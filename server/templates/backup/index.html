@@ -1,0 +1,317 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<link rel="stylesheet"  type="text/css" href="css/index.css">
+<link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link  rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+<title>MonaGO: Gene Ontology Enrichment Analysis Visualisation from Monash University</title><meta name="keywords" content="MonaGO,GO,enrichment analysis,chord diagram" />
+</head>
+
+<link rel="icon" type="image/x-icon" href="data:image/png;base64,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">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+
+<form method="post" action="" name="frmManager" id="frmManager" enctype="multipart/form-data">
+<input type="Hidden" name="listType" value="null">
+<input type="Hidden" name="annotCat" value="null">
+<input type="Hidden" name="Mode" value="null">
+<input type="Hidden" name="pVal" value="null">
+
+
+<div class="dummy_header"></div>
+
+<center class="header-index ">
+	<img src="../img/header.png" class="img-fluid header-img" alt="Responsive image" title="Visualization tool for Gene Ontology enrichment analysis">
+</center>
+
+<div class="submitFormCentered">
+
+				<div class="main_section">
+
+					<div class="step1">
+						<h2><span class="label label-primary" title="paste a list of genes seperated by comma,newline or space">Step 1: Enter Gene List</span></h2>
+		
+						<font class="regular"> Paste a list</font>
+						
+						<div >
+							<textarea rows="6" id="LISTBox" class="form-control" name="inputIds"></textarea>
+							<div class="example_gene" onclick="copyDemoGenes()"><p>Demo genes(click to paste):</p> 
+								<p id="demo_gene">
+									Actc1,Actn2,Adk,Adnp,Adprhl1,Akap2,Ankrd1,
+									Anp32e,Anxa6,App,Arpc2,Asb2,Atp1a1,Atp1b1,
+									Atp2a2,Atp5o,Atp6v0e,Brd7,Bves,Bzw1,Cald1,
+									Cap2,Casq2,Cav3,Cbx5,Ccdc141,Cd93,Col18a1,
+									Col1a1,Col3a1,Cox8b  ....
+								</p>
+							</div>
+						</div>
+				
+						<input type="Button" value="Clear" onclick="clearPaste();" name="B3">
+					</div>
+
+
+					<div class="step2">
+
+						<h2><span class="label label-primary" title="select gene identifier">Step 2: Select Identifier</span></h2>
+			
+									<br>
+									  <select class="selectpicker" data-width="300px" size="10" name="idType">
+								  
+										  	<option value="AFFYMETRIX_3PRIME_IVT_ID">AFFYMETRIX_3PRIME_IVT_ID</option>						
+										  	<option value="AFFYMETRIX_EXON_GENE_ID">AFFYMETRIX_EXON_GENE_ID</option>	
+										  	<option value="AFFYMETRIX_SNP_ID">AFFYMETRIX_SNP_ID</option>
+										  	<option value="AGILENT_CHIP_ID">AGILENT_CHIP_ID</option>
+										  	<option value="AGILENT_ID">AGILENT_ID</option>
+										  	<option value="AGILENT_OLIGO_ID">AGILENT_OLIGO_ID</option>
+										  	<option value="ENSEMBL_GENE_ID">ENSEMBL_GENE_ID</option>
+										  	<option value="ENSEMBL_TRANSCRIPT_ID">ENSEMBL_TRANSCRIPT_ID</option>
+										  	<option value="ENTREZ_GENE_ID">ENTREZ_GENE_ID</option>
+										  	<option value="FLYBASE_GENE_ID">FLYBASE_GENE_ID</option>
+										  	<option value="FLYBASE_TRANSCRIPT_ID">FLYBASE_TRANSCRIPT_ID</option>
+										  	<option value="GENBANK_ACCESSION">GENBANK_ACCESSION</option>
+										  	<option value="GENOMIC_GI_ACCESSION">GENOMIC_GI_ACCESSION</option>
+										  	<option value="GENPEPT_ACCESSION">GENPEPT_ACCESSION</option>
+										  	<option value="ILLUMINA_ID">ILLUMINA_ID</option>	
+										  	<option value="IPI_ID">IPI_ID</option>
+										  	<option value="MGI_ID">MGI_ID</option>									
+										  	<option value="OFFICIAL_GENE_SYMBOL">OFFICIAL_GENE_SYMBOL</option>									
+										  	<option value="PFAM_ID">PFAM_ID</option>
+										  	<option value="PIR_ID">PIR_ID</option>
+										  	<option value="PROTEIN_GI_ACCESSION">PROTEIN_GI_ACCESSION</option>
+										  	<option value="REFSEQ_GENOMIC">REFSEQ_GENOMIC</option>
+										  	<option value="REFSEQ_MRNA">REFSEQ_MRNA</option>
+										  	<option value="REFSEQ_PROTEIN">REFSEQ_PROTEIN</option>
+										  	<option value="REFSEQ_RNA">REFSEQ_RNA</option>
+										  	<option value="RGD_ID">RGD_ID</option>
+										  	<option value="SGD_ID">SGD_ID</option>
+										  	<option value="TAIR_ID">TAIR_ID</option>
+										  	<option value="UCSC_GENE_ID">UCSC_GENE_ID</option>
+										  	<option value="UNIGENE">UNIGENE</option>
+										  	<option value="UNIPROT_ACCESSION">UNIPROT_ACCESSION</option>
+										  	<option value="UNIPROT_ID">UNIPROT_ID</option>
+										  	<option value="UNIREF100_ID">UNIREF100_ID</option>
+										  	<option value="WORMBASE_GENE_ID">WORMBASE_GENE_ID</option>
+										  	<option value="WORMPEP_ID">WORMPEP_ID</option>
+										  	<option value="ZFIN_ID">ZFIN_ID</option>
+											<option value="NA">Not Sure </option>
+								 
+										  </select>
+								
+									
+								
+								 	<br>
+					</div>
+
+					<div class="step3">		
+						
+						<h2><span class="label label-primary" title="choose p-value">Step 3: Choose p-value</span></h2>
+
+						<br>
+
+
+						<div style="display: flex; margin-left: 15px;">
+			            	<div id="slider" class="sliderBar"></div>
+          					<input type="text" id="input_slider"/>
+          					<input type="text" id="input3_slider" hidden/> 
+
+						</div>
+			       
+
+					</div>
+
+					<div class="step4">
+
+	        			<h2><span class="label label-primary" title="choose Gene Ontology annotation type">Step 4: Choose Annotation Type</span></h2>
+
+	        			<br>
+						
+	        				<select class="selectpicker show-tick" data-width="500px" name="annotType" multiple>
+
+				            	<option value="GOTERM_BP_FAT" selected>Biological Process</option>
+								<option value="GOTERM_MF_FAT">Molecular Function</option>
+				            	<option value="GOTERM_CC_FAT">Cellular Component</option>
+
+				            </select>
+
+
+						<br>
+					</div>
+						
+
+					<div class="btn btn-success btn-rounded btn-lg submit-btn" onclick="submitClicked()">Submit</div>
+
+				</div>
+			 
+</form>
+
+  
+
+</div>
+
+   <div class="footer">
+		<p><t>MonaGO is a visualization tool for Gene Ontology(GO) enrichment analysis. It makes use of GO annotation information from <a href="https://david.ncifcrf.gov/">DAVID</a>. For more information please check <a href="help.html">help page</a>.</p>
+	</div>     
+
+
+<script>
+
+
+
+	var width = $('body').width();
+/*	$(".submitFormCentered").width(width/1.8);
+	$(".footer").width(width/1.8);
+*/
+	var ranger = document.getElementById('slider');
+	var inputFormat = document.getElementById('input_slider');
+	var demoGenes = "Actc1,Actn2,Adk,Adnp,Adprhl1,Akap2,Ankrd1,Anp32e,Anxa6,App,Arpc2,Asb2,Atp1a1,Atp1b1,Atp2a2,Atp5o,Atp6v0e,Brd7,Bves,Bzw1,Cald1,Cap2,Casq2,Cav3,Cbx5,Ccdc141,Cd93,Col18a1,Col1a1,Col3a1,Cox8b,Cpt1b,Csnk1a1,Csrp2,Csrp3,Ctnna1,Ctnnb1,Ctnnd1,Dcn,Dctn6,Ddc,Des,Dync1i2,Epb4.1l3,Ergic1,Fhl2,Gata4,Gata6,Gbas,Gja1,Gja5,Gmpr,Gnb2l1,Grb10,Hand2,Hey2,Hif1a,Hmgn1,Hopx,Hspa9,Id2,Igf2,Igf2r,Igfbp5,Itga5,Jph2,Ldb3,Lims1,Lmnb1,Lmo7,Lmod2,Lpl,Lrrc10,Lrrfip1,Mb,Mdh1,Mki67,Mlip,Mmadhc,Mmd,Mrpl33,Msi2,Mtus1,Mtx2,Myadm,Mybpc3,Myh6,Myh7,Myl12a,Myl12b,Myl2,Myl4,Myl9,Myom1,Myoz2,Naa38,Ndufa10,Nebl,Nkx2-5,Nppb,Pafah1b1,Palld,Parva,Pdk1,Pdlim3,Plekho1,Pln,Pomp,Postn,Ppp1r14c,Ppp1r3c,Ppp2r3a,Prkar1a,Psmd7,Ptov1,Ptp4a2,Pygm,Qk,Rab14,Rad23b,Rbm24,Rbpms,Rpl14,Rps24,Ryr2,Sae1,Sdpr,Sec31a,Sept7,Sfrp1,Slc8a1,Smyd1,Smyd2,Sorbs2,Sox4,Sptbn1,Srl,Srsf7,Ssr3,Stk39,Stt3b,Sulf2,Svil,Synpo2l,Tab2,Tbx20,Tcap,Tead1,Tmpo,Tmsb4x,Tns1,Tpm1,Trim55,Trim63,Ttn,Txndc5,Ube2e3,Unc45b,Vcan,Vdac3,Wdr89,Wls,Zmynd11";
+
+	init();
+
+	function init(){
+		setUpRangeSlider(ranger,inputFormat);
+
+		if($("body .background").length!=0){
+			$("body .background").remove();
+		}
+
+		$('.selectpicker').selectpicker({
+		  size: 10
+		});
+
+	}
+
+
+
+    function setUpRangeSlider(ranger,inputFormat){
+      noUiSlider.create(ranger, {
+        start: [ 0.05 ], // Handle start position
+        step: 0.001, 
+        direction: 'rtl', 
+        orientation: 'horizontal', 
+        range: { 
+          'min': 0.001,
+          'max': 0.05
+        }
+      });
+
+      ranger.noUiSlider.on('update',function(values,handle){
+          inputFormat.value = values[handle];
+      });
+
+      inputFormat.addEventListener('change',function(){
+          ranger.noUiSlider.set(this.value);
+
+      });
+    }
+
+
+	function copyDemoGenes(){
+		$("#LISTBox").val(demoGenes);
+
+		$('select[name="idType"]').val("OFFICIAL_GENE_SYMBOL");
+		$('.selectpicker').selectpicker('refresh')
+	}
+
+	function clearPaste(){
+		document.frmManager.inputIds.value="";
+	}
+
+	function submitClicked(){
+		var res = uploadList();
+		if(res) showLoadingIcon();
+	}
+
+	function showLoadingIcon(){
+		if($("body .background").length==0){
+			var $backGround = $("body").append('<div class="background"/>');
+
+			var bodyHeight = $("body").height();
+			$(".background").css("height",bodyHeight);
+
+			$backGround.append('<div class="loadingBar"><div class="loading_icon"/></div>');
+			$(".loadingBar").css("top",bodyHeight/2);
+		}
+	}
+
+	function uploadList(){
+
+		
+		//alert("start upload");
+		var FM = document.frmManager;
+		
+	/*	if(FM.cbMulti.checked)
+		{
+			FM.multiList.value="true";
+		}*/
+
+		FM.listType.value = 0;
+		
+/*		if(FM.uploadType[0].checked)
+		{
+			FM.listType.value=FM.uploadType[0].value;
+		}
+		else if(FM.uploadType[1].checked)
+		{
+			FM.listType.value=FM.uploadType[1].value;
+		}
+		else
+		{
+			alert("Error: Please specify whether this is a Gene list or a Background in step 3");
+			return;
+		}*/
+
+		var annotList = []
+
+		for(var i=0;i<3;i++){
+			if(FM.annotType[i].selected)
+				annotList.push(FM.annotType[i].value);
+		}
+
+		FM.annotCat.value = annotList.toString();
+
+		if(FM.inputIds.value == ""){
+			alert("Error: Please paste a list in step 1.");
+			return false;
+		}
+
+		
+
+		if(FM.annotCat.value == ""){
+			alert("Error: Please select annotation type in step 4.");
+
+			return false;
+		}
+
+		FM.pVal.value = $("#input_slider").val();
+
+		FM.inputIds.value = convertInputIds(FM.inputIds.value);
+		
+		FM.Mode.value="paste";
+		FM.action="\\";
+		FM.target="";
+		FM.submit();
+
+		$(".submit-btn").attr('disabled','disabled'); 
+		return true;
+
+	}
+
+	function convertInputIds(idString){
+		var idList = idString.split("\n");
+
+		if(idList.length>1){
+			idString = "";
+			for(var i=0;i<idList.length;i++){
+				idString += idList[i]+ ",";
+			}
+		}
+		var lastChar = idString.length-1;
+		if(idString[lastChar]==",")
+			idString.slice(lastChar,1);
+		return idString;
+	}
+</script>
+

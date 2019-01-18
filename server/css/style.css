@@ -7,6 +7,7 @@ body, html{
   margin: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  font-family: inherit !important;
 }
 
 .clusterNodeView {
@@ -77,7 +78,7 @@ body, html{
 
 .dropdown-menu {
   z-index: 10; 
-  width : 500px;
+  width : 100px;
   overflow-x: auto;
   max-height: 500px; 
 }
@@ -154,11 +155,6 @@ ul.skoslabel{
 	content: " / ";
 }
 
-li{
-	list-style: none;
-
-}
-
 
 .resProp{
 	line-height: 1.7;
@@ -197,7 +193,7 @@ li{
 }
 
 #arrow_controlPanel{
-    background-position: 0px 70px;
+    background-position: 0px 55px;
     background-repeat: no-repeat;
     opacity: 1;
 }
@@ -240,7 +236,8 @@ li{
 
 path.chord {
   stroke: #000;
-  stroke-width: .25px;
+  stroke-width: .1px;
+  opacity: 1;
 }
 
 #circle:hover path.fade {
@@ -361,7 +358,7 @@ path.chord {
   top: 0;
   left: 0;
   width: 558px;
-  height: 160px;
+  height: 80px;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
   z-index:3;
   background: white;
@@ -456,9 +453,6 @@ a {
   cursor:pointer;
 }
 
-.gene_content li{
-    padding-left: 20px;
-}
 
 n {
     color: #15B59C;
@@ -471,18 +465,22 @@ n:hover {
     cursor:pointer;
 }
 
-.go_List li{
-  padding-left: 40px;
-}
 
 .go_dropmenu{
   cursor:pointer;
 }
 
 #editor_save {
-  float:right;
-  right: 20px;
-  position: relative;
+  margin-right: 30px;
+}
+
+#export {
+  margin-right: 5px;
+}
+
+#import_label{
+  border: 2px solid #AAA;
+   background: #DDD;
 }
 
 .go_detail_content{
@@ -514,13 +512,22 @@ hr {
 }
 
 .highlight {
-    stroke: rgb(244, 54, 54)!important;
-    stroke-width: 2px;;
+    stroke: rgb(46, 139, 87)!important;
+    stroke-width: 3px !important;
 }
 
 
 .backToIndexImg {
-     position: relative;
+    position: relative;
     float: right;
     margin-right: 170px;
+}
+
+.control-panel-button{
+    margin-top: 30;
+    margin-left: 200px;
+}
+
+.fade{
+    opacity: 0 !important;
 }

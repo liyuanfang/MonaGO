@@ -1,3 +1,16 @@
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 (function(){
 
   Array.prototype.intersection = function() {
@@ -27,15 +40,17 @@
   };
 
   var MonaGO = function(){
+
+    var monago;
+
     var force;
     var nodesSize = size;
     var maxNodeIndex = size;
 
     var old_array_order = [];
     var clusterHierDataFiltered = [];
-    var clusterHierDataStatic = [];
 
-    var memCache = {};
+    
     
 
     var labelOff=0;
@@ -43,12 +58,24 @@
     var clusterHierNodesStatus = [];//for storing nodes generated Hierarchical clustering
     var chordGroupsNodePosition = [];
 
-    var maxNumOfOverlappingGens = clusterHierData[0][3];
-    var minNumOfOverlappingGens = clusterHierData[clusterHierData.length-1][3];
+
+
+    var popUpList = [];//store the index of go that being popped up.
 
     this.gene_info = {};//gene name for each GO term e.g. gene_info[i] = [...]
     this.dic = {};// gene intersection information
     this.go_inf = [];
+    this.goNodes = [];
+    this.matrix = [];
+    this.groupSize = [];
+    this.clusterHierData = [];
+    this.clusterHierDataStatic = [];
+    this.memCache = {};
+    this.level_g = 0;
+    this.userHighlightChordIndex = -1;
+    this.MonaGOData = [];
+    this.ranger;
+    this.clickCollapseNodeArr = [];
 
     var that = this;
 
@@ -67,23 +94,29 @@
     var color_scheme = ["#1249C9","#0F399B","#0A2B76","#0F2147","#2C3645","#82733D","#E1C03B","#E6AE29","#F2AB1C","#FFAB00"].reverse();
     var pValLevel = ["p-1","p-2","p-3","p-4","p-5","p-6","p-7","p-8","p-9","p-10"];
     var preElement = "p-1";
-
+    var annotation_manual={
+      biological_process:"[BP]",
+      cellular_component:"[CC]",
+      molecular_function:"[MF]"
+    };
     var chordMatrix;
     var chord;
     var detailPanelWidth = $(window).width()*0.25;
 
-    var controlPanelWidth = $(window).width()*0.25;
-    if(controlPanelWidth<512) controlPanelWidth = 512;
+    var controlPanelWidth = 520;
 
-    var controlPanelHeight = 170;
+    var controlPanelHeight = 120;
 
     var w = $(window).width()-detailPanelWidth,
          h = $(window).height(),
          r0 = Math.min(w, h) * .20,
-         r1 = r0 * 1.1;
+         r1 = r0 * 1.1,
+         widthToheightRatio = w/h;
 
     var goNameArr = [];
 
+
+    var main_div = 0;
     var svg ;
     var go_chart;
     var circleSvg;
@@ -100,12 +133,12 @@
 
     var zoom = d3.behavior.zoom().translate([w/2, h/2]);
     var zoomLevel = 1;
-
+    //var zoomhier=d3.behavior.zoom().translate([20,0]);
     
-    var level_g = 0;
     var clusterNodesIndex = [];
     var details_opened = true;
     var control_opened = true;
+    var reloadData = false;
 
     var clusterArc;
     var clusterLine1;
@@ -114,48 +147,87 @@
     var clusterHierNodeTextView;
     var groupElements;
     var groupLayout;
-    var groupText;
+    var groupTexts;
+    var gt;
     var chordElements;
     var chordLayout;
     var textBackground;
+    var app = angular.module('MonaGO');
+
+
+
+    app.directive('clearBtn', ['$parse', function ($parse) {
+        return {
+            link: function (scope, elm, attr, ngModelCtrl) {
+
+                elm.wrap("<div style='position: relative'></div>");
+                var btn = '<i class="searchclear ng-hide fa fa-close"></i>';
+                var angularBtn = angular.element(btn);
+
+                angularBtn.css('top', 15);
+                elm.after(angularBtn);
+
+                //clear the input
+                angularBtn.on("click", function () {
+                    popUpList = [];
+                    scope.searchText = "";
+                    $('#filter').val("");
+                    $('#filter').focus();
+                    refreshDetailPanel();
+                    if($('#searchBox')) $('#searchBox').remove();
+                    angularBtn.addClass("ng-hide");
+                    scope.$apply();
+                });
+
+                // show  clear btn  on focus
+                elm.bind('focus keyup change paste propertychange', function (blurEvent) {
+                    if (elm.val() && elm.val().length > 0) {
+                        angularBtn.removeClass("ng-hide");
+
+                    } else {
+                        angularBtn.addClass("ng-hide");
+                    }
+                });
+
+            }
+        };
+    }]);
 
 
     //associate genes with go,cluster(using index in go_inf)
     function createGeneInfo(){
-      gene_info = {};
+      that.gene_info = {};
       that.go_inf.forEach(function(d,i){
         var index = i;
         d["genes"].forEach(function(d,i){
-          if(gene_info[d]!=undefined){
+          if(that.gene_info[d]!=undefined){
               var str =   ";"  +  index.toString();
-              gene_info[d] = gene_info[d] + str;
+              that.gene_info[d] = that.gene_info[d] + str;
           }
           else{
-            gene_info[d] = index.toString();
+            that.gene_info[d] = index.toString();
           }
         });
       });
 
-      return gene_info;
     }
 
     function createInteractionGenes(){
-       dic = {};
+       that.dic = {};
        var size = that.go_inf.length;
        for(var i = 0;i < size;i++){
           for(var j = 0;j < size;j++){
             if(i == j){
-              dic[i+"-"+j] = ""
+              that.dic[i+"-"+j] = ""
             }else{
               var genes_i = that.go_inf[i]["genes"];
               var genes_j = that.go_inf[j]["genes"];
               var intersectionGenes = genes_i.intersection(genes_j);
               
-              dic[i+"-"+j] = intersectionGenes.getGeneString("|");
+              that.dic[i+"-"+j] = intersectionGenes.getGeneString(";");
             }
           }
        }
-       return dic
     }
 
     function GOFilter(){
@@ -287,19 +359,20 @@
           nodes[i].y = 50;
           nodes[i]['is'] = 'root';
         }
+
       }
 
 
       nodes[nodeIndex[target]].fixed = true;
       nodes[nodeIndex[target]].x = width / 2;
-      nodes[nodeIndex[target]].y = height - 20;
+      nodes[nodeIndex[target]].y = height - 50;
       nodes[nodeIndex[target]]['is'] = 'target';
 
       return {'nodes' : nodes, 'links' : links};
     }      
 
     function GO(goid) {
-      return goNodes[goid];
+      return that.goNodes[goid];
     }
 
     function recursiveAncestor(goid) {
@@ -520,9 +593,11 @@
     }
 
     function createPvalLabelPanel(fill){
-      titie = "p-value";
-      panel.push(titie);
-      panel.push("---------------------");
+      var panelTitle = [];
+      var panel = [];
+      panelTitle.push("p-value");
+      panelTitle.push("<hr></hr>");
+      panelTitle = panelTitle.join('');
       //create panel
       for(i=0;i<seperated_points.length-1;i++)
       {
@@ -534,7 +609,8 @@
       }
 
 
-      panelLabel = panel.join('<br>');
+      panelLabel = "<div>" + panelTitle + panel.join('<br>') + "</div>";
+      $('#pval-label').empty();
       $('#pval-label').append(panelLabel);
 
 
@@ -544,7 +620,6 @@
     }
 
     function transformIndex(index){
-      /*console.log(array_order);*/
 
       return (index < nodesSize)?
         array_order.indexOf(parseInt(index)):getIndexFormClusterNode(parseInt(index));
@@ -576,25 +651,32 @@
       return [x,y];
     }
 
-    function darwClusterNodes(){
-
-      clusterHierNodeView = clusterHierNodeView.data(clusterHierNodesStatus,function(d){return d.index;});
+    function drawClusterNodes(){
+      var index;     
+      clusterHierNodeView = clusterHierNodeView.data(clusterHierNodesStatus, function(d){return d.index;});
 
       clusterHierNodeView.enter().append("g");
 
       clusterHierNodeView.exit().remove();
 
-      clusterHierNodeView.transition().duration(500).attrTween("transform", tween).attr("class","clusterNodeView");
+      clusterHierNodeView.attr("class","clusterNodeView");
+      clusterHierNodeView.attr("value",function(d){return d.angle * 180 / Math.PI - 90;})
+      clusterHierNodeView.attr("index",function(d){return d.index;});
+      clusterHierNodeView.attr("translate_value",function(d){return d["radius"] + 5;});
+      clusterHierNodeView.transition().duration(500).attrTween("transform", tween);
 
       clusterHierNodeView.selectAll("circle").remove();
 
       circle = clusterHierNodeView.append("circle");
 
       circle.attr("r",function(d){
+        if((d["numOfOverlappingGenes"] > 0)||(d["numOfOverlappingGenes"]==undefined))
         return 6;
       }).style("fill", function(d){
         return (d["status"]=="Expanded")?"rgb(94, 141, 141)":"red";
-      }).on("click",onClusterNodeClick)
+      }).attr("id","cluster")
+
+      .on("click",onClusterNodeClick)
       .append("title").text(function(d, i) {return "Click to cluster"});
 
       clusterHierNodeTextView.selectAll("text").remove();
@@ -605,8 +687,11 @@
 
       clusterHierNodeTextView.exit().remove();
 
-      clusterHierNodeTextView.transition().duration(500).attrTween("transform", tween).attr("class","clusterText");
-      
+      clusterHierNodeTextView.transition().duration(500).attrTween("transform", tween);
+      clusterHierNodeTextView.attr("class","clusterText");
+      //clusterHierNodeTextView.attr("value",function(d){return d.angle * 180 / Math.PI - 90;})
+      //clusterHierNodeTextView.attr("translate_value",function(d){return d["radius"] + 5;});
+
       textBackground = clusterHierNodeTextView.append("g");
 
       text = textBackground.attr("transform", function(d) {
@@ -616,6 +701,7 @@
       text.attr('height', 'auto')
         .attr('text-anchor', 'middle')
         .text(function(d){
+          if((d["numOfOverlappingGenes"] > 0)||(d["numOfOverlappingGenes"]==undefined))
           return d["numOfOverlappingGenes"];
         }).attr('style', 'text-align:center;padding:2px;margin:2px;fill:white')
         .on("click",onClusterNodeClick)
@@ -624,27 +710,32 @@
       function tween(d, i, a) {
         var interpolate;
         var str;
-        
-        str = "rotate(" + (d["angle"] * 180 / Math.PI - 90) + ")"
-         + "translate(" + ( d["radius"] + 5 ) + ",0)";
-        interpolate = d3.interpolate(a,str);
 
+        //str = "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"  
 
-        return function(t) {
-            return interpolate(t);
+        if ($('[index='+d.index+']').length !=0 ){
+          str = "rotate(" + $('[index='+d.index+']')[0].getAttribute("value") + ")"
+              + "translate(" + ( d["radius"] + 5 ) + ",0)";
+          interpolate = d3.interpolate(a,str);
+
+          return function(t) {
+              return interpolate(t);
           };
+        }
       }
     }
 
     function drawArc(clusterHierData){
 
+
       var clusterHierDataFiltered = [];
       var arcData = [];
 
       clusterHierData.map(function(d){
-          if(d!=undefined)
+          if((d!=undefined) && (d[3]!=0))
             clusterHierDataFiltered.push(d);
       });
+
       
       clusterHierDataFiltered.map(function(d){
             var firstNodeIndex = d[0];
@@ -715,7 +806,7 @@
       var line2Data = [];
       
       clusterHierData.map(function(d){
-          if(d!=undefined)
+          if((d!=undefined) && (d[3]!=0))
             clusterHierDataFiltered.push(d);
       })
 
@@ -811,7 +902,7 @@
         
         drawArc(clusterHierData);
         drawLine(clusterHierData);
-        darwClusterNodes();
+        drawClusterNodes();
         
     }
 
@@ -838,7 +929,10 @@
           }
     }
 
-
+   /*get all the leaf nodes along with thier cluster levels
+    *@parama index of clicked cluster node
+    *@return index of leaf nodes and their cluster levels
+    */ 
     function getHierNodes(index){
 
       var leafNodes = [];
@@ -848,8 +942,10 @@
 
       function recursiveGetNodes(pos){
 
-          var leftNode = clusterHierData[pos][0];
-          var rightNode = clusterHierData[pos][1];
+          var leftNode = that.clusterHierData[pos][0];
+          var rightNode = that.clusterHierData[pos][1];
+
+
 
           if(leftNode < maxNodeIndex){
             leafNodes.push({"level":pos,"nodeId":leftNode});
@@ -865,6 +961,7 @@
 
           clusterNodesLevel.push(pos);
       }
+
 
       return {"leafNodes":leafNodes,"clusterNodesLevel":clusterNodesLevel};
     }
@@ -910,28 +1007,31 @@
       return pVal;
     }
 
-    function collapseNodeSet(nodePositions,genes,nodeBeingClicked){
 
-      //console.log(go_inf);
-      var removeGO = that.go_inf.splice(nodePositions[0],nodePositions.length);
-      //console.log(removeGO);
+    /**
+    *collapse/combine all go inf assoicated with the clustered node and return the removed go inf
+    *@parma leaf node position in chord(get all the assoicated go inf),total genes in the cluster, index of the node being clicked
+    *@return original go inf(before clustered)
+    */
+    function collapseNodeSet(nodePositions,nodeBeingClicked){
+      //get all the genes associated with the cluster
+      var genes = getClusterGenes(nodePositions);
 
-     //console.log(go_inf);
+      var clusterGOs = that.go_inf.splice(nodePositions[0],nodePositions.length);
       var GO_id = [];
       var GO_name = [];
-      removeGO.map(function(d){
+      clusterGOs.map(function(d){
           GO_id.push(d["GO_id"]);
           GO_name.push(d["GO_name"]);
       });
 
-      var pVal = calculateNewPvalue(removeGO);
+      var pVal = calculateNewPvalue(clusterGOs);
 
-      newGONode = {"GO_id":GO_id,"GO_name":GO_name,"count":genes.length,"pVal":pVal,"genes":genes,"nodeBeingClicked":nodeBeingClicked};
+      var newGONode = {"GO_id":GO_id,"GO_name":GO_name,"count":genes.length,"pVal":pVal,"genes":genes,"nodeBeingClicked":nodeBeingClicked};
 
       that.go_inf.splice(nodePositions[0],0,newGONode);
-      //console.log(go_inf);
 
-      return removeGO;
+      return clusterGOs;
     }
 
     function expandNodeSet(nodeBeingClicked,removeGO){
@@ -980,9 +1080,15 @@
       return newMatrix;
     }
 
-    function updateLayout(newMatrix){
+    function updateGroupSize(){
+      that.groupSize = []
+      that.go_inf.forEach(function(d){
+        that.groupSize.push(d.count)
+      }) 
+    }
 
-        chord = chordMatrix.matrix(newMatrix);
+    function drawLayout(newMatrix){
+
 
         groupElements = groupElements.data(chord.groups());
 
@@ -990,7 +1096,7 @@
 
         groupElements.exit().remove();
 
-        groupLayout =groupElements
+        groupLayout = groupElements
          .style("fill", function(d) { return getColor(Number(that.go_inf[d.index].pVal),fill); })
          .style("stroke", function(d) { return getColor(Number(that.go_inf[d.index].pVal),fill); })
          .attr("d", d3.svg.arc().innerRadius(r0).outerRadius(r1)) //important
@@ -1005,15 +1111,46 @@
 
         chordLayout = chordElements
           .attr("class", "chord")
-          //.style("fill", function(d) { return fill(d.source.index%10); })
+          .style("fill", function(d) { return "#A0A0A0"; })
           //.style("opacity",".5")
           .attr("d", d3.svg.chord().radius(r0))
           .attr("id","chordChords")
-          .on("mouseover", mouseover_chord);
+          .on("mouseover", mouseover_chord)
+          .on("click", click_chord);
 
         chordLayout.classed("fade", function(p) {
           return 1;
         });
+
+    }
+
+    function click_chord(d,i){
+      if(i != that.userHighlightChordIndex){
+          //highlight the chord
+          chordLayout.classed("highlight", function(d,j){
+            if(i == j) return true;
+            return false;
+          });
+
+          //freeze mouseover event
+          chordLayout.on("mouseover", function(){return false});
+          groupLayout.on("mouseover", function(){return false});
+          that.userHighlightChordIndex = i
+
+        if(that.userHighlightChordIndex !=-1){// click when the chord is already freezed
+          updateDetailPanelBasedOnChord(d,i);
+        }
+
+      }else{
+        //back to normal
+        chordLayout.classed("highlight", function(d,j){
+          return false;
+        });
+
+        chordLayout.on("mouseover", mouseover_chord);
+        groupLayout.on("mouseover", mouseover_group);
+        that.userHighlightChordIndex = -1;
+      }
 
     }
 
@@ -1033,8 +1170,9 @@
     }
 
     function calculateAClusterNodePosition(firstNodeIndex,secondNodeIndex,status,index,nodeBeingClicked,clusterNodesRadius,collapsedNodeRadius){
-
       //get the node object
+
+
       if(firstNodeIndex < nodesSize){
         firstNodeIndex = transformIndex(firstNodeIndex);
         firstNode = chordGroupsNodePosition[firstNodeIndex];
@@ -1053,6 +1191,7 @@
         secondNode = clusterHierNodesStatus[secondNodeIndex];
       }
 
+ 
       //calculate the position of new node(radius,angle)
       angle = (firstNode.angle+secondNode.angle)/2;
 
@@ -1070,15 +1209,27 @@
       return [angle,radius];
     }
 
+    /**
+    *create cluster nodes(position,status)
+    *@param clusterHierData: hierarchical data
+    *@param nodeBeingClicked: index of the node being clicked
+    *@param status: expanded/collapsed
+    *@param collpaseNodes: an array of collapsed nodes 
+    *@param clusterNodesRadius: an array of collapsed nodes' radius
+    *@param collapsedNodeRadius: the radius of the collapsed node
+    */
     function createClusterNodesStatus(clusterHierData,nodeBeingClicked,status,collpasedNodes,clusterNodesRadius,collapsedNodeRadius){
-
+      clusterHierNodesStatus = [];
       for(i=0;i<clusterHierData.length;i++){
         if(clusterHierData[i]!=undefined){
+
+     
             firstNode = clusterHierData[i][0];
             secondNode = clusterHierData[i][1];
             index = clusterHierData[i][2];
             numOfOverlappingGenes = clusterHierData[i][3];
 
+            
             position = calculateAClusterNodePosition(firstNode,secondNode,status,index,nodeBeingClicked,clusterNodesRadius,collapsedNodeRadius);
             //create new cluster node based on the position
             if(nodeBeingClicked == index){
@@ -1097,6 +1248,8 @@
             }
             
             clusterHierNodesStatus.push(nodeObj);
+            
+            
           }
         }
     }
@@ -1148,16 +1301,20 @@
       /*console.log("recover array order:"+array_order);*/
     }
 
-    function removeNodesInClusterData(nodePositions,clusterNodesLevel){
-        /*console.log(clusterNodesLevel);*/
+    /**
+    *remove associated cluster in cluster hierarchical data and create new cluster hierarchical data
+    *@param nodePositions : the node position assoicated with the collapsed cluster
+    *@param clusterNodesLevel : 
+    *@return new created cluster hierarchical data
+    */
+    function createNewClusterHierData(nodePositions,clusterNodesLevel){
         var newNode = old_array_order[nodePositions[nodePositions.length-1]];
-        /*console.log("newNode:"+newNode);*/
         var newClusterHierData = [];
 
-        clusterHierData.map(function(d,i){
+        that.clusterHierData.map(function(d,i){
             if(clusterNodesLevel.indexOf(i) == -1){
                 newClusterHierData.push(d);
-            }else{
+            }else{//create new node
                 if(clusterNodesLevel.indexOf(i) == clusterNodesLevel.length-1)
                 {
                     newClusterHierData.push([newNode,newNode,d[2]]);
@@ -1167,30 +1324,39 @@
             }
         });    
 
-        /*console.log(newClusterHierData);*/
-
         return newClusterHierData;
     }
 
     function addNodesInClusterData(removedClusterHierData){
 
       removedClusterHierData.map(function(d,i){
-          clusterHierData[d[2]-maxNodeIndex] = d;
+
+          that.clusterHierData[d[2]-maxNodeIndex] = d;
       });
 
-      return clusterHierData;
+
+      return that.clusterHierData;
     }
 
     function getRemoveClusterData(clusterNodesLevel){
       var removeHierData = [];
 
       clusterNodesLevel.map(function(d,i){
-          removeHierData.push(clusterHierData[d]);
+          removeHierData.push(that.clusterHierData[d]);
       });
 
       return removeHierData;
     }
 
+    /**
+    *collpase the hierarcial clusters and return removed hierarcial data
+    *@param nodePositions: an array of nodes' positions
+    *@param clusterNodesLevel: the level of the nodes being clustered in hierarchical data
+    *@param nodeBeingClicked: the index of the node being clicked
+    *@param collapsedNodes: an array of collapsed nodes
+    *@param clusterNodesRadius: an array of collapsed nodes' radius  
+    *@return removed hierarcial data
+    */
     function collapseHierClustering(nodePositions,clusterNodesLevel,nodeBeingClicked,collpasedNodes,clusterNodesRadius){
         var collapsedNodeRadius;
         clusterHierNodesStatus.map(function(d){
@@ -1209,17 +1375,15 @@
         });
 
         var removeHierData = getRemoveClusterData(clusterNodesLevel);
-        /*console.log(removeHierData);*/
 
-        clusterHierData = removeNodesInClusterData(nodePositions,clusterNodesLevel);
 
-        createClusterNodesStatus(clusterHierData,nodeBeingClicked,"collapse",collpasedNodes,clusterNodesRadius,collapsedNodeRadius);
-        
-        /*console.log("newclusternode:"+clusterHierData);*/
-        if(labelOff==1)
-          drawHierarchicalClustering(clusterHierData);
+        //create new cluster hierarchical cluster data
+        that.clusterHierData = createNewClusterHierData(nodePositions,clusterNodesLevel);
 
-        return removeHierData;
+        //create cluster node 
+        createClusterNodesStatus(that.clusterHierData,nodeBeingClicked,"collapse",collpasedNodes,clusterNodesRadius,collapsedNodeRadius);
+
+        return [removeHierData,that.clusterHierData];
     }
 
     function expandHierClustering(removedClusterHierData,clusterNodesLevel,nodeBeingClicked,collpasedNodes,clusterNodesRadius){
@@ -1231,103 +1395,139 @@
           chordGroupsNodePosition.push(nodeObj);
         });
 
-        clusterHierData = addNodesInClusterData(removedClusterHierData,clusterNodesLevel);
+        that.clusterHierData = addNodesInClusterData(removedClusterHierData,clusterNodesLevel);
 
-        createClusterNodesStatus(clusterHierData,nodeBeingClicked,"expand",collpasedNodes,clusterNodesRadius);
+        createClusterNodesStatus(that.clusterHierData,nodeBeingClicked,"expand",collpasedNodes,clusterNodesRadius);
 
-        if(labelOff==1)
-          drawHierarchicalClustering(clusterHierData);
+        return that.clusterHierData;
+    }
+
+    function collapseMonaGO(nodeBeingClickedIndex){
+        if (that.clickCollapseNodeArr.indexOf(nodeBeingClickedIndex) == -1){
+          that.clickCollapseNodeArr.push(nodeBeingClickedIndex);
+        }
+        //get leaf nodes(associated with the cluster) info(node index & cluster level)
+        var nodes = getHierNodes(nodeBeingClickedIndex);
+        
+        //get the leaf nodes position in the chord layout
+        var nodePositions = getLeafNodesPosition(nodes["leafNodes"]).unique();
+        var clusterNodesLevel = nodes["clusterNodesLevel"];
+
+        //key function: collpase/combine go and return the go inf being removed
+        var removeGOs = collapseNodeSet(nodePositions,nodeBeingClickedIndex);
+
+        var removeNodeInArray = removeNodesInArrayOrder(nodePositions);
+
+        matrix = updateMatrix();
+        updateGroupSize();
+        chord = chordMatrix.matrix(matrix).groupSize(that.groupSize);
+
+        var collapseResults = collapseHierClustering(nodePositions,clusterNodesLevel,nodeBeingClickedIndex,Object.keys(that.memCache),that.memCache["clusterNodesRadius"]);
+        removedHierData = collapseResults[0];
+        clusterHierData = collapseResults[1];
+        
+
+        if(that.memCache["clusterNodesRadius"]!=undefined)
+            var clusterNodesRadius = that.memCache["clusterNodesRadius"];
+        else
+            clusterNodesRadius = [];
+
+        clusterHierNodesStatus.map(function(d){
+            if(d["index"]==nodeBeingClickedIndex){
+              //console.log(d);
+              clusterNodesRadius.push({"nodeId":d["index"],"radius":d["radius"]});
+            }
+        });
+
+        that.memCache["clusterNodesRadius"] = clusterNodesRadius;
+
+        //console.log(clusterNodesRadius);
+        /*console.log(removeHierData);*/
+
+        var nodeBeingMemorized = {"go_inf":removeGOs,"array_order":removeNodeInArray,"clusterHierData":removedHierData,"clusterNodesLevel":clusterNodesLevel};
+
+        that.memCache[nodeBeingClickedIndex] = nodeBeingMemorized;
+
+        return clusterHierData;
+
+    }
+
+    function expandMonaGO(nodeBeingClickedIndex){
+
+        var index = that.clickCollapseNodeArr.indexOf(nodeBeingClickedIndex);
+
+        if (index > -1) {
+          that.clickCollapseNodeArr.splice(index, 1);
+        }
+
+        nodeBeingMemorized = that.memCache[nodeBeingClickedIndex];
+
+        expandNodeSet(nodeBeingClickedIndex,nodeBeingMemorized["go_inf"]);
+
+        addNodesToArrayOrder(nodeBeingMemorized["array_order"]);
+
+        var collapsedNodes = getMemKey(that.memCache);
+
+        var clusterNodesLevel = nodeBeingMemorized["clusterNodesLevel"];
+
+        var clusterNodesRadius = that.memCache["clusterNodesRadius"];
+
+        var newclusterNodesRadius = [];
+
+        clusterNodesRadius.map(function(d,i){
+          if(d["nodeId"]!=nodeBeingClickedIndex)
+            newclusterNodesRadius.push(d);
+        })
+
+        clusterNodesRadius = newclusterNodesRadius;
+
+        that.memCache["clusterNodesRadius"] = clusterNodesRadius;
+
+        matrix = updateMatrix();
+        updateGroupSize();
+        chord = chordMatrix.matrix(matrix).groupSize(that.groupSize);
+
+
+        that.clusterHierData = expandHierClustering(nodeBeingMemorized["clusterHierData"],clusterNodesLevel,nodeBeingClickedIndex,collapsedNodes,clusterNodesRadius);
+        
+        delete that.memCache[nodeBeingClickedIndex];
+
+        return that.clusterHierData;
     }
 
     function onClusterNodeClick(d,i){
 
       //transform the index to clusterlevel
 
-      var nodeBeingClicked = d["index"];
+      var nodeBeingClickedIndex = d["index"];
 
       if(d["status"]=="Expanded"){
 
-        var nodes = getHierNodes(nodeBeingClicked);
-
-        var nodePositions = getLeafNodesPosition(nodes["leafNodes"]).unique();
-
-        var clusterNodesLevel = nodes["clusterNodesLevel"];
-
-        var genes = getClusterGenes(nodePositions);
-
-        var removeGO = collapseNodeSet(nodePositions,genes,nodeBeingClicked);
-
-        createInteractionGenes();
-        createGeneInfo();
-
-        matrix = updateMatrix();
-        updateLayout(matrix);
-
-        var removeNodeInArray = removeNodesInArrayOrder(nodePositions);
-        /*console.log("array_order:" + array_order);*/
-        /*console.log("clusterNodeLevel:" + nodes["clusterNodeLevel"]);*/
-
-        var removeHierData = collapseHierClustering(nodePositions,clusterNodesLevel,nodeBeingClicked,Object.keys(memCache),memCache["clusterNodesRadius"]);
-
-        if(memCache["clusterNodesRadius"]!=undefined)
-            var clusterNodesRadius = memCache["clusterNodesRadius"];
-        else
-            clusterNodesRadius = [];
-
-        clusterHierNodesStatus.map(function(d){
-            if(d["index"]==nodeBeingClicked){
-              //console.log(d);
-              clusterNodesRadius.push({"nodeId":d["index"],"radius":d["radius"]});
-            }
-        });
-
-        memCache["clusterNodesRadius"] = clusterNodesRadius;
-
-        //console.log(clusterNodesRadius);
-        /*console.log(removeHierData);*/
-
-        var nodeBeingMemorized = {"go_inf":removeGO,"array_order":removeNodeInArray,"clusterHierData":removeHierData,"clusterNodesLevel":clusterNodesLevel};
-
-        memCache[nodeBeingClicked] = nodeBeingMemorized;
+        clusterHierData = collapseMonaGO(nodeBeingClickedIndex);
 
       }else{
         /*console.log("node going to expand");*/
 
-        nodeBeingMemorized = memCache[nodeBeingClicked];
+        clusterHierData = expandMonaGO(nodeBeingClickedIndex);
 
-        expandNodeSet(nodeBeingClicked,nodeBeingMemorized["go_inf"]);
-
-        createInteractionGenes();
-
-        //createGeneInfo();
-
-        matrix = updateMatrix();
-
-        updateLayout(matrix);
-
-        addNodesToArrayOrder(nodeBeingMemorized["array_order"]);
-
-        var collapsedNodes = getMemKey(memCache);
-
-        var clusterNodesLevel = nodeBeingMemorized["clusterNodesLevel"];
-
-        var clusterNodesRadius = memCache["clusterNodesRadius"];
-
-        var newclusterNodesRadius = [];
-
-        clusterNodesRadius.map(function(d,i){
-          if(d["nodeId"]!=nodeBeingClicked)
-            newclusterNodesRadius.push(d);
-        })
-
-        clusterNodesRadius = newclusterNodesRadius;
-
-        memCache["clusterNodesRadius"] = clusterNodesRadius;
-
-        expandHierClustering(nodeBeingMemorized["clusterHierData"],clusterNodesLevel,nodeBeingClicked,collapsedNodes,clusterNodesRadius);
-
-        delete memCache[nodeBeingClicked];
       }
+
+      
+      updateMoanaGOLayout(clusterHierData);
+      updateLabel();
+    }
+
+    function updateMoanaGOLayout(clusterHierData){
+
+      createGOAndUpdateChordLayout();
+      drawHierarchicalClustering(clusterHierData);
+    }
+
+    function createGOAndUpdateChordLayout(){
+        createInteractionGenes();
+        createGeneInfo();
+
+        drawLayout(that.matrix);
     }
 
     function moveOutHierCluster(){
@@ -1397,7 +1597,7 @@
 
     function getLevelFromNumOfOverlappingGenes(numOfOverlappingGenes){
       var level = -1;
-      clusterHierDataStatic.map(function(d,i){
+      that.clusterHierDataStatic.map(function(d,i){
           if(d[1]>=numOfOverlappingGenes)
             level = i;
       });
@@ -1406,47 +1606,49 @@
     }
 
     function getClusterNodesIndexBeingSelected(level){
-
       var clusterDataLevel = [];
-      if(level>=level_g){//collapse
+      if(level>=that.level_g){//collapse
         
         for(var i=level;i >= 0; i--){
-          if(clusterHierData[i]!=undefined&&clusterDataLevel.indexOf(i)==-1){
-            if(memCache[clusterHierData[i][2]]==undefined){
-              var clusterNodesLevel = getHierNodes(clusterHierData[i][2])["clusterNodesLevel"];
+          if(that.clusterHierData[i]!=undefined&&clusterDataLevel.indexOf(i)==-1){
+            if(that.memCache[clusterHierData[i][2]]==undefined){
+              var clusterNodesLevel = getHierNodes(that.clusterHierData[i][2])["clusterNodesLevel"];
               //console.log(clusterNodesLevel);
               clusterNodesLevel.map(function(d){return clusterDataLevel.push(d);});
               clusterDataLevel = clusterDataLevel.unique();
-              clusterNodesIndex.push(clusterHierData[clusterNodesLevel[clusterNodesLevel.length-1]][2]);
+              clusterNodesIndex.push(that.clusterHierData[clusterNodesLevel[clusterNodesLevel.length-1]][2]);
             }
           }
           clusterNodesIndex = clusterNodesIndex.unique();
 
 
         }
-        
+
       }else{//expand
+        console.log("expand");
         var index = level + nodesSize;
         var pos = [];
+
         clusterNodesIndex.reverse().map(function(d1,i){
           if(d1 >= index){
             pos.push(i);
 
             var clusterNode = getClusterNode(d1);
-            onClusterNodeClick(clusterNode);
+            that.clusterHierData = expandMonaGO(clusterNode["index"]);
+          
           }
         });
 
         clusterNodesIndex.splice(pos[0],pos.length);
 
         for(var i=level;i >= 0; i--){
-          if(clusterHierData[i]!=undefined&&clusterDataLevel.indexOf(i)==-1){
+          if(that.clusterHierData[i]!=undefined&&clusterDataLevel.indexOf(i)==-1){
 
-            var clusterNodesLevel = getHierNodes(clusterHierData[i][2])["clusterNodesLevel"];
+            var clusterNodesLevel = getHierNodes(that.clusterHierData[i][2])["clusterNodesLevel"];
             //console.log(clusterNodesLevel);
             clusterNodesLevel.map(function(d){return clusterDataLevel.push(d);});
             clusterDataLevel = clusterDataLevel.unique();
-            clusterNodesIndex.push(clusterHierData[clusterNodesLevel[clusterNodesLevel.length-1]][2]);
+            clusterNodesIndex.push(that.clusterHierData[clusterNodesLevel[clusterNodesLevel.length-1]][2]);
 
           }
         }
@@ -1458,15 +1660,20 @@
         clusterNodesIndex.map(function(index,i){
             clusterHierNodesStatus.map(function(d){
               if(index == d["index"]){
-                if(memCache[index]==undefined){
-                  onClusterNodeClick(d);
+                if(that.memCache[index]==undefined){
+                  that.clusterHierData = collapseMonaGO(index);
+
                 }
               }
             });
             
         });
       }
-      level_g = level;
+
+
+
+      that.level_g = level;
+      updateMoanaGOLayout(that.clusterHierData);
     }
 
     function getClusterNode(index){
@@ -1481,26 +1688,60 @@
     function createGoHierifNecessary(goid){
 
       if(typeof goid == "string"){
-          $('#content').append("<div id=\"go_chart\"></div>");
-      
+          $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart\"></div>")
       var go_chart = d3.select("#go_chart").append("svg")
+
+        .attr("id","go_chart1")
         .attr("width", width)
         .attr("height", height);
-      go_chart.append('rect')
+      $('#go_chart1').css ("border", "1px solid grey");
+
+     var hier_group = go_chart.append("svg:svg")
+        .attr("id","hier_group");
+
+     //   .call(zoomhier.on("zoom", zoomed));
+     hier_group.selectAll("line")
+	    .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+     hier_group.selectAll("circle")
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+     hier_group.selectAll("text")
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
+     $('#go_chart').on("mouseover",mouseoverHier);
+     $('#go_chart').on("mouseout",mouseoutHier);
+     /* go_chart.append('rect')
         .style('fill','white')
         .style('stroke','gray')
         .attr('width',width)
         .attr('height',height)
         .attr('x',0)
-        .attr('y',0);
+        .attr('y',0);*/
+      update(goid,hier_group,width,height);
 
-      update(goid,go_chart,width,height);
 
-      }
-
-      
     }
-
+    }
+    function mouseoverHier(){
+       if(!$('[id="exporthier"]').hasClass("btn")){
+            $('#go_chart').append("<div style=\"position:relative;left:25px;bottom:"+(height-5)+"px;\"><button id='exporthier' class='btn'>Export</button><div>")
+            setexporthierbtn();
+       }
+       else if($('#exporthier').hide())
+            $('#exporthier').show();
+       }
+    function mouseoutHier(){
+       if($('[id="exporthier"]').hasClass("btn"))
+            $('#exporthier').hide();
+    }
+    function setexporthierbtn(){
+         $("#exporthier").click(function() {
+         saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 5});
+      })
+    }
     function replaceCommaWithUnderline(term){
         return term.replace(":","_");
     }
@@ -1527,12 +1768,12 @@
     function createGeneListHtml(go){
       var geneListInHtml = "";
 
-      geneListInHtml += "<div class='gene_content'>";
+      geneListInHtml += "<div class='gene_content'><ol>";
       go.genes.forEach(function(d,i){
-           var tmp = "<p>" + (i+1) +"."+"<n class='gene_name'>"+ d + "</n> "+ "</p>";
+           var tmp = "<li>"+" <n class='gene_name'>"+ d + "</n> "+ "</li>";
            geneListInHtml+=tmp;
       });
-      geneListInHtml += "</div>";
+      geneListInHtml += "</ol></div>";
 
       return geneListInHtml;
     }
@@ -1542,6 +1783,7 @@
 
         that.go_inf_ori.forEach(function(d,i){
           if(d.GO_name == goName){
+
             goDetailArr = d;
           }
         });
@@ -1556,7 +1798,7 @@
 
       goDetail += "<div class='go_detail_content'>";
       goDetail += "<p> <a class='prop-field'> GO_id: </a>" + goDetailArr.GO_id + "</p>";
-      goDetail += " <p> <a class='prop-field'>Num of genes: </a>"+ goDetailArr.count + "</p>" +
+      goDetail += " <p> <a class='prop-field'>Num of genes: </a>"+ goDetailArr.count + "</p>" +" <p> <a class='prop-field'>Annotation type: </a>"+ goDetailArr.cat + "</p>"
                        "<p> <a class='prop-field'>P-value: </a>" + goDetailArr.pVal + "</p>";
 
       var geneListInHtml = createGeneListHtml(goDetailArr);
@@ -1580,7 +1822,7 @@
     }
 
     function createGOList(go_names){
-      var goList = "<div class='go_List'>";
+      var goList = "<div class='go_List'><ol>";
       goNameArr = [];
 
       go_names.forEach(function(d,i){
@@ -1588,38 +1830,67 @@
 
            goNameArr.push(d);
 
-           var tmp = "<li>" + (i+1) +"."+"<n class='Go_name go_detail_dropmenu'>"+ d + 
+           var tmp = "<li>" + "<n class='Go_name go_detail_dropmenu'>"+ d + 
            "</n> <b id='caret_GO_details' class='caret'></b>"+ goDetail + "</li>";
            goList += tmp;
       });
 
 
-      goList += "</div>";
+      goList += "</li></div>";
       return goList;
+    }
+
+    function recursiveGetArrays(arrsSource){
+      var arrDest = [];
+
+      recursiveGet(arrsSource);
+
+      function recursiveGet(arrsSource){
+        if (typeof arrsSource == 'string'){
+          arrDest.push(arrsSource);
+        }else{
+          arrsSource.forEach(function(d){
+              recursiveGet(d);
+          });
+        }
+      }
+      
+      return arrDest;
+    }
+
+    function roundPval(pval,place){
+      if (typeof pval === "string"){
+        return parseFloat(pval).toFixed(place);
+      }
+      else{
+        return pval.toFixed(place);
+      }
     }
 
     function createDetailPanelTempl(i){
         var detailPanelTempl = "";
 
-        var numOfGOTerms = getNumOfGOTerms(that.go_inf[i].GO_id);
-        var goInfTempl = "<p> <a class='prop-field'> GO_id: </a>" + that.go_inf[i].GO_id + "</p>";
+        var numOfGOTerms = getNumOfGOTerms(recursiveGetArrays(that.go_inf[i].GO_id));
+        var goInfTempl = "<p> <a class='prop-field'> GO_id: </a>" + recursiveGetArrays(that.go_inf[i].GO_id).join(", ") + "</p>";
 
         if(numOfGOTerms == 1){
-           goInfTempl += "<p> <a class='prop-field'>GO_Name: </a>"+ that.go_inf[i].GO_name + "</p>";
+           goInfTempl += "<p> <a class='prop-field'>GO_Name: </a>"+ recursiveGetArrays(that.go_inf[i].GO_name) + "</p>";
+           goInfTempl += " <p> <a class='prop-field'>Num of genes: </a>"+ that.go_inf[i].count + "</p>"+"</p>"+ " <p> <a class='prop-field'>Annotation type: </a>"
+           + that.go_inf[i].cat+ "</p>"+"<p> <a class='prop-field'>P-value: </a>" + roundPval(that.go_inf[i].pVal,5) + "</p>";
         }else{
            goInfTempl += "<a class='prop-field go_dropmenu'> GO_name: <b id='caret_GO' class='caret rotate180'></b></a>" + 
-                          createGOList(that.go_inf[i].GO_name) + "<p>";
+                          createGOList(recursiveGetArrays(that.go_inf[i].GO_name)) + "<p>";
+           goInfTempl += " <p> <a class='prop-field'>Num of genes: </a>"+ that.go_inf[i].count  +
+           "<p> <a class='prop-field'>P-value(Average): </a>" + roundPval(that.go_inf[i].pVal,5) + "</p>";
         }
-
-        goInfTempl += " <p> <a class='prop-field'>Num of genes: </a>"+ that.go_inf[i].count + "</p>" +
-                       "<p> <a class='prop-field'>P-value: </a>" + that.go_inf[i].pVal + "</p>";
+           
 
         var geneListInHtml = createGeneListHtml(that.go_inf[i]);
         var genesListTempl = "<a class='prop-field gene_dropmenu'>Genes:</a><b id='caret_gene' class='caret rotate180'></b>"+geneListInHtml+"</p>";
 
 
-        var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy:</a></p> <div id='go_chart'></div> ":"";
-
+//        var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a><button id='exporthier' class='btn' z-index:50'>Export Hierarchy Image</button></p> <div id='go_chart'></div> ":"";
+        var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a></p> <div id='go_chart'></div> ":"";
         detailPanelTempl += goInfTempl + genesListTempl + chartTempl;
 
         return detailPanelTempl;
@@ -1664,6 +1935,7 @@
 
         $('.gene_name').click(function(){
             $('#filter').val($(this).html());
+            $('#filter').focus();
             refreshDetailPanel();
         });
 
@@ -1671,7 +1943,9 @@
             $('#filter').val($(this).html());
             refreshDetailPanel();
         });
-        
+    /*    $("#exporthier").click(function() {
+         saveSvgAsPng(document.getElementById("go_chart1"), "hierarchy.png", {scale: 5});
+        });*/
 
         $('.go_dropmenu').click(function(d){
               
@@ -1704,39 +1978,95 @@
         var hierWidth = width-50;
 
         var go_chart = d3.select("#"+goNameID).append("svg")
+	    .attr("id","go_chart1")
         .attr("width", hierWidth)
         .attr("height", hierHeight);
+        $('#go_chart1').css ("border", "1px solid grey");
 
-        go_chart.append('rect')
+	var hier_group = go_chart.append("svg:svg")
+  //   	.call(zoomhier.on("zoom", zoomed));
+	hier_group.selectAll("line")
+	    .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+        hier_group.selectAll("circle")
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+        hier_group.selectAll("text")
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
+
+        /*go_chart.append('rect')
           .style('fill','white')
           .style('stroke','gray')
           .attr('width',hierWidth)
           .attr('height',hierHeight)
           .attr('x',0)
-          .attr('y',0);
+          .attr('y',0);*/
 
-        update(goDetail.GO_id,go_chart,hierWidth,hierHeight);
+        update(goDetail.GO_id,hier_group,hierWidth,hierHeight);
 
       })
     }
 
-    function mouseover_group(d, i) {
+    /* function zoomed() {
+          if(zoomhier.scale()<0.5){
+            //reset zoom scale and do nothing
+             zoomhier.scale(0.5)
+          }else{
+          //  (transition ? hier_group.transition() : hier_group)
+          d3.select(this)
+    //      .attr("transform", "translate("  + 50+","+10+ " ) scale(" + zoomhier.scale() + ")");
+      .attr("transform", "translate("+zoomhier.translate()+" ) scale(" + zoomhier.scale() + ")");
+          }
+    }*/
+    function updateDetailPanelBasedOnChord(d,i){
         $('#content').empty();
-        chordLayout.classed("fade", function(p) {
-          return p.source.index != i
-              && p.target.index != i;
-        });
-        
+        var index = d.source.index+"-"+d.source.subindex;
+        var chordTempl = createChordTempl(index,d);
+        $('#content').append(chordTempl);
+        setUpDetailPanelListener();
+    }
+
+    function updateDetailPanelBasedOnGroup(i){
+        $('#content').empty();
         var detailPanelTempl = createDetailPanelTempl(i);
         $('#content').append(detailPanelTempl);
 
         setUpDetailPanelListener();
-
         createGoHierifNecessary(that.go_inf[i].GO_id);
         createGOHierForClusterGO();
 
-        changePvalPanel(d.index);
     }
+
+    function mouseover_group(d, i) {
+        //update chord layout
+        chordLayout.classed("fade", function(p) {
+          return p.source.index != i
+              && p.target.index != i;
+        });
+
+        highlight_index = i;
+        gt.transition().duration(300).style("fill", function(d,i) {
+          if(d.index == highlight_index){
+            return "black";
+          }else{
+            return "grey";
+          }
+        });
+        //update pvalue panel
+        changePvalPanel(d.index);
+
+        //updateDetailPanel
+        updateDetailPanelBasedOnGroup(i)
+
+    }
+
+    function mouseleave_group(){
+
+    }
+    
 
     function changePvalPanel(index){
         var levelElement = getPvalLevel(that.go_inf[index].pVal);
@@ -1756,36 +2086,45 @@
     function setlevelElement(element){
 
       $('#'+preElement).css("border","0");
-      $('#'+element).css("border","solid 1px red");
+      $('#'+element).css("border","solid 3px red");
       preElement = element;
 
     }
 
+   function removeDuplicatedItem3(ar) {
+    var ret = [];
 
+    ar.forEach(function(e, i, ar) {
+        if (ar.indexOf(e) === i) {
+            ret.push(e);
+        }
+    });
+
+   return ret;
+}
     function createChordTempl(index,d){
-        
-        var geneListInHtml = "<div class='gene_content'>";
-        dic[index].split("|").forEach(function(d,i){
-             var tmp = "<li>" + "<a class='gene_name'>"+ (i+1) +"."+ d + "</a> "+ "</li>";
+
+        var totalGenesNumber=removeDuplicatedItem3(that.go_inf[d.source.index].genes.concat(that.go_inf[d.source.subindex].genes)).length
+        //console.log(totalGenesNumber)
+        var geneListInHtml = "<div class='gene_content'><ol>";
+        that.dic[index].split(";").forEach(function(d,i){
+             var tmp = "<li>" + " <n class='gene_name'>"+ d + "</n> "+ "</li>";
              geneListInHtml+=tmp;
         });
-        geneListInHtml += "</div>";
+        geneListInHtml += "</ol></div>";
 
-        templ="<p>Overlapping genes between <a class='go_id'>" + that.go_inf[d.source.index].GO_id + 
-        "</a> and <a class='go_id'>" +  that.go_inf[d.source.subindex].GO_id+"</a>:\n</p>"+geneListInHtml;
+        //console.log(clusterHierData)
+        templ = "<p>Overlapping genes between <a class='go_id'>" + that.go_inf[d.source.index].GO_id + " (" + that.go_inf[d.source.index].GO_name + ")" +
+		"</a> and <a class='go_id'>" +  that.go_inf[d.source.subindex].GO_id + " (" + that.go_inf[d.source.subindex].GO_name +")" + "</a>:\n</p>"+
+		"Number of overlapping genes: "+ that.dic[index].split(";").length+"</a>\n</p>"+"</a></p>"+
+		"Percentage of overlapping genes: "+ parseInt(that.dic[index].split(";").length / totalGenesNumber*100)+"%" +"</a>\n</p>" + geneListInHtml;
+
 
         return templ;
     }
 
     function mouseover_chord(d, i) {
-        $('#content').empty();
-
-        var index = d.source.index+"-"+d.source.subindex;
-
-        var chordTempl = createChordTempl(index,d);
-
-        $('#content').append(chordTempl);
-        setUpDetailPanelListener();
+      updateDetailPanelBasedOnChord(d,i)
     }
 
 
@@ -1801,7 +2140,7 @@
                 });
         });
       }
-        
+
         $(".dropbtn").click(function () {
 
           $header = $(this);
@@ -1814,35 +2153,69 @@
 
     }
 
+    function createOnHover(num_array){
+
+      $(".dropbtn").mouseover(function (d) {
+/*        console.log($(this)[0].id);
+        console.log(d.target.id);*/
+        var num = getTargetGONum(d.target.id);
+        groupLayout.classed("highlight", function(p){
+          return p.index==num;
+        })
+
+        changePvalPanel(num);
+      });
+
+      $(".dropbtn").mouseleave(function(d){
+          var num = getTargetGONum(d.target.id);
+          groupLayout.classed("highlight",false,function(d){
+              return d.index==num;
+          });
+
+          resetPvaluePanel(num);
+      });
+
+    }
+
+    function resetPvaluePanel(index){
+      var levelElement = getPvalLevel(that.go_inf[index].pVal);
+      $('#'+levelElement).css("border","0");
+    }
+
+    function getTargetGONum(id){
+      var id_arr = id.split("_");
+      return id_arr[id_arr.length-1];
+    }
+
     function getGenesFromACluster(num){
-      var genes = "<div class='gene_content'>";
+      var genes = "<div class='gene_content'><ol>";
 
       that.go_inf[num].genes.forEach(function(d,i){
 
-           var tmp = "<li>" + (i+1) +".<n class='gene_name'>"+ d + "</n></li>";
+           var tmp = "<li>" + "<n class='gene_name'>"+ d + "</n></li>";
            genes+=tmp;
         });
 
-      genes += "</div>";
+      genes += "</ol></div>";
 
       return genes;
     }
 
-    function renderGOTerm(go_num_array){
-      var GOterms="";
+    function generateGOTermHtml(go_num_array){
+      var GOterms = "";
       var num = 0;
       var GO = "";
       for(i=0;i<go_num_array.length;i++){
-        num = go_num_array[i];
-        console.log(go_num_array);
-        console.log(num);
+        var num = go_num_array[i];
         GO = that.go_inf[num].GO_id + " " + that.go_inf[num].GO_name;
 
+        var numOfGOTerms = getNumOfGOTerms(that.go_inf[num].GO_id);
+
         var line = "<button class=\"dropbtn\""+ "id=GO_button_"+ num +">" + GO + "</button>";
-        line += "<div class=\"Go_content\">" + "<p><a class='prop-field'> P-value:</a> " + that.go_inf[num].pVal + 
-        " <p><a class='prop-field'> Num of genes: </a>"+ that.go_inf[num].count +
-        "<p><a class='prop-field'>Genes: </a>" +  getGenesFromACluster(num) + "</div>";
-        GOterms += line; 
+        line += "<div class=\"Go_content\">" + "<p><a class='prop-field'>" + ((numOfGOTerms == 1)?" P-value:</a> ":" P-value(Average):</a>")
+         + that.go_inf[num].pVal + " <p><a class='prop-field'> Num of genes: </a>"+ that.go_inf[num].count + " <p> <a class='prop-field'>Annotatino type: </a>"+ that.go_inf[i].cat+ "</p>" +
+        "<p><a class='prop-field'>Genes: </a></p>" +  getGenesFromACluster(num) + "</div>";
+        GOterms += line;
 
       }
       return GOterms;
@@ -1887,6 +2260,7 @@
         //text.transition().duration(500).text(function(d){return go_inf[d.index].GO_id;}).attr("x",8);
         groupLayout.transition().duration(500).attr("d",d3.svg.arc().innerRadius(r0).outerRadius(r1));
         chordLayout.transition().duration(500).attr("d",d3.svg.chord().radius(r0));
+        groupTexts.transition().duration(500).attr("x",8);
         //moveInHierCluster();
     }
 
@@ -1902,12 +2276,10 @@
             return true;
           }
         }
-
-
         return false;
       }
-      
-      var searchTerm = $('#filter').val(); 
+
+      var searchTerm = $('#filter').val();
 
       if(isGO(searchTerm)){//for GO
         resetVis();
@@ -1928,17 +2300,16 @@
             }
           }
         }
-        
+
 
         if(i != undefined){
 
           genes = getGenesFromACluster(i);
-        
+
           var detailPanelTempl = createDetailPanelTempl(i);
           $('#content').append(detailPanelTempl);
 
           setUpDetailPanelListener();
-
           createGoHierifNecessary(that.go_inf[i].GO_id);
 
           chordLayout.classed("fade", function(p) {
@@ -1947,18 +2318,36 @@
                 });
 
           groupLayout.transition().attr("d",
-               d3.svg.arc().innerRadius(function(d){return (d.index!=i)? r0:r0+5;}).outerRadius(
-                function(d){return (d.index!=i)? r1:r1+5;}));
+               d3.svg.arc().innerRadius(function(d){return (d.index!=i)? r0:r0+10;}).outerRadius(
+                function(d){return (d.index!=i)? r1:r1+10;}));
 
-          chordLayout.transition().attr("d",d3.svg.chord().radius(function(d){return (d.index!=i)? r0:r0+5;}));
 
-          
+          gt.transition().attr("x",function(d){
+            if(d.index==i){
+              if ((d.startAngle+d.endAngle)/2 < 3.1415)
+                return 20;
+              else
+                return -10;
+            }else{
+              return 8;
+            }
+          });
+
+          popUpList = [];
+
+          popUpList.push(parseInt(i));//for consistency between two modes
+
+          popUpHierarchy();
+
+          chordLayout.transition().attr("d",d3.svg.chord().radius(function(d){return (d.index!=i)? r0:r0+10;}));
+
+
           //moveHierCluster();
         }
       }else{//for genes
         var indexs = that.gene_info[searchTerm];
 
-        
+
         if(indexs!=undefined)
         {
 
@@ -1970,17 +2359,16 @@
 
               var num = parseInt(index_array[i]);
               num_array.push(num);
-              
+
               go_contents.push(num);
             }
 
-            if(go_contents > 1){//only sort if two go and more exist
+            if(go_contents.length > 1){//only sort if two go and more exist
               sortGOcontent(go_contents);
             }
-            
-            console.log(go_contents);
 
-            $('#content').append(renderGOTerm(go_contents));
+
+            $('#content').append(generateGOTermHtml(go_contents));
             $('.dropbtn').css("width",detailPanelWidth-50);
 
             $('.gene_name').click(function(){
@@ -1989,63 +2377,297 @@
             });
 
             createOnClick(num_array);
+            createOnHover(num_array);
 
-            var arrayList=[];
+            popUpList=[];
             for(i in index_array){
               var num = parseInt(index_array[i]);
-              arrayList.push(num);
+              popUpList.push(num);
             }
 
             groupLayout.transition().attr("d",
-                 d3.svg.arc().innerRadius(function(d){return (arrayList.indexOf(d.index)==-1)? r0:r0+5;}).outerRadius(
-                  function(d,i){return (arrayList.indexOf(d.index)==-1)? r1:r1+5;}));
+                 d3.svg.arc().innerRadius(function(d){return (popUpList.indexOf(d.index)==-1)? r0:r0+5;}).outerRadius(
+                  function(d,i){return (popUpList.indexOf(d.index)==-1)? r1:r1+5;}));
 
-            chordLayout.transition().attr("d",d3.svg.chord().radius(function(d){return (arrayList.indexOf(d.index)==-1)? r0:r0+5;}));
+            gt.transition().attr("x",function(d){
+              if(popUpList.indexOf(d.index)!=-1){
+                if ((d.startAngle+d.endAngle)/2 < 3.1415)
+                  return 20;
+                else
+                  return -10;
+              }else{
+                return 8;
+              }
+            });
 
-         /*   if(arrayList.length!=0)
+            popUpHierarchy();
+
+            chordLayout.transition().attr("d",d3.svg.chord().radius(function(d){return (popUpList.indexOf(d.index)==-1)? r0:r0+5;}));
+
+         /*   if(popUpList.length!=0)
               moveOutHierCluster();*/
         }
         else{
           resetVis();
-         
+          resetHierarchy();
+          popUpList= [];
+
+
         }
       }
+    }
+
+    function popUpArcs(){
+      clusterArc
+        .style("fill", "green")
+        .attr("class","clusterArc")
+        .transition()
+        .duration(300)
+        .attr("d",function(d){
+
+            var arc = d3.svg.arc()
+              .innerRadius(d["radius"]+15)
+              .outerRadius(d["radius"]+16)
+              .startAngle(d["startAngle"])
+              .endAngle(d["endAngle"]);
+
+            return arc();
+        });
+    }
+
+    function resetArcs(){
+      clusterArc
+        .style("fill", "green")
+        .attr("class","clusterArc")
+        .transition()
+        .duration(300)
+        .attr("d",function(d){
+
+            var arc = d3.svg.arc()
+              .innerRadius(d["radius"]+10)
+              .outerRadius(d["radius"]+11)
+              .startAngle(d["startAngle"])
+              .endAngle(d["endAngle"]);
+
+            return arc();
+        });
+    }
+
+    function popUpLines(){
+      clusterLine1
+        .style("fill", "green")
+        .attr("class","clusterLine")
+        .transition()
+        .duration(300)
+        .attr("d",function(d){
+
+            var firstLine = d3.svg.arc()
+            .innerRadius((d["index"]>nodesSize)?d["LineInnerPosition"]+10:d["LineInnerPosition"])
+            .outerRadius(d["LineOuterPosition"]+10)
+            .startAngle(d["LineAngle"])
+            .endAngle(d["LineAngle"]+0.002);
+
+            return firstLine();
+        });
+
+      clusterLine2
+        .style("fill", "green")
+        .attr("class","clusterLine")
+        .transition()
+        .duration(300)
+        .attr("d",function(d){
+
+          var secondLine = d3.svg.arc()
+            .innerRadius((d["index"]>nodesSize)?d["LineInnerPosition"]+10:d["LineInnerPosition"])
+            .outerRadius(d["LineOuterPosition"]+10)
+            .startAngle(d["LineAngle"])
+            .endAngle(d["LineAngle"]+0.002);
+
+            return secondLine();
+        });
+    }
+
+    function resetLines(){
+      clusterLine1
+        .style("fill", "green")
+        .attr("class","clusterLine")
+        .transition()
+        .duration(300)
+        .attr("d",function(d){
+
+            var firstLine = d3.svg.arc()
+            .innerRadius((d["index"]>nodesSize)?d["LineInnerPosition"]+5:d["LineInnerPosition"])
+            .outerRadius(d["LineOuterPosition"]+5)
+            .startAngle(d["LineAngle"])
+            .endAngle(d["LineAngle"]+0.002);
+
+            return firstLine();
+        });
+
+      clusterLine2
+        .style("fill", "green")
+        .attr("class","clusterLine")
+        .transition()
+        .duration(300)
+        .attr("d",function(d){
+
+          var secondLine = d3.svg.arc()
+            .innerRadius((d["index"]>nodesSize)?d["LineInnerPosition"]+5:d["LineInnerPosition"])
+            .outerRadius(d["LineOuterPosition"]+5)
+            .startAngle(d["LineAngle"])
+            .endAngle(d["LineAngle"]+0.002);
+
+            return secondLine();
+        });
+    }
+
+    function popUpClusterNodes(){
+      clusterHierNodeView.transition().duration(300).attrTween("transform", tween).attr("class","clusterNodeView");
+      clusterHierNodeTextView.transition().duration(300).attrTween("transform", tween).attr("class","clusterText");
+
+      function tween(d, i, a) {
+              var interpolate;
+              var str;
+              //console.log("popup")
+              str = "rotate(" + $('[index='+d.index+']')[0].getAttribute("value") + ")"
+              //str = "rotate(" + (d["angle"] * 180 / Math.PI - 90) + ")"
+               + "translate(" + ( d["radius"] + 10 ) + ",0)";
+              interpolate = d3.interpolate(a,str);
+
+
+              return function(t) {
+                  return interpolate(t);
+              };
+      }
+    }
+
+    function resetClusterNodes(){
+      clusterHierNodeView.transition().duration(300).attrTween("transform", tween).attr("class","clusterNodeView");
+      clusterHierNodeTextView.transition().duration(300).attrTween("transform", tween).attr("class","clusterText");
+      console.log("reset")
+      function tween(d, i, a) {
+              var interpolate;
+              var str;
+
+              str = "rotate(" + $('[index='+d.index+']')[0].getAttribute("value") + ")"
+              //str = "rotate(" + (d["angle"] * 180 / Math.PI - 90) + ")"
+               + "translate(" + ( d["radius"] + 5 ) + ",0)";
+              interpolate = d3.interpolate(a,str);
+
+
+              return function(t) {
+                  return interpolate(t);
+              };
+      }
+    }
+
+    function popUpHierarchy(){
+      popUpArcs();
+      popUpLines();
+      popUpClusterNodes();
+    }
+
+    function resetHierarchy(){
+      resetArcs();
+      resetLines();
+      resetClusterNodes();
     }
 
     function drawLable(){
 
       labelOff = 0;
 
-      clusterArc.style("display","none");
-      clusterLine1.style("display","none");
-      clusterLine2.style("display","none");
-      clusterHierNodeView.style("display","none");
-      clusterHierNodeTextView.style("display","none");
-      groupText.style("display","")
+
 
       updateLabel();
     }
 
     function updateLabel(){
-      groupText.remove();
+      // groupText.remove();
+      var node_angle=[];
+      var translate_value=[];
+      var label_angle;
+      var last_label_angle
+      var clusternode=$('.clusterNodeView');
+        for (var i=0;i<clusternode.length;i++)
+        {
+            node_angle.push(clusternode[i].getAttribute("value"));
+            translate_value.push(clusternode[i].getAttribute("translate_value"));
+        }
+      gt.remove()
 
-      groupText = circleSvg.append("svg:g")
-            .selectAll("g")
-            .data(chord.groups)
-            .enter().append("svg:g")
-            .attr("transform", function(d) {
-            return "rotate(" + ((d.startAngle+d.endAngle)/2 * 180 / Math.PI - 90) + ")"
-               + "translate(" + r1 + ",0)";
-            }).append("svg:text")
-            .attr("x", 8)
-            .attr("dy", ".45em")
-            .attr("text-anchor", function(d) {
-             return (d.startAngle+d.endAngle)/2 > Math.PI ? "end" : null;
-            })
-            .attr("transform", function(d) {
-             return (d.startAngle+d.endAngle)/2 > Math.PI ? "rotate(180)translate(-16)" : null;
-            })
-            .text(function(d) {return (typeof that.go_inf[d.index].GO_id == "string")? that.go_inf[d.index].GO_name:getMaxLabel(that.go_inf[d.index].GO_name)+"+"});
+      gt = groupTexts.selectAll("g")
+             .data(chord.groups)
+           .enter().append("svg:g").attr("class","labeltext");
+
+      gt
+        .attr("transform", function(d) {
+        label_angle=(d.startAngle+d.endAngle)/2 * 180 / Math.PI - 90+2;
+        var node_angle2=[];
+        var index;
+        var node_angle1=node_angle.map(function(t){
+            return t-label_angle;});
+
+        for (i=0;i<node_angle1.length;i++)
+        {
+         if (Math.abs(node_angle1[i]) < 4)
+         node_angle2.push(i);
+        }
+
+        if(node_angle2.length!=0)
+        {
+        if (Math.abs(label_angle-last_label_angle)>=5)
+        {
+        for (i=0;i<node_angle2.length;i++)
+        {
+
+        index=node_angle2[i]
+        //node_angle1[index]>0?node_angle[index]-=-3:node_angle[index]-=3;
+
+        node_angle1[index]>0?node_angle[index]-=-(4.1-node_angle1[index]):node_angle[index]-=4.1+node_angle1[index];
+
+
+        $('.clusterNodeView')[index].setAttribute("transform","rotate(" + node_angle[index] + ")"+ "translate(" + translate_value[index] + ",0)");
+        $('.clusterNodeView')[index].setAttribute("value",node_angle[index]);
+        }
+        }
+        }
+        last_label_angle=label_angle
+        return "rotate(" + label_angle + ")"
+           + "translate(" + (r1 + 0) + ",0)";
+        }).append("svg:text")
+        .attr("x", function(d){
+          if(popUpList.indexOf(d.index)!=-1){
+            if ((d.startAngle+d.endAngle)/2 < 3.1415)
+              return 20;
+            else
+              return -10;
+          }else{
+            return 8;
+          }
+        })
+        .attr("dy", ".45em")
+        .attr("text-anchor", function(d) {
+         return (d.startAngle+d.endAngle)/2 > Math.PI ? "end" : null;
+        })
+        .attr("transform", function(d) {
+         return (d.startAngle+d.endAngle)/2 > Math.PI ? "rotate(180)translate(-16)" : null;
+        })
+        .text(function(d) {
+         if(that.go_inf[d.index].cat in annotation_manual)
+         {
+             var annotation=annotation_manual[that.go_inf[d.index].cat];
+             var text1= (d.startAngle+d.endAngle)/2 > Math.PI ?that.go_inf[d.index].GO_name+"  "+annotation:annotation+"  "+that.go_inf[d.index].GO_name;
+             return (typeof that.go_inf[d.index].GO_id == "string")? text1:getMaxLabel(that.go_inf[d.index].GO_name)+"+";
+         }
+         else if(that.go_inf[d.index].cat!=undefined)
+         {
+           var text1= (d.startAngle+d.endAngle)/2 > Math.PI ?that.go_inf[d.index].GO_name+"  ["+that.go_inf[d.index].cat.slice(7,9)+"]  ":"  ["+that.go_inf[d.index].cat.slice(7,9)+"]  "+that.go_inf[d.index].GO_name;
+           return (typeof that.go_inf[d.index].GO_id == "string")? text1:getMaxLabel(that.go_inf[d.index].GO_name)+"+";
+         }
+
+        //return (typeof that.go_inf[d.index].GO_id == "string")? that.go_inf[d.index].GO_name:getMaxLabel(that.go_inf[d.index].GO_name)+"+"});
+    });
     }
 
     function getMaxLabel(d){
@@ -2061,18 +2683,33 @@
       return d[position];
     }
 
+    function drawPopUpHierarchy(){
+      setUpElementIfNecessary();
+      popUpHierarchy();
+    }
+
+    function setUpElementIfNecessary(){
+        drawHierarchicalClustering(clusterHierData);
+    }
+
     function drawHierCluster(){
       labelOff = 1;
-      clusterArc.style("display","");
-      clusterLine1.style("display","");
-      clusterLine2.style("display","");
-      clusterHierNodeView.style("display","");
-      clusterHierNodeTextView.style("display","");
+      // clusterArc.style("display","");
+      // clusterLine1.style("display","");
+      // clusterLine2.style("display","");
+      // clusterHierNodeView.style("display","");
+      // clusterHierNodeTextView.style("display","");
 
 
-      groupText.style("display","none");
+      // groupText.style("display","none");
 
-      drawHierarchicalClustering(clusterHierData);
+      if(popUpList.length != 0){
+        drawPopUpHierarchy();
+      }else{
+        drawHierarchicalClustering(that.clusterHierData);
+      }
+
+
       if(textBackground){
         if(zoom.scale()<0.7){
             textBackground.attr("visibility","hidden");
@@ -2094,9 +2731,10 @@
     }
 
     function toggleControl(){
+
       $('#arrow_controlPanel').css('transform', function(){ return control_opened ? 'rotate(180deg)' : 'rotate(0deg)'});
-      
-      var shiftleft = controlPanelWidth - 20;
+
+      var shiftleft = controlPanelWidth + 30;
       $('#control-panel').css('margin-left', function(){ return control_opened ? '-' + shiftleft+ 'px' : '0'});
       control_opened = !control_opened;
     }
@@ -2114,43 +2752,59 @@
 
     function movePvalPanel(details_opened){
       if(!details_opened){
-        d3.select(".pval-label").transition().duration(300).style("margin-left",-190);
+        d3.select(".pval-label").transition().duration(300).style("margin-left",-210);
       }else{
-        d3.select(".pval-label").transition().duration(300).style("margin-left",-660);
+        d3.select(".pval-label").transition().duration(300).style("margin-left",-detailPanelWidth-160);
       }
     }
 
     function setUpControlPanel(){
 
-      var element = '<label style="font-size:16px">Cluster GO term according to the minimum number of common gene(s)</label> \
-          <div id="slider" class="sliderBar"></div>\
-          <input type="text" id="input_slider"/>\
-            <table class="RadioBox">\
-            <tbody><tr><td>\
-                  <input id="labelRadioBox" class="radioButton" type="radio" name="radioBox" value="0" checked>\
-                </td><td><label for="labelRadioBox">Show GO term name</label>\
-                </td></tr><tr><td></td></tr><tr><td>\
-                  <input id="hierClusterRadioBox"  class="radioButton" type="radio" name="radioBox" value="1" >\
-                </td><td>\
-                   <label style="width:300px;" for="hierClusterRadioBox">Show hierarchical tree and click on the node to manually cluster the GO term</label>\
-                </td></tr></tbody></table>';
+      if (reloadData == false){
+          var element = '&nbsp<label>Cluster GO term according to the minimum number of common gene(s)</label> \
+              <div id="slider" class="sliderBar"></div>\
+              <input type="text" id="input_slider"/>';
+                // <table class="RadioBox">\
+                // <tbody><tr><td>\
+                //       <input id="labelRadioBox" class="radioButton" type="radio" name="radioBox" value="0" checked>\
+                //     </td><td><label style="padding-left:10px" for="labelRadioBox">Show GO term name</label>\
+                //     </td></tr><tr><td></td></tr><tr><td>\
+                //       <input id="hierClusterRadioBox"  class="radioButton" type="radio" name="radioBox" value="1" >\
+                //     </td><td>\
+                //        <label style="width:300px;padding-left:10px" for="hierClusterRadioBox">Show hierarchical tree and click on the node to manually cluster the GO term</label>\
+                //     </td></tr></tbody></table>';
 
-      //add save image button
-      element += '<button id="editor_save" class="btn" z-index:100">Save image</button>';
+          //add save image button
+          element += '<div class="control-panel-button">';
+          element //+= '<button id="editor_save" class="btn " z-index:100">Save image</button>';
+          element+='<button type="button" id="editor_save" class="btn dropdown-toggle" data-toggle="dropdown">Save image    <span class="caret"></span></button>'
+          element+=	'<ul class="dropdown-menu" role="menu">';
+          //element+='<button id="export" class="btn" z-index:100">pdf</button></ul>';
+    		  element+='<li><a href="" id="PDF">PDF</a></li>'
+    		  element+='<li><a href="" id="PNG">PNG</a></li>'
+    		  element+='<li><a href=""id="SVG">SVG</a></li></ul>'
+          element+=  '<button id="export" class="btn" z-index:100">Export File</button>';
+          element+=  '<input type="file" id="import" style="display: none"> <label for="import" class="btn" id="import_label">Import File</label>'
 
-      //add toggle button
-      element +=  '<button id="arrow_controlPanel" class="arrowBar arrow"></button>';
+          // element +=  '<input id="import" type="file" class="btn" z-index:100"></input>';
+          element += '</div>';
+          //add toggle button
+          element +=  '<button id="arrow_controlPanel" class="arrowBar arrow"></button>';
 
+        $("#control-panel").append(element);
 
+      }
 
-      $("#control-panel").append(element);
-      var ranger = document.getElementById('slider');
+      that.ranger = document.getElementById('slider');
       var inputFormat = document.getElementById('input_slider');
-      setUpRangeSlider(ranger,inputFormat,minNumOfOverlappingGens,maxNumOfOverlappingGens);
+      setUpRangeSlider(inputFormat,that.minNumOfOverlappingGens,that.maxNumOfOverlappingGens);
     }
 
-    function setUpRangeSlider(ranger,inputFormat,minNumOfOverlappingGens,maxNumOfOverlappingGens){
-      noUiSlider.create(ranger, {
+    function setUpRangeSlider(inputFormat,minNumOfOverlappingGens,maxNumOfOverlappingGens){
+      if(that.ranger.noUiSlider)
+        that.ranger.noUiSlider.destroy();
+
+      noUiSlider.create(that.ranger, {
         start: [ maxNumOfOverlappingGens+1 ], // Handle start position
         step: 1, // Slider moves in increments of '10'
         margin: 0, // Handles must be more than '20' apart
@@ -2163,12 +2817,12 @@
         }
       });
 
-      ranger.noUiSlider.on('update',function(values,handle){
-          inputFormat.value = values[handle];
+      that.ranger.noUiSlider.on('update',function(values,handle){
+          inputFormat.value = parseInt(values[handle] );
       });
 
-      ranger.noUiSlider.on('change', function( values, handle ) {
-          var level = getLevelFromNumOfOverlappingGenes(inputFormat.value);
+      that.ranger.noUiSlider.on('change', function( values, handle ) {
+          var level = getLevelFromNumOfOverlappingGenes(values.toString());
           getClusterNodesIndexBeingSelected(level);
 
           //temporary fix
@@ -2177,7 +2831,7 @@
       });
 
       inputFormat.addEventListener('change',function(){
-          ranger.noUiSlider.set(this.value);
+          that.ranger.noUiSlider.set(this.value);
           var level = getLevelFromNumOfOverlappingGenes(this.value);
           getClusterNodesIndexBeingSelected(level);
 
@@ -2186,7 +2840,24 @@
       });
     }
 
-    function setUpListener(){
+    function getRidOfFadeLines(svg){
+        return svg.replace(/<path class="chord fade" d="[,-\d\s\w\.]*" id="chordChords"><\/path>/g, "");
+    }
+
+    function enlargeSVG(svg){
+      var re = /<svg class="main_vis" width="(\d+)" height="(\d+)" version="1.1" xmlns="http:\/\/www.w3.org\/2000\/svg"><g id="circle" transform="translate\(([0-9]*\.[0-9]+),([0-9]*\.[0-9]+)\)">/g;
+
+      function converter(str, p1,p2,p3,p4, offset, s){
+        p1 = parseInt(p1) + 200;
+        p2 = parseInt(p2) + 200;
+        p3 = parseFloat(p3) + 100;
+        p4 = parseFloat(p4) + 100;
+        return '<svg class="main_vis" width="'+ p1 + '" height="' + p2 + '" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="circle" transform="translate('+ p3 + ','+ p4 +')">'
+      }
+      return svg.replace(re,converter);
+    }
+
+    function setUpListener(monago){
       $('#filter').keydown(function(event){
         if(event.which == 13){
           refreshDetailPanel();
@@ -2200,13 +2871,16 @@
         $('#searchBox').remove();
       });
 
-      $('#arrow_detailedPanel').click(function(){
-        toggleDetails();
-      });
+      if (reloadData == false){
+        $('#arrow_detailedPanel').click(function(){
+          toggleDetails();
+        });
 
-      $('#arrow_controlPanel').click(function(){
-        toggleControl();
-      });
+        $('#arrow_controlPanel').click(function(){
+          toggleControl();
+        });
+      }
+
 
       $('.radioButton').change(function(){
         switch(this.value) {
@@ -2216,54 +2890,239 @@
               case "1" :
                   drawHierCluster();
                   break;
-          }            
+          }
       });
 
       $("#editor_save").click(function() {
+      $('.dropdown-menu').slideToggle();
 
-          var svg = d3.select('.main_vis')
-                    .attr("version", 1.1)
-                    .attr("xmlns", "http://www.w3.org/2000/svg")
-                    .node().parentNode.innerHTML;
+          // d3.select("canvas").attr("width",w).attr("height",h);
 
-          var imgsrc = 'data:image/svg+xml;base64,'+ btoa(svg);
+          // var svg = d3.select('.main_vis')
+          //           .attr("version", 1.1)
+          //           .attr("xmlns", "http://www.w3.org/2000/svg")
+          //           .node().parentNode.innerHTML;
 
-          var canvas = document.querySelector("canvas");
-          var context = canvas.getContext("2d");
 
-          var image = new Image();
-          image.src = imgsrc;
+          // svg_data = getRidOfFadeLines(svg);
+          // svg_data = enlargeSVG(svg_data);
+/*          post("/getPic", {
+              filename: 'chart',
+              svg: svg_data
+          }, null);*/
 
-          image.onload = function() {
-            //clean the context for redrawing
-            context.clearRect(0, 0, canvas.width, canvas.height);
+          //(1) save high resolution png, fast, small size
+  //      saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 5});
 
-            context.drawImage(image, 0, 0);
+          //(2) save pdf , slow, large file.
+          // svgAsPngUri(document.getElementById("main_vis"),{scale: 3},function(data){
+          //     var doc = new jsPDF();
+          //     doc.addImage(data, 'PNG', 0, 0, 250, 250/widthToheightRatio);
+          //     doc.save('pic.pdf');
+          // })
 
-            var canvasdata = canvas.toDataURL("image/png");
+          // var imgsrc = 'data:image/svg+xml;base64,'+ btoa(svg_data);
 
-            var a = document.createElement("a");
-            a.download = "sample.png";
-            a.href = canvasdata;
-            a.click();
-          };
+          //save as pdf
+          // var doc = new jsPDF()
+          // doc.addImage(imgsrc, 'JPEG', 0, 0, 1350, 750);
+          // doc.save('pic.pdf');
+          // //console.log(svg);
+
+          // var canvas = document.querySelector("canvas");
+          // var context = canvas.getContext("2d");
+
+          // var image = new Image();
+          // image.src = imgsrc;
+
+          // image.onload = function() {
+          //   //clean the context for redrawing
+
+          //   context.clearRect(0, 0, w, h);
+
+          //   context.drawImage(image, 0, 0);
+
+          //   var canvasdata = canvas.toDataURL("image/png");
+
+
+          //a way to save as png, need server
+          //   // var a = document.createElement("a");
+          //   // a.download = "chart.png";
+          //   // a.href = canvasdata;
+          //   // a.click();
+          //   // post("/getPic", {
+          //   //     filename: 'chart',
+          //   //     png: canvasdata
+          //   // }, null);
+
+          // };
+
+          //save as svg
+          // var svgBlob = new Blob([svg_data], {type:"image/svg+xml;charset=utf-8"});
+          // var svgUrl = URL.createObjectURL(svgBlob);
+          // var downloadLink = document.createElement("a");
+          // downloadLink.href = svgUrl;
+          // downloadLink.download = "newesttree.svg";
+          // document.body.appendChild(downloadLink);
+          // downloadLink.click();
+          // document.body.removeChild(downloadLink);
+
 
         });
+       $('#PNG').click(function(){
+       saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 5});
+       });
+       $('#PDF').click(function(){
+        svgAsPngUri(document.getElementById("main_vis"),{scale: 3},function(data){
+        var doc = new jsPDF();
+        doc.addImage(data, 'PNG', 0, 0, 250, 250/widthToheightRatio);
+        doc.save('pic.pdf');
+         })
+
+       });
+       $('#SVG').click(function(){
+        saveSvg(document.getElementById("main_vis"), "diagram.svg", {scale: 2});
+       });
+      $('#export').click(function(){
+
+          nodeCollapse = $("#input_slider").val()
+
+          var save_file = "{\"size\":" + size + "," + "\"go_inf\":" + JSON.stringify(that.MonaGOData.go_inf) + "," + "\"clusterHierData\":" +JSON.stringify(that.MonaGOData.clusterHierData)
+          + "," + "\"matrix\":" + JSON.stringify(that.MonaGOData.matrix) + "," +"\"array_order\":" + JSON.stringify(that.MonaGOData.array_order) + "," + "\"goNodes\":" + JSON.stringify(goNodes)
+          + "," + "\"groupSize\":" + JSON.stringify(that.MonaGOData.groupSize) + "," + "\"nodeCollapse\":" + nodeCollapse
+          + "," + "\"clickCollapseNodeArr\":" + JSON.stringify(that.clickCollapseNodeArr) + "}";
+
+            post("/export", {
+                filename: 'file',
+                file: save_file
+            }, null);
+      });
+
+      $('#import').click(function(){
+
+            function readSingleFile(evt) {
+            //Retrieve the first (and only!) File from the FileList object
+            var f = evt.target.files[0];
+
+            if (f) {
+              var r = new FileReader();
+
+<<<<<<< HEAD
+              r.onload = function(e) { 
+                var contents = e.target.result;
+                console.log(contents) 
+=======
+              r.onload = function(e) {
+                var contents = e.target.result;
+>>>>>>> refs/remotes/origin/master
+                monago.reload(contents);
+              }
+              r.readAsText(f);
+            } else {
+              alert("Failed to load file");
+            }
+          }
+
+        document.getElementById('import').addEventListener('change', readSingleFile, false);
+      })
     }
 
+    function mextend (a, b) {
+          var n;
+          if (!a) {
+              a = {};
+          }
+          for (n in b) {
+              a[n] = b[n];
+          }
+          return a;
+    };
+
+
+    function mcss(el, styles) {
+          // if (H.isMS && !H.svg) { // #2686
+          //     if (styles && styles.opacity !== undefined) {
+          //         styles.filter = 'alpha(opacity=' + (styles.opacity * 100) + ')';
+          //     }
+          // }
+          mextend(el.style, styles);
+      };
+
+    function createElement(tag, attribs, styles, parent, nopad) {
+            var el = window.document.createElement(tag),
+                css = mcss;
+            if (attribs) {
+                mextend(el, attribs);
+            }
+            if (nopad) {
+                css(el, {
+                    padding: 0,
+                    border: 'none',
+                    margin: 0
+                });
+            }
+            if (styles) {
+                css(el, styles);
+            }
+            if (parent) {
+                parent.appendChild(el);
+            }
+            return el;
+    };
+
+    // Add the H.post utility
+    function post(url, data, formAttributes) {
+
+        var name,
+            form;
+
+        // create the form
+        form = createElement('form', {
+            method: 'post',
+            action: url,
+            enctype: 'multipart/form-data'
+        }, {
+            display: 'none'
+        }, window.document.body);
+
+        // add the data
+        for (name in data) {
+            createElement('input', {
+                type: 'hidden',
+                name: name,
+                value: data[name]
+            }, null, form);
+        }
+
+        // submit
+        form.submit();
+
+        // clean up
+        discardElement(form);
+    };
+
+
+    function discardElement(element) {
+      element.remove();
+    };
+
+
     function setUpView(){
+
+      if(main_div)
+        main_div.remove();
 
       main_div = d3.select("#chart").append("div");
 
       $("#details").css("width",detailPanelWidth);
-      $("#pval-label").css("margin-left",-detailPanelWidth-150);
-      $("#control-panel").css("width",controlPanelWidth);
+      $("#pval-label").css("margin-left",-detailPanelWidth-160);
+      $("#control-panel").css("width",controlPanelWidth+50);
       $("#control-panel").css("height",controlPanelHeight);
-
 
       svg = main_div
        .append("svg:svg")
          .attr("class","main_vis")
+         .attr("id","main_vis")
          .attr("width", w)
          .attr("height", h)
          .call(zoom.on("zoom", redraw))
@@ -2273,7 +3132,7 @@
          .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
 
       circleSvg.append("circle").attr("r",r0).style("opacity", "0");
-      
+
       clusterArc = circleSvg.append("svg:g")
          .selectAll("g")
            .data(clusterHierData)
@@ -2288,6 +3147,12 @@
        .selectAll("g")
          .data(clusterHierData)
        .enter().append("path");
+
+      groupTexts = circleSvg.append("svg:g")
+
+      gt = groupTexts.selectAll("g")
+             .data(chord.groups)
+        .enter().append("svg:g")
 
       clusterHierNodeView = circleSvg.append("svg:g")
        .selectAll("g")
@@ -2312,10 +3177,7 @@
          .attr("id","chordGroups")
          .on("mouseover", mouseover_group);
 
-      groupText = circleSvg.append("svg:g")
-           .selectAll("g")
-             .data(chord.groups)
-            .enter().append("svg:g");
+
 
       that.go_inf.map(function(d){
         if(goLabelSize[d.GO_name] == undefined){
@@ -2330,11 +3192,12 @@
 
       chordLayout = chordElements
             .attr("class", "chord")
-            //.style("fill", function(d) { return fill(d.source.index%10); })
+            .style("fill", function(d) { return "#A0A0A0"; })
             //.style("opacity",".5")
             .attr("d", d3.svg.chord().radius(r0))
             .attr("id","chordChords")
-            .on("mouseover", mouseover_chord);
+            .on("mouseover", mouseover_chord)
+            .on("click",click_chord);
 
       setUpControlPanel();
     }
@@ -2348,20 +3211,8 @@
 
     }
 
-    this.init = function(size,go_inf,clusterHierData){
-
-      that.go_inf = go_inf;
-      that.go_inf_ori = copyGOInfFrom(go_inf);
-
-      clusterHierData.map(function(d){
-        clusterHierDataStatic.push([d[2],d[3]]);
-      });
-
-      that.go_inf.forEach(function(d,i){
-        that.go_inf[i].genes = d.genes.split("|");
-      });
-
-
+    function perparePvalue(){
+      seperated_points = [];
       maxpVal = getMaxPval();
       minpVal = getMinPval();
 
@@ -2369,41 +3220,156 @@
 
       step = (maxpVal-minpVal)/10;
 
+      for(i=0;i<11;i++){
+        seperated_points.push(minpVal+step*i);
+      }
+    }
+
+    function perpareChord(){
       chordMatrix = d3.layout.chord()
        .padding(.03)
        .sortSubgroups(d3.descending);
-       
-      chord = chordMatrix.matrix(matrix);
+
+
+      chord = chordMatrix.matrix(that.matrix).groupSize(that.groupSize);
 
       //store the nodes for hierarchical clustering visualzaition
+      chordGroupsNodePosition = [];
       chord.groups().forEach(function(d,i){
         nodeObj = {"index":d.index,"angle":(d.startAngle+d.endAngle)/2,"radius":r1};
         chordGroupsNodePosition.push(nodeObj);
       });
-       
-      for(i=0;i<11;i++){
-        seperated_points.push(minpVal+step*i);
-      }
+    }
 
-      that.gene_info = createGeneInfo();
-      that.dic = createInteractionGenes();
+    function clusterGO(nodeCollapse){
+      var level = getLevelFromNumOfOverlappingGenes(nodeCollapse);
+      getClusterNodesIndexBeingSelected(level);
+
+      $("#input_slider").val(nodeCollapse);
+      that.ranger.noUiSlider.set(nodeCollapse);
+    }
+
+    this.init = function(size,go_inf,array_order,clusterHierData,goNodes,matrix){
+
+      that.go_inf = go_inf;
+      that.goNodes = goNodes;
+      that.go_inf_ori = copyGOInfFrom(go_inf);
+      that.matrix = matrix;
+      //console.log(matrix)
+      go_inf.forEach(function(d){
+        that.groupSize.push(d.count);
+      })
+
+      that.clusterHierData = clusterHierData;
+      //console.log(clusterHierData)
+
+      that.maxNumOfOverlappingGens = that.clusterHierData[0][3];
+      that.minNumOfOverlappingGens = that.clusterHierData[that.clusterHierData.length-1][3];
+
+      that.clusterHierData.map(function(d){
+        that.clusterHierDataStatic.push([d[2],d[3]]);
+      });
+
+      //get a list of genes for each GO term
+      that.go_inf.forEach(function(d,i){
+        that.go_inf[i].genes = d.genes.split(";");
+      });
+
+      that.MonaGOData = {"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData}
+
+      perparePvalue();
+
+      perpareChord();
+
+      createGeneInfo();
+      createInteractionGenes();
 
       createPvalLabelPanel(fill);
       createClusterNodesStatus(clusterHierData,[],"",[]);
       setUpView();
       determineLabelSize();
-      drawLable();
-      setUpListener();
       
+      drawHierCluster();
+      drawLable();
+
+      setUpListener(that);
+      
+    }
+
+    this.reload = function(content){
+      reloadData = true;
+      that.level_g = 0;
+
+      var content = JSON.parse(content);
+
+      that.go_inf = content["go_inf"];
+      that.goNodes = content["goNodes"];
+      that.go_inf_ori = copyGOInfFrom(that.go_inf);
+      that.matrix = content["matrix"];
+      that.groupSize = content["groupSize"];
+      that.nodeCollapse = content["nodeCollapse"];
+      that.clickCollapseNodeArr = content["clickCollapseNodeArr"]
+
+      //array_order = content["array_order"];
+
+      nodesSize = content["size"];
+      maxNodeIndex = content["size"];
+
+      that.clusterHierData = content["clusterHierData"];
+      that.maxNumOfOverlappingGens = that.clusterHierData[0][3];
+      that.minNumOfOverlappingGens = that.clusterHierData[that.clusterHierData.length-1][3];
+
+
+      that.clusterHierDataStatic = [];
+      clusterHierNodesStatus = [];
+      that.memCache = {};
+
+      that.clusterHierData.map(function(d){
+        that.clusterHierDataStatic.push([d[2],d[3]]);
+      });
+
+      perparePvalue();
+
+      perpareChord();
+
+      createGeneInfo();
+      createInteractionGenes();
+
+      createPvalLabelPanel(fill);
+      createClusterNodesStatus(that.clusterHierData,[],"",[]);
+      setUpView();
+      determineLabelSize();
+
+      clusterArc.remove()
+      clusterLine2.remove()
+      clusterLine1.remove()
+
+      
+      drawHierCluster();
+      drawLable();
+
+      setUpListener();
+
+      if (that.clickCollapseNodeArr.length != 0){
+        that.clickCollapseNodeArr.forEach(function(d){
+          result = collapseMonaGO(d);
+          updateMoanaGOLayout(result);
+          updateLabel();
+        })
+      }
+
+      if (that.nodeCollapse < that.maxNumOfOverlappingGens+1){
+        clusterGO(that.nodeCollapse)
+      }
+
     }
 
   }
 
-  new MonaGO().init(size,go_inf,clusterHierData);
+  monago = new MonaGO().init(size,go_inf,array_order,clusterHierData,goNodes,matrix);
 
 
 })();
-
 
 
 

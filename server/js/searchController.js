@@ -1,5 +1,12 @@
-var app = angular.module('MonaGO', []);
 
+var app = angular.module('MonaGO', []);
+if (size == 0){
+    var go_inf = content["go_inf"]
+    var array_order = content["array_order"]
+    var clusterHierData = content["clusterHierData"]
+    var goNodes = content["goNodes"]
+    var matrix = content["matrix"]
+}
 app.constant('go_inf', go_inf);
 
 app.controller('searchCtrl', ['$scope', 'go_inf', function($scope,go_inf) {
@@ -23,6 +30,8 @@ app.controller('searchCtrl', ['$scope', 'go_inf', function($scope,go_inf) {
         })
         
     });
+
+    //}
     
     $scope.isNotEmpty = function(searchText){
 
@@ -50,4 +59,5 @@ app.controller('searchCtrl', ['$scope', 'go_inf', function($scope,go_inf) {
         }, 100);
  
     }
+
 }]);

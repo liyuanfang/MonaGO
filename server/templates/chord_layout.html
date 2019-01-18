@@ -1,4 +1,7 @@
 <html ng-app="MonaGO">
+<head>
+<title>MonaGO: Gene Ontology Enrichment Analysis Visualisation from Monash University</title>
+</head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/x-icon" href="data:image/png;base64,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">
 
@@ -25,7 +28,7 @@
 	<div style ="position: absolute;">
      
 	    <div id="content">
-	      <p>The visualisation on the left will help you to explore all the intersection between different GO terms(Data comes from <a href="https://david.ncifcrf.gov" target="_blank">DAVID</a>)</p>
+	      <p>The visualisation on the left will help you to explore all the intersection between different GO terms (Data comes from <a href="https://david.ncifcrf.gov" target="_blank">DAVID</a>)</p>
 	      
 	    </div>
 	    
@@ -38,14 +41,14 @@
 
 <div>
   <div id = "pval-label" class="pval-label"></div>
-  <a href="http://127.0.0.1:5000/index" class = "backToIndexImg" alt="Go back to home page"><img  src = "img/logo.png"/></a>
+  <a href="/" class = "backToIndexImg" alt="Go back to home page"><img  src = "img/logo.png"/></a>
   <div id = "control-panel"></div>
   
 </div>
 
 </div>
 
-<canvas width="1920" height="1080" style="display:none"></canvas>
+<canvas style="display:none"></canvas>
 </body>
 
 
@@ -57,12 +60,14 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/font-awesome-4.6.3/css/font-awesome.min.css">
 
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="js/d3.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="js/searchController.js"></script>
 <script src="js/Queue.js"></script>
 <script src="js/nouislider.min.js"></script>
+<script src="js/jspdf.min.js"></script>
+<script src="js/saveSvgAsPng.js"></script>
 <script src="js/MonaGO.js"></script>
 <script>
   

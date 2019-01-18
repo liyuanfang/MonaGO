@@ -16,10 +16,10 @@ h1{
     color: rgb(76, 78, 239);
 }
 h2{
-    color: orange;
+    color: black;
 }
 h3{
-    color: orange;
+    color: black;
 }
 ul#navMenu{
     padding:0;
@@ -137,6 +137,14 @@ textarea{
     visibility: visible;
 }
 
+.header{
+    text-align: center;
+    height: 200px;
+}
+
+.header-img{
+    max-height: 100%;
+}
 </style>
 
 
@@ -144,7 +152,7 @@ textarea{
 
 <html>
     <head>
-        <title>MonaGO: visualization tool for GO enrichment analysis</title>
+        <title>MonaGO: Gene Ontology Enrichment Analysis Visualization from Monash University</title>
         <title>MonaGO: Help</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     </head>
@@ -156,42 +164,76 @@ textarea{
 
                 </map>
 
-                <h1>
-                    <a href="./" style="text-decoration:none;color:orange">
-                        ManaGO
-                    </a>
-                </h1>
+                <a href="./"><img src="../img/header.png" class="img-fluid header-img" alt="Responsive image" title="Visualization tool for Gene Ontology enrichment analysis"></a>
+
 
         </div>
         <div id="form">
             <h2>
-                <strong>Help/Information</strong>
+                <strong>Help Page</strong>
             </h2>
        
-        <h3>Usage</h3>
-            <p>MonaGO is a visualization tool for Gene Ontology (GO) enrichment analysis which facilitates a better interpretation of GO enrichment results by using innovative visualization techniques. The basic workflow is as following:<p>
-            <div style="padding-left: 50px">
-                <p>(1) Input a list of genes to identify over-represented GO terms.
-                <p>(2) Select the gene identifier given.
-                <p>(3) Choose p-value to filter the enrichment result.
-                <p>(4) Choose the GO annotation type (Biological Process, Molecular Function, Cellular Component). The GO annotation data are from <a href="https://david.ncifcrf.gov" target="blank">DAVID</a>.
-            </div>
+        <h3>1. Introduction</h3>
+            <p>MonaGO is a visualization tool for Gene Ontology (GO) enrichment which facilitates a better interpretation of GO enrichment results by using innovative interactive visualization techniques. MonaGO can visualize GO enrichment analysis results produced by <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a>, or enriched GO terms directly.</p>
+            <p>Three kinds of input are supported in MonaGO.</p>
+            <center><img src="../img/input1.png" style="width:500px"/></center>
 
+            <!-- <p>or</p> -->
+            <h4>1.1 Submit enriched GO terms for visualization directly.</h4>
+                
 
-            <p></p>
+            <p> There are two ways to submit enriched GO terms.</p>
+            <p>(1) Pasting enriched GO terms in the text area manually. The text needs to be in a comma-delimited format, where each line contains three columns: (1) the enriched GO term ("GO_id"), (2) the enrichment values (e.g., p-values, "pVal"), and (3) the list of genes ("genes"). As shown in the screenshot below, the list of genes of an enriched GO term should be separated by semicolons. Note that the header shouldn't be included.
+            </p>
+                <center><img src="../img/upload1.png" style="width:500px"/></center>
             
+            <p>(2) Submiting enriched GO terms by uploading a csv file, which should be in the same format as above. The following screenshot shows an example csv file:
+            
+            </p>
+                <center><img src="../img/upload2.png" style="width:500px"/></center>
+            <p></p>
+            <h4>1.2 Submit files exported from MonaGO </h4>
+            <p>A JSON file that stores the current state of the main chord diagram can be downloaded and uploaded to get restoration. Submission Interface can be found in Figure 5.</p>
+            <center><img src="../img/import1.png" style="width:500px"/></center>
+        <h4>1.3 Using DAVID as input</h4>
+            <!-- <p>To produce a GO enrichment visualization, users can either:</p> -->
+
+            <p>A user can submit a list of genes on MonaGO to <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a> to obtain GO enrichment results and visualize them.</p>
+
+                <div style="padding-left: 50px">
+                    <p>(1) Input a list of genes or upload a file to identify over-represented GO terms.</p>
+                    <p>(2) Select the appropriate gene identifier.</p>
+                    <p>(3) Choose p-value to filter the enrichment result.</p>
+                    <p>(4) Choose the GO annotation type (Biological Process, Molecular Function, Cellular Component). </p>
+                </div>
+                <center><img src="../img/david2.png" style="width:500px"/></center>
+            <h4>Options used in <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a></h4>
+            <P>MonaGO utilizes the following options in Functional Annotation Tool of DAVID.</P>
+                <div style="padding-left: 50px">
+                    <p>(1) Input of gene lists are posted to Step 1 (Enter Gene List)</p>
+                    <p>(2) Gene identifier selected are posted to Step 2 (Select Identifier)</p>
+                    <p>(3) Select Gene List in Step 3</p>
+                </div>
+                <center><img src="../img/david1.png" style="width:200px"/></center>
+            <p>Default options are selected in Functional Annotation Chart when getting results of related GO terms and P-values.</p>
+                <code>
+
+                </code>
+            <center><img src="../img/david3.png" style="width:800px"/></center>
         
-        <h3>Interface<h3>
+        <h3>2. Interface<h3>
         <center>
-            <img src="../img/interface.png" style="width:600px">
+            <img src="../img/interface1.png" style="width:500px">
         </center>
-        <h4>1. Main visualization panel</h4>
+        <h4>2.1  Main visualization panel</h4>
 
-        <p>The main visualization component is the chord diagram, which has auxiliary visual elements attached to it, including the GO term labels and the hierarchical clustering tree.</p>
+        <p>The main visualization component is the chord diagram, which has auxiliary visual elements attached to it, including the GO term labels and the hierarchical clustering tree.Prefixes are used in label to differentiate 3 branches of GO, such as BP (biological process), CC（cellular component) and MF（molecular function).</p>
 
-        <h5>1.1 The chord diagram</h5>
 
-        <p>Each element in the chord diagram represents a GO term or a cluster of GO terms. The edges inside the chord diagram between two elements denote the fact that there are common genes between them. </p>
+        <h5>2.1.1 The chord diagram</h5>
+
+        <p>Each element in the chord diagram represents a GO term or a cluster of GO terms. Length of the element is proportional to number of genes related with the GO term or a cluster of GO terms. The edges inside the chord diagram between two elements denote the fact that there are common genes between them. </p>
+
 
 
         <p>Additionally, on each element two types of information are displayed, controlled by the toggle (radio buttons) on the top-left:
@@ -199,17 +241,21 @@ textarea{
         The hierarchical clustering tree that allows the collapsing/expansion of GO terms.</p>
         Note that the size and the position of the chord diagram can be changed.
 
-        <h5>1.2 Hierarchical clustering tree</h5>
+        <h5>2.1.2 Hierarchical clustering tree</h5>
         <p>Clustering can be performed systematically or manually using the hierarchical clustering tree:
         The slider on the top left allows systematic clustering of GO terms based on a threshold of the minimum number of common genes.
         Alternatively, the nodes in the hierarchical clustering tree can be clicked to manually collapse GO /terms/clusters and expand clusters. </p>
+        <h5>2.1.3 Save image</h5>
+         <p>Image of main diagram can be saved in two formats, svg and png, by clicking drop-down menu button on top left (Save image).</p>
 
-
-        <h4>2. Details panel</h4>
+        <h4>2.2 Details panel</h4>
 
         <p>The details panel shows detailed information about a GO term or a cluster in the main visualization panel. The details panel is activated when the mouse hovers over a GO term/cluster in the chord diagram. </p>
 
-
+        <p>Note that edge can be clicked and highlighted to freeze the detail panel. For highlighted edge, click again can release detail panel. </p>
+        <center>
+            <img src="../img/click_edge2.png" style="width:300px">
+        </center>
         <p>The following information is shown in the details panel.
 
 
@@ -230,17 +276,43 @@ textarea{
             <p>The average p-value of all GO terms in the cluster, and
             <p>The list of names of all common genes.
         </div>
+        <p><b>Images in svg and png format can be downloaded by clicking save image button.</b>:
+        <center>
+            <img src="../img/hierarchy.png" style="width:200px">
+        </center>
 
-
-        <h4>3. Search panel</h4>
+        <h4>2.3 Search panel</h4>
         <p>The search panel allows the search of GO terms by gene names, and IDs or names of GO terms (search by its full name).
 
         <p>All GO terms/clusters relevant to a search query will be highlighted (popping out) on the chord diagram in the  main visualization panel. Moreover, relevant GO terms/clusters will be listed in the details panel. 
+        <center>
+        <table><tr>
+        <td><img src="../img/search1.png" style="height:500px" border=0></td>
+        <td><img src="../img/search.png" style="height:500px" border=0></td>
+        </tr></table>
+        </center>
+        <h3>3. What does visualization result mean</h3>
+
+            <p>MonaGO helps users reduce redundancy by assisting user to cluster similar GO term. In  MonaGO, enriched GO terms are ordered and visualised in a way that  GO terms whose common genes percentage (Cluster A AND Cluster B/ Cluster A OR Cluster B) are larger are close to each other.</p>
+            <p>In this way, user can easily group them as cluster in which only the most represented GO terms will be displayed in the chord diagram, thereby reducing the “information overload”. Following is an example of GO enrichment result visualised in MonaGO. As shown in the picture below, many enriched GO terms are redundant. An example is the redundancy between GO1 and GO2(They share 11 common genes which takes 100% of their total genes thus considered to be highly related). Therefore they are placed right next to each other.</p>
+            <center>
+                <img src="../img/cluster3.png" style="width:500px"/>
+            </center>
+            <p>
+            Curved lines inside the circle are indicators that the GO terms connected share common genes. User can move the cursor on a particular line to see a list of common genes shared the two connected GO terms on the detailed panel.</p>
+            
+            <center>
+                <img src="../img/cluster4.png" style="width:500px"/>
+            </center>
+            <p>
+            When grouped these two enriched GO terms together as shown above, the one that is most represented(with lower p-value), in this case, GO2 is displayed.  As a result, the redundancy of the enriched GO term is reduced and help user to have better understanding of the enrichment result. </p>
+        
 
         <h2>Contacts:</h2>
-        <p>Alex Xin: <a href="mailto:zxin9@student.monash.edu">zxin9@student.monash.edu</a></p>
-        <p>Yuan-Fang Li: <a href="mailto:yuanfang.li@monash.edu">yuanfang.li@monash.edu</a></p>
-        <p>Mirana Ramialison: <a href="mailto:mirana.ramialison@monash.edu">mirana.ramialison@monash.edu</a></p>
+<!--         <p>Alex Xin: <a href="mailto:zxin9@student.monash.edu">zxin9@student.monash.edu</a></p>
+        <p>Yujun Cai: <a href="mailto:Yajun.Cai@monash.edu">Yajun.Cai@monash.edu</a></p>
+ -->        <p>Yuan-Fang Li: <a href="mailto:yuanfang.li@monash.edu">yuanfang.li@monash.edu</a></p>
+            <p>Mirana Ramialison: <a href="mailto:mirana.ramialison@monash.edu">mirana.ramialison@monash.edu</a></p>
         
         <h2>Source code</h2>
         <p>The source code is available on <a href="https://github.com/xinba123/MonaGO">GitHub</a>.</p>

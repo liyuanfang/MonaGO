@@ -1,12 +1,40 @@
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from HTMLParser import HTMLParser
 import re
-from PycurlHelper import PycurlHelper
-from twisted.internet import defer
+import requests
+import threading
 import logging
 
-logging.basicConfig(level=logging.debug)
+from logTime import logTime
+
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+class myThread (threading.Thread):
+    def __init__(self, threadID, request, url):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.url = url
+        self.request = request
+
+    def run(self):
+        self.res = self.request.get(self.url,verify=False)
+
+
+    def getRes(self):
+        return self.res.content
 
 class DavidDataScrawler(object):
 
@@ -15,74 +43,74 @@ class DavidDataScrawler(object):
 
     def run(self):
 
-        pcHelper = PycurlHelper()
+        s = requests.session()
+        #s.cert = '/path/client.cert'
 
         #d = Deferred()#init defer
 
-        res = self._uploadGene(pcHelper,self.idType,self.inputIds)
+        res = self._uploadGene(s,self.idType,self.inputIds)
 
-        # with open('test.html',"w") as fr_html:
-        #     fr_html.write(res) 
+        with open('test.html',"w") as fr_html:
+            fr_html.write(res) 
 
         if self._checkSuccess(res):
-            print "exception throw0"
+            logger.debug("upload gene success")
 
-            url_1 = 'https://david-d.ncifcrf.gov/chartReport.jsp?annot={0}&currentList=0'.format(self.annotCat)
-            url_2 = 'https://david-d.ncifcrf.gov/list.jsp'
+            url_1 = 'https://david.ncifcrf.gov/chartReport.jsp?annot={0}&currentList=0'.format(self.annotCat)
+            url_2 = 'https://david.ncifcrf.gov/list.jsp'
 
-            urls = [url_1,url_2]
+            thread1 = myThread(1, s, url_1)
+            thread2 = myThread(2, s, url_2)
 
-            pcHelper.curlMultiGet(urls)
+            thread1.start()
+            thread2.start()
 
-            print "exception throw1"
+            threads = []
+            threads.append(thread1)
+            threads.append(thread2)
 
-            getGO_response,geneList_response = map(lambda x: x.getvalue().decode('iso-8859-1'), pcHelper.buffers)
+            for t in threads:
+                t.join()
 
-            print "exception throw2"
 
-            logger.debug("getGO_response:{}".format(getGO_response))
+            try:
+                getGO_response = thread1.getRes()
+                geneList_response = thread2.getRes()
+            except:
+                raise Exception("get response from david failed") ##unlikely to happen but good to have
 
-            print "exception throw3"
-            #logger.debug("geneList_response:{}".format(geneList_response))
+            # with open('test1.html',"w") as fr_html:
+            #     fr_html.write(getGO_response) 
 
-            go,geneIds = self._parseGO(getGO_response, pcHelper)
-            # with open("go","w") as fw:
-            #     fw.write(str(go))
-            print "exception throw4"
+            go,geneIds = self._parseGO(getGO_response, s)
+
             geneList = self._parseGenes(geneList_response)
+
                 
+            # with open("go.txt","w") as fw:
+            #     fw.write(str(go))
 
             go_filtered = self._filterGO(self.pVal,go)
-            print "exception throw5"
-            # with open("go_filtered","w") as fw:
+
+            # with open("go_filtered.txt","w") as fw:
             #     fw.write(str(go_filtered))
+
             geneIds = self._getUniqueGeneIds(geneIds)
 
-            print "exception throw6"
 
             #logger.debug("geneIds:{}".format(geneIds))
 
             geneIdNameMapping = self._getGenesNamesByIds(geneIds,geneList)
-            with open("geneIdNameMapping","w") as fw:
-                fw.write(str(geneIdNameMapping))
-
-            with open("go_filtered","w") as fw:
-                fw.write(str(go_filtered))
-                
-            print "exception throw7"
 
             #change the gene id into gene name in go
             go_processed = self._changeGeneIdToNameInGO(go_filtered,geneIdNameMapping)
 
-            print "exception throw8"
 
             if not go_processed:
-                raise Exception("get final GO failed")
+                raise Exception("get go_processed failed")
             
 
             #before return, close the connection to DAVID explicitly
-
-            pcHelper.close()
 
             return go_processed
 
@@ -99,8 +127,8 @@ class DavidDataScrawler(object):
             return True
 
 
-    def _parseGO(self,getGO_response,pcHelper):
-        parser = DavidDataScrawler.GOParser(pcHelper)
+    def _parseGO(self,getGO_response,request):
+        parser = DavidDataScrawler.GOParser(request)
         parser.feed(getGO_response)#get go
         go = parser.getGO_inf()
         geneIds = parser.getGeneLists()
@@ -122,22 +150,29 @@ class DavidDataScrawler(object):
         parser = DavidDataScrawler.geneParser()
         parser.feed(geneList_response)
         genesIdName = parser.getParsedGeneNameWithId()
+
+        if len(genesIdName) == 0:
+            raise Exception("parse gene list failed") 
+
         return genesIdName
 
 
 
 
+    @logTime
+    def _uploadGene(self,s,idType,inputIds):
 
-    def _uploadGene(self,pcHelper,idType,inputIds):
+        data = {'idType':(None, idType), 'uploadType': (None, 'list'), 'multiList': (None,'false'),'Mode':(None,'paste'),
+                         'useIndex':(None,'null'),'usePopIndex': (None,'null'),'demoIndex': (None,'null'),'ids': (None,inputIds),
+                         'removeIndex': (None,'null'),'renameIndex': (None,'null'),'renamePopIndex': (None,'null'),
+                         'newName': (None,'null'),'combineIndex': (None,'null'),'selectedSpecies': (None,'null'),'uploadHTML': (None,'null'),
+                         'managerHTML': (None,'null'), 'sublist': (None,''),'rowids': (None,''),'convertedListName': (None,'null'),
+                         'convertedPopName': (None,'null'),'pasteBox': (None,inputIds),'Identifier': (None,idType) ,
+                         'selectedSpecies': (None,',0') , 'speciesList': (None,'0'), 'rbUploadType':(None,'list')}
 
-        data = [('idType', idType), ('uploadType', 'list'),('multiList','false'),('Mode','paste'),
-                         ('useIndex','null'),('usePopIndex','null'),('demoIndex','null'),('ids',inputIds),
-                         ('removeIndex','null'),('renameIndex','null'),('renamePopIndex','null'),('newName','null'),
-                         ('combineIndex','null'),('selectedSpecies','null'),('uploadHTML','null'),('managerHTML','null'),
-                         ('sublist',''),('rowids',''),('convertedListName','null'),('convertedPopName','null'),
-                         ('pasteBox',inputIds),('Identifier',idType) , ('rbUploadType','list')]
+        r = s.post('https://david.ncifcrf.gov/tools.jsp', files=data,  verify=False)
 
-        return pcHelper.sendMultipart(url="https://david-d.ncifcrf.gov/tools.jsp",data=data)
+        return r.content
 
 
 
@@ -157,7 +192,7 @@ class DavidDataScrawler(object):
         for i in range(0,len(go)):
 
             geneNames = go[i]["genes"].split(",")
-            geneNameString = "|".join([geneIdNameMapping[geneName.strip().lower()] for geneName in geneNames]) 
+            geneNameString = ";".join([geneIdNameMapping[geneName.strip().lower()] for geneName in geneNames]) 
 
             go[i]["genes"] = geneNameString[:-1]# strip the last '|'
 
@@ -209,7 +244,7 @@ class DavidDataScrawler(object):
 
         filterGO_inf = [GO for GO in go_inf if float(GO["pVal"]) < float(pVal)]
 
-        logger.debug('go_filtered:{}'.format(filterGO_inf))
+        #logger.debug('go_filtered:{}'.format(filterGO_inf))
 
         if not filterGO_inf:
             raise Exception("get go_filtered failed")
@@ -222,10 +257,10 @@ class DavidDataScrawler(object):
         parse a list of GO terms(name and a list of associated gene ids)
         '''
 
-        def __init__(self,pcHelper):
+        def __init__(self,request):
             HTMLParser.__init__(self)
 
-            self.pcHelper = pcHelper
+            self.request = request
             self.go_inf = []
             self.geneLists = {}
             self.metacount = 0
@@ -235,10 +270,12 @@ class DavidDataScrawler(object):
             #get GO_id,GO_name,p-value,count
             if tag == "a":
                 m = re.search('(data/download/chart_\w+.txt)',attrs[0][1])
+                
                 if m!=None:
-                    url = 'https://david-d.ncifcrf.gov/'+m.group(0)
-                    res = self.pcHelper.get(url)
-                    self._parseGO(res)
+                #if exists
+                    url = 'https://david.ncifcrf.gov/'+m.group(0)
+                    res = self.request.get(url,verify = False)
+                    self._parseGO(res.content)
 
             #get gene rowid
             if tag == "img":
