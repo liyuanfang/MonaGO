@@ -522,7 +522,8 @@ class DataProcess4():
         #print matrix_count
         return {"matrix_count": matrix_count}
 
-    def dataProcess(self, go_inf):
+    def dataProcess(self, go_inf, clustComp):
+
 
         self.clusterHierData = []  ##clear clusterHierData
 

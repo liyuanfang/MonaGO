@@ -73,9 +73,7 @@ def index():
             else:
                 go = parseInputGOs(request.form['inputGOs'],float(str(pVal)))
 
-
-
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'])
+            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'], request.form['clustComp'])
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
@@ -99,7 +97,7 @@ def index():
 
             if status == False:
                 return "Failure to get data, please make sure the identifier is correct"
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'])
+            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
@@ -113,11 +111,10 @@ def index():
             content_dict = json.loads(content, encoding='utf-8')
             content_dict["go_inf"] = parseInputMonagos(content_dict, float(str(pVal)))
             similarity=content_dict['similarity'].encode('ascii', 'ignore')
-            print(similarity)
-            print(type(similarity))
+            clustComp=content_dict['clustComp'].encode('ascii', 'ignore')
 
             # content_dict = yaml.safe_load(content_dict, encoding='utf-8')
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(content_dict["go_inf"],similarity)
+            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(content_dict["go_inf"],similarity, clustComp)
             myList=simDict
 
             if not matrix_count:
@@ -322,7 +319,7 @@ def getDataFromDavid(inputIds,idType,annotCat,pVal):
 
 
 @logTime
-def processedData(go, similarity):
+def processedData(go, similarity, clustComp):
     '''
     generate necessary data for visualization
 
@@ -338,7 +335,6 @@ def processedData(go, similarity):
     '''
 
     #for pre processing the data
-    ### currently similarity is empty
     if similarity=='Resnik':
         from DataProcessResnikAve import DataProcess4
     elif similarity=='Genes':
@@ -349,7 +345,8 @@ def processedData(go, similarity):
 
     dataProcess = DataProcess4()
     try:
-        preProcessedData = dataProcess.dataProcess(go)
+        preProcessedData = dataProcess.dataProcess(go, clustComp)
+
 
     except Exception as e:
         logger.error(str(e))
@@ -369,4 +366,4 @@ def loadConfig():
 if __name__ == '__main__':
     loadConfig()
     loadGOHier()
-    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 51, threaded = True)
+    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1128, threaded = True)

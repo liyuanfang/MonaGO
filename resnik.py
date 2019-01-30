@@ -57,31 +57,30 @@ def simRes(nodeA,nodeB):
 
 
 
-def ResnikDis(iGOids, x, yGOids):
+def ResnikDis(iGOids, x, yGOids, clustComp):
     '''
     calculate the distance between clusters based on the average resnik distance between each GO
     '''
-    clusterDist='ave'
     resnikDistances=[]
     for iGOid in iGOids:
         for yGOid in yGOids:
             resnikDistances.append(simRes(iGOid,yGOid)[0])
-    if clusterDist=='ave':
+    if clustComp=='ave':
         averageResnik=float(sum(resnikDistances))/float(len(resnikDistances))
         return(averageResnik)
-    elif clusterDist=='min':
+    elif clustComp=='min':
         minResnik=float(min(resnikDistances))
         return(minResnik)
-    elif clusterDist=='max':
+    elif clustComp=='max':
         maxResnik=float(max(resnikDistances))
         return(maxResnik)
 
 
 
 
-def ResnikDisPerc(iGOids,x,yGOids):
+def ResnikDisPerc(iGOids,x,yGOids, clustComp):
     scalar=1
-    normalised=ResnikDis(iGOids,x,yGOids)/scalar
+    normalised=ResnikDis(iGOids,x,yGOids, clustComp)/scalar
     # use cuberoot to adjust scale making it slightly more linear... might need to think about using a different scalar or writing a function that checks for linearity.
     return((normalised**(1.)*100))
 

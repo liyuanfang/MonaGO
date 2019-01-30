@@ -277,7 +277,7 @@ class DataProcess4():
                     D[n * i - (i * (i + 1) / 2) + (j - i - 1)] = Z[i][j]
         return D
 
-    def linkage(self, dists, dists1, Z, n, method):
+    def linkage(self, dists, dists1, Z, n, method, clustComp):
         """
         Perform hierarchy clustering.
         Parameters
@@ -359,8 +359,8 @@ class DataProcess4():
 
                 # calcuate the real distance
                 #self.updateClusterGenes(x, y)
-                D[self.condensed_index(n, i, y)] = self.calRealDis(i,x,y)
-                D_num[self.condensed_index(n, i, y)] = self.calRealDisNum(i,x,y)
+                D[self.condensed_index(n, i, y)] = self.calRealDis(i,x,y, clustComp)
+                D_num[self.condensed_index(n, i, y)] = self.calRealDisNum(i,x,y, clustComp)
                 if i < x:
                     D[self.condensed_index(n, i, x)] = -1
                     D_num[self.condensed_index(n, i, x)] = -1
@@ -375,25 +375,25 @@ class DataProcess4():
 
         return Z
 
-    def calRealDis(self, i, x, y):
+    def calRealDis(self, i, x, y, clustComp):
         '''
         calculate the distance between clusters based on the average simrel distance between each GO
         '''
         # but how do i deal with the matrix that stores the number of overlapping genes? Store simrel number instead? what is the matrix used for...
         iGOids = self.getIDs(i)
         yGOids = self.getIDs(y)
-        averageSimRel=SimRelDisPerc(iGOids,x,yGOids,'ave')
+        averageSimRel=SimRelDisPerc(iGOids,x,yGOids,clustComp)
         return(averageSimRel)
 
 
-    def calRealDisNum(self, i, x, y):
+    def calRealDisNum(self, i, x, y, clustComp):
         """
         calculate the real distance between different clusters based on the average simrel distance between each GO
         Instad of using the max value of two clusters/node for approxiamte estimation.
         """
 	iGOids = self.getIDs(i)
         yGOids = self.getIDs(y)
-        averageSimRel=SimRelDis(iGOids,x,yGOids,'ave')
+        averageSimRel=SimRelDis(iGOids,x,yGOids,clustComp)
         return((averageSimRel*100))
 
 
@@ -478,7 +478,7 @@ class DataProcess4():
             go_inf_tmp.append(go_inf[i])
         return go_inf_tmp
 
-    def createMatrix(self, go_inf):
+    def createMatrix(self, go_inf, clustComp):
 
         # logger.debug(go_inf)
 
@@ -497,10 +497,10 @@ class DataProcess4():
                     #overlappingGenes = set(genes_i).intersection(genes_j)
                     #totalGenes = self.getTotalGenes(genes_i, genes_j)
                     #matrix[i][j] = len(overlappingGenes)
-                    matrix[i][j]=round(SimRelDis(iGOids,'fill',jGOids,'ave')*100)
+                    matrix[i][j]=round(SimRelDis(iGOids,'fill',jGOids,clustComp)*100)
                     # get count
                     #percent_matrix[i][j] = len(overlappingGenes) * 100.0 / len(totalGenes)
-                    percent_matrix[i][j]=round(SimRelDisPerc(iGOids,'fill',jGOids,'ave'))
+                    percent_matrix[i][j]=round(SimRelDisPerc(iGOids,'fill',jGOids,clustComp))
                     # get count
 
         return matrix, percent_matrix
@@ -553,7 +553,7 @@ class DataProcess4():
 
 
 
-    def dataProcess(self, go_inf):
+    def dataProcess(self, go_inf, clustComp):
 
         self.clusterHierData = []  ##clear clusterHierData
 
@@ -564,7 +564,7 @@ class DataProcess4():
         if size == 0:
             raise Exception("go_inf is empty")
 
-        num_matrix, percent_matrix = self.createMatrix(go_inf)
+        num_matrix, percent_matrix = self.createMatrix(go_inf, clustComp)
 
         D = np.ndarray(size * (size - 1) / 2, dtype=np.int)
         # D = self.pdist(matrix,size)
@@ -572,7 +572,7 @@ class DataProcess4():
         D_num = self.pdist(num_matrix, size)
         # Z = np.zeros((size - 1, 3))
         Z = np.zeros((size - 1, 4))
-        Z = self.linkage(D, D_num, Z, size, 0)
+        Z = self.linkage(D, D_num, Z, size, 0, clustComp)
 
         nd = [None] * (size * 2 - 1)
         nd = self.to_tree(Z)

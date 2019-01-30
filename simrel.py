@@ -68,29 +68,29 @@ def simRel(nodeA,nodeB):
 
 
 
-def SimRelDis(iGOids, x, yGOids, clusterDist):
+def SimRelDis(iGOids, x, yGOids, clustComp):
     '''
     calculate the distance between clusters based on the average resnik distance between each GO
     '''
-    simrelDistances=[0]
+    simrelDistances=[]
     for iGOid in iGOids:
         for yGOid in yGOids:
             simrelDistances.append(simRel(iGOid,yGOid)[0])
-    if clusterDist=='ave':
+    if clustComp=='ave':
         averageSimRel=float(sum(simrelDistances))/float(len(simrelDistances))
         return(averageSimRel)
-    elif clusterDist=='min':
+    elif clustComp=='min':
         minSimRel=float(min(simrelDistances))
-        return(minResnik)
-    elif clusterDist=='max':
+        return(minSimRel)
+    elif clustComp=='max':
         maxSimRel=float(max(simrelDistances))
-        return(maxResnik)
+        return(maxSimRel)
 
 
 
-def SimRelDisPerc(iGOids,x,yGOids, clusterDist):
+def SimRelDisPerc(iGOids,x,yGOids, clustComp):
     scalar=1#-math.log10(float(1)/float(maxFreq))
-    normalised=SimRelDis(iGOids,x,yGOids, clusterDist)/scalar
+    normalised=SimRelDis(iGOids,x,yGOids, clustComp)/scalar
     # use cuberoot to adjust scale making it slightly more linear... might need to think about using a different scalar or writing a function that checks for linearity.
     return((normalised**(1.)*100))
 

@@ -692,10 +692,15 @@ var MonaGO = function(){
 
         text.attr('height', 'auto')
         .attr('text-anchor', 'middle')
-        .attr('font-size','9px')
+        .attr('font-size','8px')
         .text(function(d){
             if((d["percentOfOverlappingGenes"] > 0)||(d["percentOfOverlappingGenes"]==undefined))
-                return d["percentOfOverlappingGenes"];
+                if ((similarity=='Genes')||(d["percentOfOverlappingGenes"]==undefined)){
+                	return d["percentOfOverlappingGenes"];
+		}
+		else {
+			return (d["percentOfOverlappingGenes"]/100).toFixed(1);
+		}
             }).attr('style', 'text-align:center;padding:2px;margin:2px;fill:white')
         .on("click",onClusterNodeClick)
         .append("title").text(function(d, i) {return "Click to cluster"});
@@ -2798,16 +2803,22 @@ var MonaGO = function(){
             orientation: 'horizontal', // Orient the slider vertically
             //behaviour: 'tap-drag', // Move handle on tap, bar is draggable
             range: { // Slider can select '0' to '100'
-
               'min': minPercentOfOverlappingGens,
 
               'max': maxPercentOfOverlappingGens
-            }
+	    }
         });
 
+	if (similarity=="Genes"){
         that.ranger.noUiSlider.on('update',function(values,handle){
             inputFormat.value = parseInt(values[handle] );
         });
+	}
+	else{
+        that.ranger.noUiSlider.on('update',function(values,handle){
+            inputFormat.value = (values[handle]/100 ).toFixed(2);
+        });
+	}
 
         that.ranger.noUiSlider.on('change', function( values, handle ) {
             var level = getLevelFromPercentOfOverlappingGenes(values.toString());

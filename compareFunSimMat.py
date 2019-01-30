@@ -11,7 +11,7 @@ def makeRandomList():
             go_hier=json.loads(str(GO))
 
 
-    sampleList=random.sample(go_hier.keys(),50)
+    sampleList=random.sample(go_hier.keys(),300)
 
 
     sampleString=''
@@ -48,23 +48,24 @@ for row in table:
     elif funsimmatRes==0 and mysimRes==0:
         errorRes+=[0]
     elif funsimmatRes==0:
-        print('hi')
-        print(GO1)
-        print(GO2)
+        #pass
+        #print(GO1)
+        #print(GO2)
         errorRes+=[1]
 
 
     funsimmatRel=row[3]
     mysimRel,MICA=simRel(unicode(GO1),unicode(GO2))
     if funsimmatRel!=0:
-        errorRel+=[(funsimmatRel-mysimRel)/funsimmatRel]
+        errorRel+=[abs((funsimmatRel-mysimRel)/funsimmatRel)]
     elif funsimmatRel==0 and mysimRel==0:
         errorRel+=[0]
     elif funsimmatRel==0:
-        print('hi')
-        print(GO1)
-        print(GO2)
+        #print(GO1)
+        #print(GO2)
         errorRel+=[1]
 
 print(sum(errorRes)/len(errorRes))
 print(sum(errorRel)/len(errorRel))
+
+
