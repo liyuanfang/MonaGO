@@ -2751,15 +2751,38 @@ var MonaGO = function(){
 
 	    if (existReload == false){
                     if (similarity == 'Resnik'){
+                        if (clustComp == 'ave'){
 		    var element = '&nbsp<label>Cluster GO term according to average Resnik similarity between terms</label> \
 			    <div id="slider" class="sliderBar"></div>\
 			    <input type="text" id="input_slider"/>';
-                    }
-
-                    if (similarity == 'Simrel'){
-		    var element = '&nbsp<label>Cluster GO term according to average Simrel percentage between terms</label> \
+                        }
+                        if (clustComp == 'min'){
+		    var element = '&nbsp<label>Cluster GO term according to minimum Resnik similarity between terms</label> \
 			    <div id="slider" class="sliderBar"></div>\
 			    <input type="text" id="input_slider"/>';
+                        }
+                        if (clustComp == 'max'){
+		    var element = '&nbsp<label>Cluster GO term according to maximum Resnik similarity between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                    }
+                    if (similarity == 'Simrel'){
+                        if (clustComp == 'ave'){
+		    var element = '&nbsp<label>Cluster GO term according to average simRel between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                        if (clustComp == 'min'){
+		    var element = '&nbsp<label>Cluster GO term according to minimum simRel between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                        if (clustComp == 'max'){
+		    var element = '&nbsp<label>Cluster GO term according to maximum simRel between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
                     }
                     if (similarity == 'Genes'){
 		    var element = '&nbsp<label>Cluster GO term according to minimum percentage of common gene(s)</label> \
@@ -2913,7 +2936,7 @@ var MonaGO = function(){
     		var save_file = "{\"size\":" + that.MonaGOData.size + "," + "\"go_inf\":" + JSON.stringify(that.MonaGOData.go_inf) + "," + "\"clusterHierData\":" +JSON.stringify(that.MonaGOData.clusterHierData)
     		+ "," + "\"matrix\":" + JSON.stringify(that.MonaGOData.matrix) + "," +"\"array_order\":" + JSON.stringify(that.MonaGOData.array_order) + "," + "\"goNodes\":" + JSON.stringify(goNodes)
     		+ "," + "\"groupSize\":" + JSON.stringify(that.MonaGOData.groupSize) + "," + "\"nodeCollapse\":" + nodeCollapse
-    		+ "," + "\"clickCollapseNodeArr\":" + JSON.stringify(that.clickCollapseNodeArr) +','+"\"similarity\":" + JSON.stringify(that.MonaGOData.similarity)  + "}";
+    		+ "," + "\"clickCollapseNodeArr\":" + JSON.stringify(that.clickCollapseNodeArr) +','+"\"similarity\":" + JSON.stringify(that.MonaGOData.similarity)+','+"\"clustComp\":" + JSON.stringify(that.MonaGOData.clustComp)  + "}";
 
             post("/export", {
                 filename: 'file',
@@ -3167,7 +3190,7 @@ var MonaGO = function(){
             that.go_inf[i].genes = d.genes.split(";");
         });
 
-        that.MonaGOData = {"size":size,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData,'similarity':similarity}
+        that.MonaGOData = {"size":size,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData,'similarity':similarity, 'clustComp':clustComp}
 
         perparePvalue();
         perpareChord();
@@ -3202,7 +3225,7 @@ var MonaGO = function(){
         that.clusterHierData = content["clusterHierData"];
         nodesSize = content["size"];
         maxNodeIndex = content["size"];
-        that.MonaGOData = {"size":nodesSize,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData,'similarity':similarity};
+        that.MonaGOData = {"size":nodesSize,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData,'similarity':similarity, 'clustComp':clustComp};
         that.maxNumOfOverlappingGens = that.clusterHierData[0][3];
         that.minNumOfOverlappingGens = that.clusterHierData[that.clusterHierData.length-1][3];
         that.maxPercentOfOverlappingGens = that.clusterHierData[0][4];

@@ -78,7 +78,7 @@ def index():
             if not matrix_count:
                 return "Failure to process data"
             data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
-            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var similarity='"+str(request.form['similarity'])+"'</script>"
+            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(request.form['clustComp'])+"';"+"var similarity='"+str(request.form['similarity'])+"'</script>"
 
         if request.form['type'] == "david":
             #parameters needed for querying DAVID
@@ -102,7 +102,7 @@ def index():
             if not matrix_count:
                 return "Failure to process data"
             data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
-            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var similarity='"+str(request.form['similarity'])+"'</script>"
+            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(request.form['clustComp'])+"';"+"var similarity='"+str(request.form['similarity'])+"'</script>"
 
 
         if request.form['type'] == "MonaGO":
@@ -120,7 +120,7 @@ def index():
             if not matrix_count:
                 return "Failure to process data"
             data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
-            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var similarity='"+str(similarity)+"'</script>"
+            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(clustComp)+"';"+"var similarity='"+str(similarity)+"'</script>"
             #data = "<script>"+ "var size = 0"+";"+"var content ="+content+";"+"</script>"
 
 
@@ -366,4 +366,4 @@ def loadConfig():
 if __name__ == '__main__':
     loadConfig()
     loadGOHier()
-    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1128, threaded = True)
+    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1142, threaded = True)
