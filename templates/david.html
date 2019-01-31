@@ -1,0 +1,212 @@
+<table border="0" cellpadding="2" width="100%" align="top">
+				<tbody><tr>
+						  <td class="sidebar_header"><br>Upload Gene List<br><br></td>
+				</tr>
+				<tr><td>
+					
+					<font class="regular"><a href="javascript:demoList(page,'1');">Demolist 1</a></font>
+					<font class="regular"><a href="javascript:demoList(page,'2');">Demolist 2</a></font>
+					</td></tr>
+					<tr><td>
+					<font class="regular"><a href="/helps/list_manager.html#upload" target="_blank">Upload Help</a></font>
+					</td></tr>
+					
+			
+					<tr><td class="sidebar_subheader"><br>Step
+					1: Enter Gene List
+			
+					</td></tr>
+			
+			
+				<tr>
+				  <td align="left" height="15">
+					<font class="regular">A: Paste a list</font>
+				  </td>
+				</tr>
+			
+				<tr>
+				  <td valign="top" align="left">
+					
+					<textarea rows="4" id="LISTBox" class="paste" name="pasteBox"></textarea>
+					<script type="text/javascript">clearPaste();</script>
+					<input type="Button" value="Clear" onclick="clearPaste();" name="B3" class="upload">
+				  </td>
+				</tr>
+				<tr>
+								  <td align="left" height="8">
+									<b><font color="white" face="Verdana" size="2">Or&nbsp;</font></b>
+								  </td>
+				</tr>
+				<tr><td>
+							
+							<font class="regular">B:Choose From a File</font>
+							</td>
+								</tr>
+								<tr>
+								  <td align="left" height="25">
+											  <p style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
+											  
+											  <input type="file" class="browse" name="fileBrowser" accept="text/plain" size="14">
+											  
+											  </p>
+								  </td>
+								</tr>
+								<tr><td><input type="checkbox" name="cbMulti" id="cbMulti">Multi-List File <a href="/helps/multilist.html" class="jTip" id="Multi-list File Upload" name="Multi-list File Upload"><img style="border:0px;" src="images/help-icon.png"></a></td></tr>
+							   
+							
+				
+			<tr><td>&nbsp;</td></tr>
+			<tr><td class="sidebar_subheader">Step 2: Select Identifier
+						
+								</td></tr>
+								<tr><td>
+								<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
+								  <font face="Verdana" size="1">
+								  <select id="IDT" size="1" name="Identifier">
+							  
+											
+										
+									  	<option value="AFFYMETRIX_3PRIME_IVT_ID">AFFYMETRIX_3PRIME_IVT_ID</option>
+											
+										
+									  	<option value="AFFYMETRIX_EXON_GENE_ID">AFFYMETRIX_EXON_GENE_ID</option>
+											
+										
+									  	<option value="AFFYMETRIX_SNP_ID">AFFYMETRIX_SNP_ID</option>
+											
+										
+									  	<option value="AGILENT_CHIP_ID">AGILENT_CHIP_ID</option>
+											
+										
+									  	<option value="AGILENT_ID">AGILENT_ID</option>
+											
+										
+									  	<option value="AGILENT_OLIGO_ID">AGILENT_OLIGO_ID</option>
+											
+										
+									  	<option value="ENSEMBL_GENE_ID">ENSEMBL_GENE_ID</option>
+											
+										
+									  	<option value="ENSEMBL_TRANSCRIPT_ID">ENSEMBL_TRANSCRIPT_ID</option>
+											
+										
+									  	<option value="ENTREZ_GENE_ID">ENTREZ_GENE_ID</option>
+											
+										
+									  	<option value="FLYBASE_GENE_ID">FLYBASE_GENE_ID</option>
+											
+										
+									  	<option value="FLYBASE_TRANSCRIPT_ID">FLYBASE_TRANSCRIPT_ID</option>
+											
+										
+									  	<option value="GENBANK_ACCESSION">GENBANK_ACCESSION</option>
+											
+										
+									  	<option value="GENOMIC_GI_ACCESSION">GENOMIC_GI_ACCESSION</option>
+											
+										
+									  	<option value="GENPEPT_ACCESSION">GENPEPT_ACCESSION</option>
+											
+										
+									  	<option value="ILLUMINA_ID">ILLUMINA_ID</option>
+											
+										
+									  	<option value="IPI_ID">IPI_ID</option>
+											
+										
+									  	<option value="MGI_ID">MGI_ID</option>
+											
+										
+									  	<option value="OFFICIAL_GENE_SYMBOL">OFFICIAL_GENE_SYMBOL</option>
+											
+										
+									  	<option value="PFAM_ID">PFAM_ID</option>
+											
+										
+									  	<option value="PIR_ID">PIR_ID</option>
+											
+										
+									  	<option value="PROTEIN_GI_ACCESSION">PROTEIN_GI_ACCESSION</option>
+											
+										
+									  	<option value="REFSEQ_GENOMIC">REFSEQ_GENOMIC</option>
+											
+										
+									  	<option value="REFSEQ_MRNA">REFSEQ_MRNA</option>
+											
+										
+									  	<option value="REFSEQ_PROTEIN">REFSEQ_PROTEIN</option>
+											
+										
+									  	<option value="REFSEQ_RNA">REFSEQ_RNA</option>
+											
+										
+									  	<option value="RGD_ID">RGD_ID</option>
+											
+										
+									  	<option value="SGD_ID">SGD_ID</option>
+											
+										
+									  	<option value="TAIR_ID">TAIR_ID</option>
+											
+										
+									  	<option value="UCSC_GENE_ID">UCSC_GENE_ID</option>
+											
+										
+									  	<option value="UNIGENE">UNIGENE</option>
+											
+										
+									  	<option value="UNIPROT_ACCESSION">UNIPROT_ACCESSION</option>
+											
+										
+									  	<option value="UNIPROT_ID">UNIPROT_ID</option>
+											
+										
+									  	<option value="UNIREF100_ID">UNIREF100_ID</option>
+											
+										
+									  	<option value="WORMBASE_GENE_ID">WORMBASE_GENE_ID</option>
+											
+										
+									  	<option value="WORMPEP_ID">WORMPEP_ID</option>
+											
+										
+									  	<option value="ZFIN_ID">ZFIN_ID</option>
+								
+										<option value="NA">Not Sure </option>
+							 
+									  </select>
+							
+									  </font>
+							
+									</p><br>
+								  </td>
+								</tr>
+						<tr>
+			          <td class="sidebar_subheader"><br>Step 3: List Type</td>
+			        </tr>
+			        <tr>
+			          <td class="sidebar_subheader"> 
+			            <table>
+							<tbody><tr>
+								<td class="sidebar_text">Gene List</td>
+			              		<td>
+			                  <input type="radio" name="rbUploadType" value="list">
+			                </td>
+							</tr>
+							<tr>
+								<td class="sidebar_text">Background</td>
+			              		<td><input type="radio" name="rbUploadType" value="population"></td>
+							</tr>
+						</tbody></table>
+			            
+			          </td>
+        </tr>
+        <tr><td>
+        <table>			
+	            <tbody><tr><td class="sidebar_subheader"><br>
+	                  Step 4: Submit List </td>
+	              </tr></tbody></table>
+              <input type="button" onclick="uploadList(page);" value="Submit List" name="B52" class="upload">
+        </td></tr>
+			</tbody></table>

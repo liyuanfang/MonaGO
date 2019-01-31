@@ -1,0 +1,710 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<link rel="stylesheet"  type="text/css" href="css/index.css">
+<link  rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link  rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+<link rel="stylesheet" href="css/font-awesome-4.6.3/css/font-awesome.min.css">
+<title>MonaGO: Gene Ontology Enrichment Analysis Visualisation from Monash University</title><meta name="keywords" content="MonaGO,GO,enrichment analysis,chord diagram" />
+</head>
+
+<link rel="icon" type="image/x-icon" href="data:image/png;base64,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">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+
+<script type='text/javascript'>
+function showClusterCompare(similarityVal){
+    if (similarityVal=='Genes'){
+        $('#clusterCompare').hide();
+    }
+    else{
+        $('#clusterCompare').show();
+    }
+}
+function showClusterCompareDavid(similarityVal){
+    if (similarityVal=='Genes'){
+        $('#clusterCompareDavid').hide();
+    }
+    else{
+        $('#clusterCompareDavid').show();
+    }
+}
+</script>
+
+
+<form method="post" action="" name="frmManager" id="frmManager" enctype="multipart/form-data">
+<input type="Hidden" name="listType" value="null">
+<input type="Hidden" name="annotCat" value="null">
+<input type="Hidden" name="Mode" value="null">
+<input type="Hidden" name="pVal" value="null">
+<input type="Hidden" name="type" value="null">
+<input type="Hidden" name="similarity" value="null">
+<input type="Hidden" name="clustComp" value="null">
+
+
+<div class="dummy_header"></div>
+
+<center class="header-index ">
+	<img src="../img/header.png" class="img-fluid header-img" alt="Responsive image" title="Visualization tool for Gene Ontology enrichment analysis">
+</center>
+
+<div class="submitFormCentered">
+
+
+
+			<div class="manual_submit">
+				<div class="manual_submit_button btn-success"><label class="large_label">1. Submit enriched GO terms for visualisation</label></div>
+				<div class="manual_input " style="display:none">
+					<h2><span class="label label-primary" title="enter enriched GO term manually">Enter Enriched GO Terms Manually (Beta)</span></h2>
+
+					<div>
+						<label for="fileselect2">Files to upload:<span id="uploadFile2"></span></label>
+						<div id="drop-zone2" class="drop-zone">
+						    Drop files here...
+						    <div id="clickHere2" class="clickHere">
+						        or click here..
+						        <input type="file" id="fileselect2" name="files2"/>
+						    </div>
+						</div>
+					</div>
+					<span class="example_upload_format">Upload File Format<br><a href="csv/demo2.csv" id="csvDownload">csv<i class="fa fa-download"></i></a></span>
+					<br>
+					<font class="regular">Or paste a list</font>
+					<textarea rows="6" id="inputGOs" class="form-control" name="inputGOs"></textarea>
+					<div class="example_go" onclick="copyDemoGOs()"><p>Demo enriched GO terms (click to paste):</p>
+								<p class="demo_GOs">
+									GO_id,pVal,genes<br>
+									GO:0042221,1.08E-04,"cytochrome P450 family 2 subfamily A member 6(CYP2A6);thyroid hormone receptor, alpha(THRA);heat shock protein family A (Hsp70) member 6(HSPA6);paired box 8(PAX8);cytochrome P450 family 2 subfamily E member 1(CYP2E1);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"...
+								</p>
+							</div>
+					<input type="Button" value="Clear" class="btn" onclick="clearManualPaste();" name="B3">
+<!-- 					<input type="file" id="Upload2" style="display: none"> <label for="Upload2" class="btn" id="Upload_label">Upload CSV</label> -->
+
+
+						<h2><span class="label label-primary" title="choose p-value from 0.05 to 0.001">Choose p-value</span></h2>
+
+						<br>
+
+
+						<div style="display: flex; margin-left: 15px;">
+			            	<div id="slider_manual" class="sliderBar"></div>
+          					<input type="text" id="input_slider_manual"/>
+						<br>
+
+						</div>
+
+					<div class="distance">
+
+	        			<h2><span class="label label-primary" title="choose distance measurement based on common genes or semantic similarity">Choose Distance Measurement</span></h2>
+
+	        			<br>
+
+									  <select id="selectPicker" class="selectpicker" data-width="300px" size="10" name="similaritySelectManual"
+									          onchange = "showClusterCompare(this.options[this.selectedIndex].value)">
+										  	<option value="Genes">Number of overlapping genes</option>
+										  	<option value="Resnik">Resnik similarity between GO terms</option>
+										  	<option value="Simrel">Simrel between GO terms</option>
+											
+
+										  </select>
+
+
+						<br>
+
+					</div>
+
+                                        <div id='clusterCompare' style='display:none'>
+
+	        			<h2><span class="label label-primary" title="Choose how to compare similarity scores between clusters of GO terms. Average takes the average similarity between every combination, minimum considers the most informative ancestor common to all GO terms, and maximum considers the most informative ancestor common to any combination.">Advanced option</span></h2>
+	        			<br>
+
+									  <select class='selectPicker' name="clusterCompare">
+										  	<option value="ave">Average</option>
+										  	<option value="min">Minimum</option>
+										  	<option value="max">Maximum</option>
+											
+
+										  </select>
+
+                                        </div>
+
+
+					<div class="btn btn-success btn-rounded btn-lg submit-btn" onclick="manualSubmitClicked()">Submit</div>
+				</div>
+
+			</div>
+
+			<div class="MonaGO_submit">
+				<div class="MonaGO_submit_button btn-success"><label class="large_label">2. Submit files exported from MonaGO </label></div>
+				<div class="MonaGO_input " style="display:none">
+					<h2><span class="label label-primary" title="enter enriched GO term manually">Import file exported from MonaGO</span></h2>
+
+						<div>
+							<label for="fileselect3">Files to upload:<span id="uploadFile3"></span></label>
+							<div id="drop-zone3" class="drop-zone">
+							    Drop files here...
+							    <div id="clickHere3" class="clickHere">
+							        or click here..
+							        <input type="file" id="fileselect3" name="files3"/>
+							    </div>
+							</div>
+						</div>
+					<br>
+					<h2><span class="label label-primary" title="choose p-value from 0.05 to 0.001">Choose p-value</span></h2>
+
+						<br>
+
+
+						<div style="display: flex; margin-left: 15px;">
+			            	<div id="slider_monago" class="sliderBar"></div>
+          					<input type="text" id="input_slider_monago"/>
+
+
+						</div>
+
+<!-- 					<input type="file" id="Upload2" style="display: none"> <label for="Upload2" class="btn" id="Upload_label">Upload CSV</label> -->
+					<div class="btn btn-success btn-rounded btn-lg submit-btn" onclick="MonaGO_SubmitClicked()">Submit</div>
+				</div>
+
+			</div>
+			<div class="David_submit">
+
+				<div class="David_submit_button btn-success" ><label class="large_label">3. Submit genes to DAVID for GO enrichment and visualisation</label></div>
+
+
+				<div class="main_section" style="display:none">
+
+					<div class="step1">
+						<h2><span class="label label-primary" title="paste a list of genes seperated by comma, newline or space">Step 1: Enter Gene List</span></h2>
+
+						<div>
+							<label for="fileselect1">Files to upload:<span id="uploadFile1"></span></label>
+							<div id="drop-zone1" class="drop-zone">
+							    Drop files here...
+							    <div id="clickHere1" class="clickHere">
+							        or click here..
+							        <input type="file" id="fileselect1" name="files1"/>
+							    </div>
+							</div>
+						</div>
+						<span class="example_upload_format">Upload File Format<br><a href="csv/demo.csv" id="csvDownload">csv<i class="fa fa-download"></i></a></span>
+						<br>
+						<font class="regular">Or paste a list</font>
+						<p>
+						<div >
+							<textarea rows="6" id="LISTBox" class="form-control" name="inputIds"></textarea>
+							<div class="example_gene" onclick="copyDemoGenes()"><p>Demo genes (click to paste):</p>
+								<p id="demo_gene">
+									1007_s_at
+									1053_at
+									117_at
+									121_at
+									1255_g_at
+									1294_at
+									1316_at
+									1320_at
+									1405_i_at
+									1431_at
+									1438_at
+									1487_at
+									1494_f_at
+									1598_g_at  ....
+								</p>
+							</div>
+						</div>
+
+						<input type="Button" value="Clear" class="btn" onclick="clearDavidPaste();" name="B3">
+						<!-- <input type="file" id="Upload1" style="display: none"> <label for="Upload1" class="btn" id="Upload_label">Upload CSV</label> -->
+
+				</div>
+
+
+					<div class="step2">
+
+						<h2><span class="label label-primary" title="choose gene identifier">Step 2: Choose Identifier</span></h2>
+
+									<br>
+									  <select class="selectpicker" data-width="300px" size="10" name="idType">
+
+										  	<option value="AFFYMETRIX_3PRIME_IVT_ID">AFFYMETRIX_3PRIME_IVT_ID</option>
+										  	<option value="AFFYMETRIX_EXON_GENE_ID">AFFYMETRIX_EXON_GENE_ID</option>
+										  	<option value="AFFYMETRIX_SNP_ID">AFFYMETRIX_SNP_ID</option>
+										  	<option value="AGILENT_CHIP_ID">AGILENT_CHIP_ID</option>
+										  	<option value="AGILENT_ID">AGILENT_ID</option>
+										  	<option value="AGILENT_OLIGO_ID">AGILENT_OLIGO_ID</option>
+										  	<option value="ENSEMBL_GENE_ID">ENSEMBL_GENE_ID</option>
+										  	<option value="ENSEMBL_TRANSCRIPT_ID">ENSEMBL_TRANSCRIPT_ID</option>
+										  	<option value="ENTREZ_GENE_ID">ENTREZ_GENE_ID</option>
+										  	<option value="FLYBASE_GENE_ID">FLYBASE_GENE_ID</option>
+										  	<option value="FLYBASE_TRANSCRIPT_ID">FLYBASE_TRANSCRIPT_ID</option>
+										  	<option value="GENBANK_ACCESSION">GENBANK_ACCESSION</option>
+										  	<option value="GENOMIC_GI_ACCESSION">GENOMIC_GI_ACCESSION</option>
+										  	<option value="GENPEPT_ACCESSION">GENPEPT_ACCESSION</option>
+										  	<option value="ILLUMINA_ID">ILLUMINA_ID</option>
+										  	<option value="IPI_ID">IPI_ID</option>
+										  	<option value="MGI_ID">MGI_ID</option>
+										  	<option value="OFFICIAL_GENE_SYMBOL">OFFICIAL_GENE_SYMBOL</option>
+										  	<option value="PFAM_ID">PFAM_ID</option>
+										  	<option value="PIR_ID">PIR_ID</option>
+										  	<option value="PROTEIN_GI_ACCESSION">PROTEIN_GI_ACCESSION</option>
+										  	<option value="REFSEQ_GENOMIC">REFSEQ_GENOMIC</option>
+										  	<option value="REFSEQ_MRNA">REFSEQ_MRNA</option>
+										  	<option value="REFSEQ_PROTEIN">REFSEQ_PROTEIN</option>
+										  	<option value="REFSEQ_RNA">REFSEQ_RNA</option>
+										  	<option value="RGD_ID">RGD_ID</option>
+										  	<option value="SGD_ID">SGD_ID</option>
+										  	<option value="TAIR_ID">TAIR_ID</option>
+										  	<option value="UCSC_GENE_ID">UCSC_GENE_ID</option>
+										  	<option value="UNIGENE">UNIGENE</option>
+										  	<option value="UNIPROT_ACCESSION">UNIPROT_ACCESSION</option>
+										  	<option value="UNIPROT_ID">UNIPROT_ID</option>
+										  	<option value="UNIREF100_ID">UNIREF100_ID</option>
+										  	<option value="WORMBASE_GENE_ID">WORMBASE_GENE_ID</option>
+										  	<option value="WORMPEP_ID">WORMPEP_ID</option>
+										  	<option value="ZFIN_ID">ZFIN_ID</option>
+											<option value="NA">Not Sure </option>
+
+										  </select>
+
+
+
+								 	<br>
+					</div>
+
+					<div class="step3">
+
+						<h2><span class="label label-primary" title="choose p-value from 0.05 to 0.001">Step 3: Choose p-value</span></h2>
+
+						<br>
+
+
+						<div style="display: flex; margin-left: 15px;">
+			            	<div id="slider" class="sliderBar"></div>
+          					<input type="text" id="input_slider"/>
+          					<input type="text" id="input3_slider" hidden/>
+
+						</div>
+
+
+					</div>
+
+
+					<div class="step4">
+
+	        			<h2><span class="label label-primary" title="choose Gene Ontology annotation type">Step 4: Choose Annotation Type</span></h2>
+
+	        			<br>
+
+							<select class="selectpicker show-tick" data-width="500px" name="annotType" multiple>
+
+				            	<option value="GOTERM_BP" selected>Biological Process</option>
+						<option value="GOTERM_MF">Molecular Function</option>
+				            	<option value="GOTERM_CC">Cellular Component</option>
+
+				            </select>
+
+
+						<br>
+
+					</div>
+
+					<div class="step5">
+
+	        			<h2><span class="label label-primary" title="choose distance measurement based on common genes or semantic similarity">Step 5: Choose Distance Measurement</span></h2>
+
+	        			<br>
+
+									  <select class="selectpicker" data-width="300px" size="10" name="similaritySelectDavid"
+									          onchange = "showClusterCompareDavid(this.options[this.selectedIndex].value)">
+
+										  	<option value="Genes">Number of overlapping genes</option>
+										  	<option value="Resnik">Resnik similarity between GO terms</option>
+										  	<option value="Simrel">Simrel between GO terms</option>
+
+
+										  </select>
+
+
+						<br>
+
+					</div>
+
+
+
+                                        <div id='clusterCompareDavid' style='display:none'>
+
+	        			<h2><span class="label label-primary" title="Choose how to compare similarity scores between clusters of GO terms. Average takes the average similarity between every combination, minimum considers the most informative ancestor common to all GO terms, and maximum considers the most informative ancestor common to any combination.">Advanced option</span></h2>
+	        			<br>
+
+									  <select class='selectPicker' name="clusterCompareDavid">
+										  	<option value="ave">Average</option>
+										  	<option value="min">Minimum</option>
+										  	<option value="max">Maximum</option>
+											
+
+										  </select>
+
+                                        </div>
+
+					<div class="btn btn-success btn-rounded btn-lg submit-btn" onclick="davidSubmitClicked()">Submit</div>
+				</div>
+
+			</div>
+
+		</div>
+			 
+</form>
+
+  
+
+
+   <div class="footer">
+		<p><t>MonaGO is a visualization tool for Gene Ontology (GO) enrichment analysis. It makes use of GO annotation information from <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a>. For more information please check the <a href="help.html">help page</a>.</p>
+	</div>     
+
+
+
+<script>
+
+
+
+	var width = $('body').width();
+/*	$(".submitFormCentered").width(width/1.8);
+	$(".footer").width(width/1.8);
+*/
+
+	var ranger_manual = document.getElementById('slider_manual');
+	var ranger_monago = document.getElementById('slider_monago');
+	var ranger = document.getElementById('slider');
+	var inputFormat_manual = document.getElementById('input_slider_manual');
+	var inputFormat_monago = document.getElementById('input_slider_monago');
+	var inputFormat = document.getElementById('input_slider');
+
+	var demoGenes = "1007_s_at,1053_at,117_at,121_at,1255_g_at,1294_at,1316_at,1320_at,1405_i_at,1431_at,1438_at,1487_at,1494_f_at,1598_g_at";
+	
+	var demoGO_csvFormat = `GO:0042221,1.08E-04,"cytochrome P450 family 2 subfamily A member 6(CYP2A6);thyroid hormone receptor, alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);cytochrome P450 family 2 subfamily E member 1(CYP2E1);protein tyrosine phosphatase, non-receptor type 21(PTPN21);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"
+GO:0009893,0.007231789,"thyroid hormone receptor,alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);growth arrest specific 6(GAS6"
+GO:0051716,0.007623017,"thyroid hormone receptor, alpha(THRA);paired box 8(PAX8);cytochrome P450 family 2 subfamily E member 1(CYP2E1);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA'"
+GO:0002520,0.02843111,"thyroid hormone receptor, alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"
+GO:0051094,0.030425398,"thyroid hormone receptor, alpha(THRA);paired box 8(PAX8);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6'"
+GO:0044237,0.034162056,"cytochrome P450 family 2 subfamily A member 6(CYP2A6);thyroid hormone receptor, alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);cytochrome P450 family 2 subfamily E member 1(CYP2E1);protein tyrosine phosphatase, non-receptor type 21(PTPN21);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"
+GO:0044238,0.035383743,"cytochrome P450 family 2 subfamily A member 6(CYP2A6);thyroid hormone receptor, alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);cytochrome P450 family 2 subfamily E member 1(CYP2E1);protein tyrosine phosphatase, non-receptor type 21(PTPN21);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"
+GO:0023051,0.035681429,"thyroid hormone receptor, alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);C-C motif chemokine ligand 5(CCL5);guanylate cyclase activator 1A(GUCA1A);growth arrest specific 6(GAS6"
+GO:0050793,0.040954635,"thyroid hormone receptor, alpha(THRA);paired box 8(PAX8);estrogen related receptor alpha(ESRRA);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"
+GO:0042330,0.049042278,C-C motif chemokine ligand 5(CCL5);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6
+`;
+
+	init();
+
+	function init(){
+
+		setUpRangeSlider(ranger,inputFormat);
+		setUpRangeSlider(ranger_manual,inputFormat_manual);
+		setUpRangeSlider(ranger_monago,inputFormat_monago);
+
+		if($("body .background").length!=0){
+			$("body .background").remove();
+		}
+
+		$('.selectpicker').selectpicker({
+		  size: 10
+		})
+
+		$(".David_submit_button").click(function(d){
+		  $goList = $(this).next();
+          $goList.slideToggle(500);
+          setUpUploadListener(1);
+		})
+
+		$(".manual_submit_button").click(function(d){
+		  $goList = $(this).next();
+          $goList.slideToggle(500);
+          setUpUploadListener(2)
+		})
+
+		$(".MonaGO_submit_button").click(function(d){
+		  $goList = $(this).next();
+          $goList.slideToggle(500);
+          setUpUploadListener(3)
+		})
+
+		var fileselect1 = $id("fileselect1"),
+			fileselect2 = $id("fileselect2"),
+			fileselect3 = $id("fileselect3");
+
+		fileselect1.addEventListener("change", FileSelectHandler1, false);
+		fileselect2.addEventListener("change", FileSelectHandler2, false);
+		fileselect3.addEventListener("change", FileSelectHandler3, false);
+
+	}
+
+	function setUpUploadListener(d){
+		var dropZoneId = "drop-zone"+d;
+	    var buttonId = "clickHere"+d;
+	    var mouseOverClass = "mouse-over";
+
+	    var dropZone = $("#" + dropZoneId);
+	    var ooleft = dropZone.offset().left;
+	    var ooright = dropZone.outerWidth() + ooleft;
+	    var ootop = dropZone.offset().top;
+	    var oobottom = dropZone.outerHeight() + ootop;
+	    var inputFile = dropZone.find("input");
+
+	    document.getElementById(dropZoneId).addEventListener("dragover", function (e) {
+	        e.preventDefault();
+	        e.stopPropagation();
+	        dropZone.addClass(mouseOverClass);
+	        var x = e.pageX;
+	        var y = e.pageY;
+
+	        if (!(x < ooleft || x > ooright || y < ootop || y > oobottom)) {
+	            inputFile.offset({ top: y - 15, left: x - 100 });
+	        } else {
+	            inputFile.offset({ top: -400, left: -400 });
+	        }
+
+	    }, true);
+
+	    if (buttonId != "") {
+	        var clickZone = $("#" + buttonId);
+
+	        var oleft = clickZone.offset().left;
+	        var oright = clickZone.outerWidth() + oleft;
+	        var otop = clickZone.offset().top;
+	        var obottom = clickZone.outerHeight() + otop;
+
+	        $("#" + buttonId).mousemove(function (e) {
+	            var x = e.pageX;
+	            var y = e.pageY;
+	            if (!(x < oleft || x > oright || y < otop || y > obottom)) {
+	                inputFile.offset({ top: y - 15, left: x - 160 });
+	            } else {
+	                inputFile.offset({ top: -400, left: -400 });
+	            }
+	        });
+	    }
+
+	    document.getElementById(dropZoneId).addEventListener("drop", function (e) {
+	        $("#" + dropZoneId).removeClass(mouseOverClass);
+	    }, true);
+	}
+
+	function $id(id) {
+		return document.getElementById(id);
+	}
+
+	// file selection
+	function FileSelectHandler1(e) {
+		$("#uploadFile1").html(e.target.files[0].name)
+	}
+
+	function FileSelectHandler2(e) {
+		$("#uploadFile2").html(e.target.files[0].name)
+	}
+
+	function FileSelectHandler3(e) {
+		$("#uploadFile3").html(e.target.files[0].name)
+	}
+
+
+	function copyDemoGOs(){
+		$("#inputGOs").val(demoGO_csvFormat);
+	}
+
+
+    function setUpRangeSlider(ranger,inputFormat){
+      noUiSlider.create(ranger, {
+        start: [ 0.05 ], // Handle start position
+        step: 0.001, 
+        direction: 'ltr', 
+        // direction: 'rtl', 
+        orientation: 'horizontal', 
+        range: { 
+          'min': 0.001,
+          'max': 0.05
+        }
+      });
+
+      ranger.noUiSlider.on('update',function(values,handle){
+          inputFormat.value = values[handle];
+      });
+
+      inputFormat.addEventListener('change',function(){
+          ranger.noUiSlider.set(this.value);
+
+      });
+    }
+
+
+	function copyDemoGenes(){
+		$("#LISTBox").val(demoGenes);
+
+		//$('select[name="idType"]').val("OFFICIAL_GENE_SYMBOL");
+		$('.selectpicker').selectpicker('refresh')
+	}
+
+	function clearDavidPaste(){
+		document.frmManager.inputIds.value="";
+	}
+
+	function clearManualPaste(){
+		document.frmManager.inputGOs.value="";
+	}
+
+	function davidSubmitClicked(){
+		var res = uploadList("david");
+		if(res) showLoadingIcon();
+	}
+
+	function manualSubmitClicked(){
+		var res = uploadList("manual");
+		if(res) showLoadingIcon();
+	}
+	function MonaGO_SubmitClicked(){
+		var res = uploadList("MonaGO");
+		if(res) showLoadingIcon();
+	}
+
+	function showLoadingIcon(){
+		if($("body .background").length==0){
+			var $backGround = $("body").append('<div class="background"/>');
+
+			var bodyHeight = $("body").height();
+			$(".background").css("height",bodyHeight);
+
+			$backGround.append('<div class="loadingBar"><div class="loading_icon"/></div>');
+			$(".loadingBar").css("top",bodyHeight/2);
+		}
+	}
+
+
+
+	function uploadList(type){
+
+		
+		//alert("start upload");
+		var FM = document.frmManager;
+		
+	/*	if(FM.cbMulti.checked)
+		{
+			FM.multiList.value="true";
+		}*/
+
+		FM.type.value = type;
+
+		FM.listType.value = 0;
+		
+/*		if(FM.uploadType[0].checked)
+		{
+			FM.listType.value=FM.uploadType[0].value;
+		}
+		else if(FM.uploadType[1].checked)
+		{
+			FM.listType.value=FM.uploadType[1].value;
+		}
+		else
+		{
+			alert("Error: Please specify whether this is a Gene list or a Background in step 3");
+			return;
+		}*/
+
+		var annotList = []
+
+		for(var i=0;i<3;i++){
+			if(FM.annotType[i].selected)
+				annotList.push(FM.annotType[i].value);
+		}
+
+		FM.annotCat.value = annotList.toString();
+
+
+
+		if(type == "david"){
+			if((FM.inputIds.value == "") && ((!FM.files1.value))){
+				alert("Error: Please upload csv file or paste a list in step 1.");
+				return false;
+			}
+
+
+					for(var i=0;i<3;i++){
+			if(FM.similaritySelectDavid[i].selected)
+				FM.similarity.value=FM.similaritySelectDavid[i].value;
+		        }
+
+					for(var i=0;i<3;i++){
+			if(FM.clusterCompareDavid[i].selected)
+				FM.clustComp.value=FM.clusterCompareDavid[i].value;
+		        }
+
+			if(FM.annotCat.value == ""){
+				alert("Error: Please select annotation type in step 4.");
+
+				return false;
+			}
+			FM.pVal.value = $("#input_slider").val();
+		        }
+
+		if(type == "manual"){
+			if((FM.inputGOs.value == "") && (!FM.files2.value)){
+				alert("Error: Please upload csv file or paste GO terms");
+				return false;
+			}
+
+					for(var i=0;i<3;i++){
+			if(FM.similaritySelectManual[i].selected)
+				FM.similarity.value=FM.similaritySelectManual[i].value;
+		        }
+					for(var i=0;i<3;i++){
+			if(FM.clusterCompare[i].selected)
+				FM.clustComp.value=FM.clusterCompare[i].value;
+		        }
+			FM.pVal.value = $("#input_slider_manual").val();
+
+
+
+		}
+		if(type == "MonaGO"){
+			if(!FM.files3.value){
+				alert("Error: Please upload file");
+				return false;
+			}
+			FM.pVal.value = $("#input_slider_monago").val();
+		}
+
+
+
+
+
+		FM.inputIds.value = convertInputIds(FM.inputIds.value);
+		
+		FM.Mode.value="paste";
+		FM.action="\\";
+		FM.target="";
+		FM.submit();
+
+		$(".submit-btn").attr('disabled','disabled'); 
+		return true;
+
+	}
+
+	function convertInputIds(idString){
+		var idList = idString.split("\n");
+
+		if(idList.length>1){
+			idString = "";
+			for(var i=0;i<idList.length;i++){
+				idString += idList[i]+ ",";
+			}
+		}
+		var lastChar = idString.length-1;
+		if(idString[lastChar]==",")
+			idString.slice(lastChar,1);
+		return idString;
+	}
+
+
+</script>
+

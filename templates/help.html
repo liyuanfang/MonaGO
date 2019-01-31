@@ -1,0 +1,321 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+    font-family:Verdana, Geneva, sans-serif;
+    font-size: 20px;
+}
+fieldset{
+    background: rgba(255, 152, 0, 0.47);
+}
+h1{
+    font-family:"Candal", sans-serif;
+    text-align: center;
+    font-size: 48px;
+    color: rgb(76, 78, 239);
+}
+h2{
+    color: black;
+}
+h3{
+    color: black;
+}
+ul#navMenu{
+    padding:0;
+    margin-bottom:7px;
+    margin-left: 7px;
+}
+ul#navMenu li{
+    display:inline;
+}
+ul#navMenu li a{
+    background-color: #A98DD8; /*black;*/
+    color: #27537A; /*white;*/
+    padding: 7px 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px
+    height: 18px;
+    /*border-radius: 4px 4px 0 0;*/
+}
+ul#navMenu li a:hover, ul#navMenu li a:active{
+    background-color:#ab82ff; /*gray;*/
+}
+ul#email li{
+    display:inline;
+}
+ul#opt_menu li {
+    list-style-type:none;
+    padding:2px 10px;
+}
+legend{
+    font-size:24px;
+}
+div#form{
+    background: rgba(255, 152, 0, 0.47);
+    padding: 10px 25px 10px 25px;
+}
+input[type="submit"] {
+    font-size: 14px;
+    color: #ffffff;
+    padding: 2px 15px;
+    background: -moz-linear-gradient(
+    top,
+    #73a1e6 0%,
+    #0342ff);
+    background: -webkit-gradient(
+    linear, left top, left bottom,
+    from(darkgray),
+    to(lightgray));
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    border: 4px solid #5586c2;
+    border: 2px solid #545454;
+    -moz-box-shadow:
+    0px 0px 0px rgba(000,000,000,0),
+    inset 0px 0px 0px rgba(087,087,087,0);
+    -webkit-box-shadow:
+    0px 0px 0px rgba(000,000,000,0),
+    inset 0px 0px 0px rgba(087,087,087,0);
+    box-shadow:
+    0px 0px 0px rgba(000,000,000,0),
+    inset 0px 0px 0px rgba(087,087,087,0);
+    text-shadow:
+    0px 1px 0px rgba(000,000,000,0.4),
+    0px -1px 0px rgba(255,255,255,0.3);
+    align:center;
+}
+div#sampleBED{
+    margin: 10px;
+    margin: 0 auto;
+    width: 200px;
+    padding: 5px;
+    height: 60px;
+    border: 2px solid black;
+    text-align:center;
+}
+label#sampleBED{
+    padding-top:1px;
+    font-family:courier;
+    font-style:italic;
+    font-size:14px;
+    float:none;
+}
+label{
+    display:block;
+    float:left;
+}
+textarea{
+    background:#F1F1F1;
+}
+.demo{
+    color:blue;
+    text-decoration: underline;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size:12px;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+.tooltip {
+    text-decoration: none;
+    color: black;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.header{
+    text-align: center;
+    height: 200px;
+}
+
+.header-img{
+    max-height: 100%;
+}
+</style>
+
+
+<link rel="icon" type="image/x-icon" href="data:image/png;base64,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">
+
+<html>
+    <head>
+        <title>MonaGO: Gene Ontology Enrichment Analysis Visualization from Monash University</title>
+        <title>MonaGO: Help</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+        <div class="header">
+           <!--  <img src="../img/logo.png" alt="MonaGO_logo" style="width:300px;height:50px" usemap="#bannermap"> -->
+                <map name="bannermap">
+                    <area shape="rect" coords="0,0,155,50" alt="Monash" href="http://www.monash.edu/" target="blank">
+
+                </map>
+
+                <a href="./"><img src="../img/header.png" class="img-fluid header-img" alt="Responsive image" title="Visualization tool for Gene Ontology enrichment analysis"></a>
+
+
+        </div>
+        <div id="form">
+            <h2>
+                <strong>Help Page</strong>
+            </h2>
+       
+        <h3>1. Introduction</h3>
+            <p>MonaGO is a visualization tool for Gene Ontology (GO) enrichment which facilitates a better interpretation of GO enrichment results by using innovative interactive visualization techniques. MonaGO can visualize GO enrichment analysis results produced by <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a>, or enriched GO terms directly.</p>
+            <p>Three kinds of input are supported in MonaGO.</p>
+            <center><img src="../img/input1.png" style="width:500px"/></center>
+
+            <!-- <p>or</p> -->
+            <h4>1.1 Submit enriched GO terms for visualization directly.</h4>
+                
+
+            <p> There are two ways to submit enriched GO terms.</p>
+            <p>(1) Pasting enriched GO terms in the text area manually. The text needs to be in a comma-delimited format, where each line contains three columns: (1) the enriched GO term ("GO_id"), (2) the enrichment values (e.g., p-values, "pVal"), and (3) the list of genes ("genes"). As shown in the screenshot below, the list of genes of an enriched GO term should be separated by semicolons. Note that the header shouldn't be included.
+            </p>
+                <center><img src="../img/upload1.png" style="width:500px"/></center>
+            
+            <p>(2) Submiting enriched GO terms by uploading a csv file, which should be in the same format as above. The following screenshot shows an example csv file:
+            
+            </p>
+                <center><img src="../img/upload2.png" style="width:500px"/></center>
+            <p></p>
+            <h4>1.2 Submit files exported from MonaGO </h4>
+            <p>A JSON file that stores the current state of the main chord diagram can be downloaded and uploaded to get restoration. Submission Interface can be found in Figure 5.</p>
+            <center><img src="../img/import1.png" style="width:500px"/></center>
+        <h4>1.3 Using DAVID as input</h4>
+            <!-- <p>To produce a GO enrichment visualization, users can either:</p> -->
+
+            <p>A user can submit a list of genes on MonaGO to <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a> to obtain GO enrichment results and visualize them.</p>
+
+                <div style="padding-left: 50px">
+                    <p>(1) Input a list of genes or upload a file to identify over-represented GO terms.</p>
+                    <p>(2) Select the appropriate gene identifier.</p>
+                    <p>(3) Choose p-value to filter the enrichment result.</p>
+                    <p>(4) Choose the GO annotation type (Biological Process, Molecular Function, Cellular Component). </p>
+                </div>
+                <center><img src="../img/david2.png" style="width:500px"/></center>
+            <h4>Options used in <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a></h4>
+            <P>MonaGO utilizes the following options in Functional Annotation Tool of DAVID.</P>
+                <div style="padding-left: 50px">
+                    <p>(1) Input of gene lists are posted to Step 1 (Enter Gene List)</p>
+                    <p>(2) Gene identifier selected are posted to Step 2 (Select Identifier)</p>
+                    <p>(3) Select Gene List in Step 3</p>
+                </div>
+                <center><img src="../img/david1.png" style="width:200px"/></center>
+            <p>Default options are selected in Functional Annotation Chart when getting results of related GO terms and P-values.</p>
+                <code>
+
+                </code>
+            <center><img src="../img/david3.png" style="width:800px"/></center>
+        
+        <h3>2. Interface<h3>
+        <center>
+            <img src="../img/interface1.png" style="width:500px">
+        </center>
+        <h4>2.1  Main visualization panel</h4>
+
+        <p>The main visualization component is the chord diagram, which has auxiliary visual elements attached to it, including the GO term labels and the hierarchical clustering tree.Prefixes are used in label to differentiate 3 branches of GO, such as BP (biological process), CC（cellular component) and MF（molecular function).</p>
+
+
+        <h5>2.1.1 The chord diagram</h5>
+
+        <p>Each element in the chord diagram represents a GO term or a cluster of GO terms. Length of the element is proportional to number of genes related with the GO term or a cluster of GO terms. The edges inside the chord diagram between two elements denote the fact that there are common genes between them. </p>
+
+
+
+        <p>Additionally, on each element two types of information are displayed, controlled by the toggle (radio buttons) on the top-left:
+        Name of the GO term, or, for a cluster, the name of the GO term with the lowest p-value, and 
+        The hierarchical clustering tree that allows the collapsing/expansion of GO terms.</p>
+        Note that the size and the position of the chord diagram can be changed.
+
+        <h5>2.1.2 Hierarchical clustering tree</h5>
+        <p>Clustering can be performed systematically or manually using the hierarchical clustering tree:
+        The slider on the top left allows systematic clustering of GO terms based on a threshold of the minimum number of common genes.
+        Alternatively, the nodes in the hierarchical clustering tree can be clicked to manually collapse GO /terms/clusters and expand clusters. </p>
+        <h5>2.1.3 Save image</h5>
+         <p>Image of main diagram can be saved in two formats, svg and png, by clicking drop-down menu button on top left (Save image).</p>
+
+        <h4>2.2 Details panel</h4>
+
+        <p>The details panel shows detailed information about a GO term or a cluster in the main visualization panel. The details panel is activated when the mouse hovers over a GO term/cluster in the chord diagram. </p>
+
+        <p>Note that edge can be clicked and highlighted to freeze the detail panel. For highlighted edge, click again can release detail panel. </p>
+        <center>
+            <img src="../img/click_edge2.png" style="width:300px">
+        </center>
+        <p>The following information is shown in the details panel.
+
+
+        <p><b>For a GO term</b>:
+        <div style="padding-left: 50px">
+            <p>Its ID,
+            <p>Its name,
+            <p>The p-value,
+            <p>The list of genes expressed for this term, and
+            <p>The part of the GO hierarchy from this term to the top term (Biological Process, Cellular Component, or Molecular Function).
+        </div>
+
+        <p><b>For a cluster</b>:
+        <div style="padding-left: 50px">
+            <p>The IDs of GO terms in the cluster, separated by commas,
+            <p>The names of GO terms in the cluster, separated by commas,
+            <p>The number of common genes among the GO terms in the cluster,
+            <p>The average p-value of all GO terms in the cluster, and
+            <p>The list of names of all common genes.
+        </div>
+        <p><b>Images in svg and png format can be downloaded by clicking save image button.</b>:
+        <center>
+            <img src="../img/hierarchy.png" style="width:200px">
+        </center>
+
+        <h4>2.3 Search panel</h4>
+        <p>The search panel allows the search of GO terms by gene names, and IDs or names of GO terms (search by its full name).
+
+        <p>All GO terms/clusters relevant to a search query will be highlighted (popping out) on the chord diagram in the  main visualization panel. Moreover, relevant GO terms/clusters will be listed in the details panel. 
+        <center>
+        <table><tr>
+        <td><img src="../img/search1.png" style="height:500px" border=0></td>
+        <td><img src="../img/search.png" style="height:500px" border=0></td>
+        </tr></table>
+        </center>
+        <h3>3. What does visualization result mean</h3>
+
+            <p>MonaGO helps users reduce redundancy by assisting user to cluster similar GO term. In  MonaGO, enriched GO terms are ordered and visualised in a way that  GO terms whose common genes percentage (Cluster A AND Cluster B/ Cluster A OR Cluster B) are larger are close to each other.</p>
+            <p>In this way, user can easily group them as cluster in which only the most represented GO terms will be displayed in the chord diagram, thereby reducing the “information overload”. Following is an example of GO enrichment result visualised in MonaGO. As shown in the picture below, many enriched GO terms are redundant. An example is the redundancy between GO1 and GO2(They share 11 common genes which takes 100% of their total genes thus considered to be highly related). Therefore they are placed right next to each other.</p>
+            <center>
+                <img src="../img/cluster3.png" style="width:500px"/>
+            </center>
+            <p>
+            Curved lines inside the circle are indicators that the GO terms connected share common genes. User can move the cursor on a particular line to see a list of common genes shared the two connected GO terms on the detailed panel.</p>
+            
+            <center>
+                <img src="../img/cluster4.png" style="width:500px"/>
+            </center>
+            <p>
+            When grouped these two enriched GO terms together as shown above, the one that is most represented(with lower p-value), in this case, GO2 is displayed.  As a result, the redundancy of the enriched GO term is reduced and help user to have better understanding of the enrichment result. </p>
+        
+
+        <h2>Contacts:</h2>
+<!--         <p>Alex Xin: <a href="mailto:zxin9@student.monash.edu">zxin9@student.monash.edu</a></p>
+        <p>Yujun Cai: <a href="mailto:Yajun.Cai@monash.edu">Yajun.Cai@monash.edu</a></p>
+ -->        <p>Yuan-Fang Li: <a href="mailto:yuanfang.li@monash.edu">yuanfang.li@monash.edu</a></p>
+            <p>Mirana Ramialison: <a href="mailto:mirana.ramialison@monash.edu">mirana.ramialison@monash.edu</a></p>
+        
+        <h2>Source code</h2>
+        <p>The source code is available on <a href="https://github.com/xinba123/MonaGO">GitHub</a>.</p>
+        </div>
+    </body>
+</html>
