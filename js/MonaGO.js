@@ -91,7 +91,6 @@ var MonaGO = function(){
 	  molecular_function:"[MF]"
 	};
 	var chordMatrix;
-	var chord;
 	var detailPanelWidth = $(window).width() * 0.25;
 
 	var controlPanelWidth = 510;
@@ -271,7 +270,7 @@ var MonaGO = function(){
 	}
 
 	//creates a D3 structure that can be inputted into the force-directed graph layout
-	function createD3Structure(goids, target) {
+	function createD3Structure(goids, target, target2) {
 
         goids = getUniqueGoid(goids);
 
@@ -320,7 +319,7 @@ var MonaGO = function(){
         			pgoid = parent;
         			pIndex = nodeIndex[pgoid];
 
-        			if (pgoid == target) {
+        			if (pgoid == target || pgoid==target2) {
         			  nodes[i]['is'] = 'child';
         			  nodes[i]['r'] = 30;
         			}
@@ -346,6 +345,14 @@ var MonaGO = function(){
         nodes[nodeIndex[target]].x = width / 2;
         nodes[nodeIndex[target]].y = height - 50;
         nodes[nodeIndex[target]]['is'] = 'target';
+
+        if (target2!='fill'){
+        nodes[nodeIndex[target2]].fixed = true;
+        nodes[nodeIndex[target]].x = width / 3;
+        nodes[nodeIndex[target2]].x = 2*width / 3;
+        nodes[nodeIndex[target2]].y = height - 43;
+        nodes[nodeIndex[target2]]['is'] = 'target';
+        }
 
         return {'nodes' : nodes, 'links' : links};
 	}      
@@ -500,10 +507,17 @@ var MonaGO = function(){
 	}
 
 	//recreate data structures and redraw graph with new nodes
-	function update(goid,svg,width,height) {
-        force = {};
-        struct = parentGO(goid);
-        data = createD3Structure(struct,goid);
+	function update(goid,goid2,svg,width,height) {
+        if (goid2=='fill'){
+            force = {};
+            struct = parentGO(goid);
+            data = createD3Structure(struct,goid,'fill');
+        }
+        else{
+            force = {};
+            struct = parentGO(goid).concat(parentGO(goid2));
+            data = createD3Structure(struct,goid, goid2);
+        }
         if(data.nodes.length < maxNodeNum){
             force = d3.layout.force()
                 .charge(-10000)
@@ -524,6 +538,7 @@ var MonaGO = function(){
         svg.selectAll("text.node").remove();
         drawGraph(data,svg,width,height);
 	}
+        
 
 	function getMaxPval(){
         var max = Number(that.go_inf[0].pVal);
@@ -794,7 +809,6 @@ var MonaGO = function(){
                     .outerRadius(d["radius"]+11)
                     .startAngle(d["startAngle"])
                     .endAngle(d["endAngle"]);
-
     			return arc();
     		});*/
     		clusterArc.transition()
@@ -896,7 +910,6 @@ var MonaGO = function(){
             	.outerRadius(d["LineOuterPosition"]+5)
             	.startAngle(d["LineAngle"])
             	.endAngle(d["LineAngle"]+0.002);
-
             	return firstLine();
             });*/
 			.attrTween("d",function(d, i, a){
@@ -934,13 +947,11 @@ var MonaGO = function(){
             .transition()
             .duration(500)
             /*.attr("d",function(d){
-
                 var secondLine = d3.svg.arc()
         			.innerRadius((d["index"]>nodesSize)?d["LineInnerPosition"]+5:d["LineInnerPosition"])
         			.outerRadius(d["LineOuterPosition"]+5)
         			.startAngle(d["LineAngle"])
         			.endAngle(d["LineAngle"]+0.002);
-
                 return secondLine();
             });*/
 			.attrTween("d",function(d, i, a){
@@ -1110,6 +1121,8 @@ var MonaGO = function(){
         });
 	}
 
+
+
 	function updateMatrix(){
         var newMatrix = [];
         var newArray = [];
@@ -1137,6 +1150,8 @@ var MonaGO = function(){
         }
 	  return newMatrix;
 	}
+
+
 
 	function updateGroupSize(){
         that.groupSize = []
@@ -1196,6 +1211,12 @@ var MonaGO = function(){
 
         if(that.userHighlightChordIndex !=-1){// click when the chord is already freezed
             updateDetailPanelBasedOnChord(d,i);
+            if (similarity!='Genes'){
+                var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
+                if(overallNumOfGOTerms == 2){
+       	        createGoHierifNecessary(that.go_inf[d.source.index].GO_id,that.go_inf[d.source.subindex].GO_id)
+                 }
+            }
         }
 
         }else{
@@ -1708,7 +1729,7 @@ var MonaGO = function(){
         return node;
 	}
 
-	function createGoHierifNecessary(goid){
+	function createGoHierifNecessary(goid, goid2){
         if(typeof goid == "string"){
             $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart\"></div>")
             var go_chart = d3.select("#go_chart").append("svg")
@@ -1738,7 +1759,7 @@ var MonaGO = function(){
             $('#go_chart').on("mouseover",mouseoverHier);
             $('#go_chart').on("mouseout",mouseoutHier);
 
-            update(goid,hier_group,width,height);
+            update(goid,goid2,hier_group,width,height);
         }
 	}
 
@@ -1798,7 +1819,7 @@ var MonaGO = function(){
             .attr('x',0)
             .attr('y',0);
 
-        update(goid,go_chart,width,height);
+        update(goid,'fill',go_chart,width,height);
 	}
 
 	function createGeneListHtml(go){
@@ -2022,7 +2043,7 @@ var MonaGO = function(){
         		.attr("x", function(d) { return d.x; })
         		.attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
-    		update(goDetail.GO_id,hier_group,hierWidth,hierHeight);
+    		update(goDetail.GO_id,'fill',hier_group,hierWidth,hierHeight);
         })
 	}
 
@@ -2040,7 +2061,7 @@ var MonaGO = function(){
 		$('#content').append(detailPanelTempl);
 
 		setUpDetailPanelListener();
-		createGoHierifNecessary(that.go_inf[i].GO_id);
+		createGoHierifNecessary(that.go_inf[i].GO_id, 'fill');
 		createGOHierForClusterGO();
 	}
 
@@ -2147,7 +2168,7 @@ var MonaGO = function(){
                     }
                     }
                     }
-                    };
+                    }
                 }
 		return templ;
                 
@@ -2155,6 +2176,12 @@ var MonaGO = function(){
 
 	function mouseover_chord(d, i) {
         updateDetailPanelBasedOnChord(d,i)
+        if (similarity!='Genes'){
+            var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
+            if(overallNumOfGOTerms == 2){
+	    createGoHierifNecessary(that.go_inf[d.source.index].GO_id, that.go_inf[d.source.subindex].GO_id)
+            }
+        }
 	}
 
 
@@ -2329,7 +2356,7 @@ var MonaGO = function(){
 		  $('#content').append(detailPanelTempl);
 
 		  setUpDetailPanelListener();
-		  createGoHierifNecessary(that.go_inf[i].GO_id);
+		  createGoHierifNecessary(that.go_inf[i].GO_id, 'fill');
 
 		  chordLayout.classed("fade", function(p) {
 				  return p.source.index != i
@@ -3281,13 +3308,3 @@ if(size != 0){
 }
 
 })();
-
-
-
-
-
-
-
-
-
-
