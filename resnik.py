@@ -97,3 +97,14 @@ def ResnikDisMIA(iGOids, x, yGOids):
     MIAName=go_hier[MIA]['n']
     return(sim,MIAName)
 
+print(simRes(u'GO:0006355',u'GO:0006351'))
+nodeA=u'GO:0006355'
+nodeB=u'GO:0006351'
+if True:
+    ancestorsNodeA=nx.ancestors(G,nodeA)
+    ancestorsNodeA.add(nodeA)
+    ancestorsNodeB=nx.ancestors(G,nodeB)
+    ancestorsNodeB.add(nodeB)
+    commonAncestors=ancestorsNodeA.intersection(ancestorsNodeB)
+    print(ancestorsNodeA)
+    print(ancestorsNodeB)

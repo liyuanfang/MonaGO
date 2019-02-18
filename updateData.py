@@ -6,18 +6,19 @@ from Bio.UniProt.GOA import gafiterator
 
 
 
+
 def createGOjsFile():
     # recreates GO.js file so that ontology is up to date
     import json
     from goatools import obo_parser
 
-    file=obo_parser.GODag('data/go-basic.obo')
+    file=obo_parser.GODag('data/go-basic.obo','relationship')
 
     GOjsDict={}
     for goID in file:
         parents=[]
-        for parent in file[goID].parents:
-            parents.append(parent.id)
+        for parent in file[goID].get_all_upper():
+            parents.append(parent)
         name=file[goID].name
         namespace=file[goID].namespace
         if not file[goID].is_obsolete:
