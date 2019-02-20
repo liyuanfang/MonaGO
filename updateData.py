@@ -17,8 +17,9 @@ def createGOjsFile():
     GOjsDict={}
     for goID in file:
         parents=[]
-        for parent in file[goID].get_all_upper():
-            parents.append(parent)
+        for parent in list(file[goID].get_goterms_upper()):
+            print(parent.id)
+            parents.append(parent.id)
         name=file[goID].name
         namespace=file[goID].namespace
         if not file[goID].is_obsolete:
