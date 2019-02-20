@@ -109,6 +109,7 @@ var MonaGO = function(){
 	var main_div = 0;
 	var svg ;
 	var go_chart;
+	var go_chart_big;
 	var circleSvg;
 
 	var width = detailPanelWidth - 70;
@@ -270,7 +271,7 @@ var MonaGO = function(){
 	}
 
 	//creates a D3 structure that can be inputted into the force-directed graph layout
-	function createD3Structure(goids, target, target2) {
+	function createD3Structure(goids, target, target2, width, height) {
 
         goids = getUniqueGoid(goids);
 
@@ -511,12 +512,12 @@ var MonaGO = function(){
         if (goid2=='fill'){
             force = {};
             struct = parentGO(goid);
-            data = createD3Structure(struct,goid,'fill');
+            data = createD3Structure(struct,goid,'fill', width, height);
         }
         else{
             force = {};
             struct = parentGO(goid).concat(parentGO(goid2));
-            data = createD3Structure(struct,goid, goid2);
+            data = createD3Structure(struct,goid, goid2, width, height);
         }
         if(data.nodes.length < maxNodeNum){
             force = d3.layout.force()
@@ -1732,6 +1733,7 @@ var MonaGO = function(){
 	function createGoHierifNecessary(goid, goid2){
         if(typeof goid == "string"){
             $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart\"></div>")
+            $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart_big\" style='visibility:hidden'></div>")
             var go_chart = d3.select("#go_chart").append("svg")
                 .attr("id","go_chart1")
                 .attr("width", width)
@@ -1760,6 +1762,34 @@ var MonaGO = function(){
             $('#go_chart').on("mouseout",mouseoutHier);
 
             update(goid,goid2,hier_group,width,height);
+
+            var go_chart_big = d3.select("#go_chart_big").append("svg")
+                .attr("id","go_chart_big1")
+                .attr("width", 1500)
+                .attr("height", 1100);
+            $('#go_chart_big1').css ("border", "1px solid grey");
+            var hier_group_big = go_chart_big.append("svg:svg")
+            .attr("id","hier_group_big");
+
+            //   .call(zoomhier.on("zoom", zoomed));
+            hier_group_big.selectAll("line")
+                .attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            hier_group_big.selectAll("circle")
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+
+            hier_group_big.selectAll("text")
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
+
+            $('#go_chart').on("mouseover",mouseoverHier);
+            $('#go_chart').on("mouseout",mouseoutHier);
+
+            update(goid,goid2,hier_group_big,1500,1000);
         }
 	}
 
@@ -1777,11 +1807,23 @@ var MonaGO = function(){
 	   else if($('#exporthier').hide()){
 			$('#exporthier').show();
        }
+	   if(!$('[id="expandhier"]').hasClass("btn")){
+			var expand="<div style=\"position:relative;left:"+(width-65)+"px;bottom:"+(height+28)+"px;\"><button id='expandhier' class='btn btn-sm'><i class='fa fa-expand'></i></button><div>"
+            $('#go_chart').append(expand)
+            $('#expandhier').append(expand)
+			setexpandhierbtn();
+	   }
+	   else if($('#expandhier').hide()){
+			$('#expandhier').show();
+       }
 	}
 
 	function mouseoutHier(){
         if($('[id="exporthier"]').hasClass("btn")){
 			$('#exporthier').hide();
+        }
+        if($('[id="expandhier"]').hasClass("btn")){
+			$('#expandhier').hide();
         }
 	}
 
@@ -1796,6 +1838,17 @@ var MonaGO = function(){
 
         $("#svg").click(function(){
              saveSvg(document.getElementById("hier_group"), "hierarchy.svg", {scale: 2});
+        });
+	}
+
+	function setexpandhierbtn(){
+		$("#expandhier").click(function() {
+		var image=document.getElementById("go_chart_big")
+		var imageClone=image.cloneNode(true)
+		imageClone.style.visibility='visible'
+		var w=window.open("","","width=1170, height=860");
+		w.document.write(imageClone.outerHTML);
+
         });
 	}
 
@@ -1820,6 +1873,19 @@ var MonaGO = function(){
             .attr('y',0);
 
         update(goid,'fill',go_chart,width,height);
+        var go_chart_big = d3.select('#'+goid_target).append("svg")
+            .attr("width", 1500)
+            .attr("height", 100);
+
+        go_chart_big.append('rect')
+            .style('fill','white')
+            .style('stroke','gray')
+            .attr('width',width)
+            .attr('height',height)
+            .attr('x',0)
+            .attr('y',0);
+
+        update(goid,'fill',go_chart_big,width,height);
 	}
 
 	function createGeneListHtml(go){
@@ -1943,6 +2009,7 @@ var MonaGO = function(){
 
         //var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a><button id='exporthier' class='btn' z-index:50'>Export Hierarchy Image</button></p> <div id='go_chart'></div> ":"";
 		var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a></p> <div id='go_chart'></div> ":"";
+
 		detailPanelTempl += goInfTempl + genesListTempl + chartTempl;
 
 		return detailPanelTempl;
@@ -2030,6 +2097,12 @@ var MonaGO = function(){
     		.attr("height", hierHeight);
     		$('#go_chart1').css ("border", "1px solid grey");
 
+            var go_chart_big = d3.select("#"+goNameID).append("svg")
+                .attr("id","go_chart_big1")
+                .attr("width", 1500)
+                .attr("height", 1000);
+            $('#go_chart_big1').css ("border", "1px solid grey");
+
             var hier_group = go_chart.append("svg:svg")
             hier_group.selectAll("line")
         		.attr("x1", function(d) { return d.source.x; })
@@ -2044,6 +2117,21 @@ var MonaGO = function(){
         		.attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
     		update(goDetail.GO_id,'fill',hier_group,hierWidth,hierHeight);
+
+            var hier_group_big = go_chart_big.append("svg:svg")
+            hier_group_big.selectAll("line")
+        		.attr("x1", function(d) { return d.source.x; })
+        		.attr("y1", function(d) { return d.source.y; })
+        		.attr("x2", function(d) { return d.target.x; })
+        		.attr("y2", function(d) { return d.target.y; });
+        		hier_group_big.selectAll("circle")
+        		.attr("cx", function(d) { return d.x; })
+        		.attr("cy", function(d) { return d.y; });
+        		hier_group_big.selectAll("text")
+        		.attr("x", function(d) { return d.x; })
+        		.attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
+
+    		update(goDetail.GO_id,'fill',hier_group_big,1500,1000);
         })
 	}
 

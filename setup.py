@@ -11,3 +11,4 @@ if __name__ == '__main__':
     install('geotools')
     install('biopython')
     install('goatools')
+    install('DavidDataScrawler')
