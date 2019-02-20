@@ -366,4 +366,4 @@ def loadConfig():
 if __name__ == '__main__':
     loadConfig()
     loadGOHier()
-    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1369, threaded = True)
+    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1484, threaded = True)

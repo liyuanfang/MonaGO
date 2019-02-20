@@ -1733,7 +1733,28 @@ var MonaGO = function(){
 	function createGoHierifNecessary(goid, goid2){
         if(typeof goid == "string"){
             $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart\"></div>")
-            $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart_big\" style='visibility:hidden'></div>")
+
+		var floatPanelTempl=window.document.createElement("div")
+
+		if (document.getElementById('go_chart_big_content')){
+			document.getElementById('go_chart_big_content').innerHTML='';
+		}
+	
+		floatPanelTempl.innerHTML="<div id='go_chart_big' class='modal'><div id='go_chart_big_content' class='modal-content'><span class='close'>&times;</span><p></p></div></div>".trim()
+		document.body.appendChild(floatPanelTempl)
+		
+		var floatPanel=document.getElementById('go_chart_big')
+
+		var span=document.getElementsByClassName('close')[0];
+		span.onclick=function(){
+			floatPanel.style.display='none';
+		}
+		window.onclick=function(event){
+			if(event.target==floatPanel){
+				floatPanel.style.display='none';
+			}
+		}
+
             var go_chart = d3.select("#go_chart").append("svg")
                 .attr("id","go_chart1")
                 .attr("width", width)
@@ -1763,11 +1784,12 @@ var MonaGO = function(){
 
             update(goid,goid2,hier_group,width,height);
 
-            var go_chart_big = d3.select("#go_chart_big").append("svg")
+            var go_chart_big = d3.select("#go_chart_big_content").append("svg")
                 .attr("id","go_chart_big1")
                 .attr("width", 1500)
                 .attr("height", 1100);
-            $('#go_chart_big1').css ("border", "1px solid grey");
+
+            $('#go_chart_big1').css ("top:200, left:800, position:'fixed'");
             var hier_group_big = go_chart_big.append("svg:svg")
             .attr("id","hier_group_big");
 
@@ -1790,6 +1812,7 @@ var MonaGO = function(){
             $('#go_chart').on("mouseout",mouseoutHier);
 
             update(goid,goid2,hier_group_big,1500,1000);
+
         }
 	}
 
@@ -1843,13 +1866,12 @@ var MonaGO = function(){
 
 	function setexpandhierbtn(){
 		$("#expandhier").click(function() {
-		var image=document.getElementById("go_chart_big")
-		var imageClone=image.cloneNode(true)
-		imageClone.style.visibility='visible'
-		var w=window.open("","","width=1170, height=860");
-		w.document.write(imageClone.outerHTML);
-
+		var floatPanel=document.getElementById('go_chart_big')
+		floatPanel.style.display='block';
+		
         });
+
+
 	}
 
 	function replaceCommaWithUnderline(term){
@@ -1857,7 +1879,7 @@ var MonaGO = function(){
 	}
 
 	function createGoHierByGOId(goid){
-
+	// not actually called
         var goid_target = replaceCommaWithUnderline(goid);
 
         var go_chart = d3.select('#'+goid_target).append("svg")
