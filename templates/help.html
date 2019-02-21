@@ -192,8 +192,16 @@ textarea{
             </p>
                 <center><img src="../img/upload2.png" style="width:500px"/></center>
             <p></p>
+
+            <p> After entering enriched GO terms, there are several options for the visualisation.</p>
+            <p> (1) Choose p-value: The maximum p-value allowed can be selected using the sliding scale or entering a value manually.</p>
+            <p> (2) Choose distance measurement: The distance measurement can be selected using the drop-down menu. This is how the similarity between GO terms is compared so that similar terms can be clustered. There are three optionss for this; firstly 'Number of overlapping genes,' which is the percentage of genes common to the GO terms. The second two options 'Resnik similarity between GO terms' and 'Simrel between GO terms' are semantic similarity measurements between two GO terms. </p>
+            <p> (3) Advanced option: If a semantic similarity measurement is chosen in option (2), the advanced option drop-down menu appears. This allows advanced users to choose how to compare similarity scores between clusters of GO terms. 'Average' takes the average similarity of every combination of GO terms in the clusters, 'Minimum' considers the most informative ancestor common to all GO terms and thus takes the minimum similarity between the combinations, and 'Maximum' considers the most informative ancestor common to any combination of GO terms and thus takes the maximum similarity between the combinations. </p>
+
+
+
             <h4>1.2 Submit files exported from MonaGO </h4>
-            <p>A JSON file that stores the current state of the main chord diagram can be downloaded and uploaded to get restoration. Submission Interface can be found in Figure 5.</p>
+            <p>A JSON file that stores the current state of the main chord diagram can be downloaded and uploaded to get restoration. Submission Interface can be seen below.</p>
             <center><img src="../img/import1.png" style="width:500px"/></center>
         <h4>1.3 Using DAVID as input</h4>
             <!-- <p>To produce a GO enrichment visualization, users can either:</p> -->
@@ -203,10 +211,12 @@ textarea{
                 <div style="padding-left: 50px">
                     <p>(1) Input a list of genes or upload a file to identify over-represented GO terms.</p>
                     <p>(2) Select the appropriate gene identifier.</p>
-                    <p>(3) Choose p-value to filter the enrichment result.</p>
+                    <p>(3) Choose p-value to filter the enrichment result, as in 1.1.</p>
                     <p>(4) Choose the GO annotation type (Biological Process, Molecular Function, Cellular Component). </p>
+                    <p>(5) Choose the distance measurement based on common genes or semantic similarity, as in 1.1 </p>
+                    <p>(6) Advanced option to choose how to compare similarity scores between clusters of GO terms, as in 1.1 </p>
                 </div>
-                <center><img src="../img/david2.png" style="width:500px"/></center>
+                <center><img src="../img/david.png" style="width:500px"/></center>
             <h4>Options used in <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a></h4>
             <P>MonaGO utilizes the following options in Functional Annotation Tool of DAVID.</P>
                 <div style="padding-left: 50px">
@@ -236,21 +246,21 @@ textarea{
 
 
 
-        <p>Additionally, on each element two types of information are displayed, controlled by the toggle (radio buttons) on the top-left:
+        <p>Additionally, on each element two types of information are displayed:
         Name of the GO term, or, for a cluster, the name of the GO term with the lowest p-value, and 
-        The hierarchical clustering tree that allows the collapsing/expansion of GO terms.</p>
-        Note that the size and the position of the chord diagram can be changed.
+        the hierarchical clustering tree that allows the collapsing/expansion of GO terms.</p>
+        Note that the size and the position of the chord diagram can be changed by zooming in and out.
 
         <h5>2.1.2 Hierarchical clustering tree</h5>
         <p>Clustering can be performed systematically or manually using the hierarchical clustering tree:
-        The slider on the top left allows systematic clustering of GO terms based on a threshold of the minimum number of common genes.
+        The slider on the top left allows systematic clustering of GO terms based on the threshold of either the minimum number of common genes, or the average/minimum/maximum semantic similarity between GO terms in clusters.
         Alternatively, the nodes in the hierarchical clustering tree can be clicked to manually collapse GO /terms/clusters and expand clusters. </p>
         <h5>2.1.3 Save image</h5>
          <p>Image of main diagram can be saved in two formats, svg and png, by clicking drop-down menu button on top left (Save image).</p>
 
         <h4>2.2 Details panel</h4>
 
-        <p>The details panel shows detailed information about a GO term or a cluster in the main visualization panel. The details panel is activated when the mouse hovers over a GO term/cluster in the chord diagram. </p>
+        <p>The details panel shows detailed information about a GO term or a cluster in the main visualization panel. The details panel is activated when the mouse hovers over a GO term/cluster or an edge in the chord diagram. </p>
 
         <p>Note that edge can be clicked and highlighted to freeze the detail panel. For highlighted edge, click again can release detail panel. </p>
         <center>
@@ -268,7 +278,7 @@ textarea{
             <p>The part of the GO hierarchy from this term to the top term (Biological Process, Cellular Component, or Molecular Function).
         </div>
 
-        <p><b>For a cluster</b>:
+        <p><b>For a cluster (or edges between clusters)</b>:
         <div style="padding-left: 50px">
             <p>The IDs of GO terms in the cluster, separated by commas,
             <p>The names of GO terms in the cluster, separated by commas,
@@ -276,9 +286,23 @@ textarea{
             <p>The average p-value of all GO terms in the cluster, and
             <p>The list of names of all common genes.
         </div>
-        <p><b>Images in svg and png format can be downloaded by clicking save image button.</b>:
+
+        <p><b>For an edge between two GO terms</b>:
+        <div style="padding-left: 50px">
+            <p>The IDs of GO terms, separated by commas,
+            <p>The names of GO terms, separated by commas,
+            <p>The number of common genes among the GO terms,
+            <p>The average p-value of the GO terms, 
+            <p>The list of names of all common genes, 
+            <p>The semantic similarity between the GO terms (if a semantic distance measurement was chosen), 
+            <p>The most informative ancestor common to the GO terms (if a semantic distance measurement was chosen and the similarity is >0), and
+            <p>The part of the GO hierarchy from each of the GO terms to the top term (if a semantic distance measurement was chosen).
+        </div>
+
+        <p><b>Hierarchy images in svg and png format can be downloaded by clicking save image button</b>:
+        <p>If the tree is unclear due to too many nodes, the image can be expanded by clicking the button in the top right. This opens a modal with the image taking up the whole screen. Nodes can be dragged around until tree is more clear, and this image can be saved in svg or png format by clicking the save button. To exit the modal click out of it. 
         <center>
-            <img src="../img/hierarchy.png" style="width:200px">
+            <img src="../img/hierarchy.png" style="width:400px">
         </center>
 
         <h4>2.3 Search panel</h4>
@@ -293,13 +317,13 @@ textarea{
         </center>
         <h3>3. What does visualization result mean</h3>
 
-            <p>MonaGO helps users reduce redundancy by assisting user to cluster similar GO term. In  MonaGO, enriched GO terms are ordered and visualised in a way that  GO terms whose common genes percentage (Cluster A AND Cluster B/ Cluster A OR Cluster B) are larger are close to each other.</p>
-            <p>In this way, user can easily group them as cluster in which only the most represented GO terms will be displayed in the chord diagram, thereby reducing the “information overload”. Following is an example of GO enrichment result visualised in MonaGO. As shown in the picture below, many enriched GO terms are redundant. An example is the redundancy between GO1 and GO2(They share 11 common genes which takes 100% of their total genes thus considered to be highly related). Therefore they are placed right next to each other.</p>
+            <p>MonaGO helps users reduce redundancy by assisting user to cluster similar GO term. In  MonaGO, enriched GO terms are ordered and visualised in a way that  GO terms whose common genes percentage (Cluster A AND Cluster B/ Cluster A OR Cluster B) or semantic similarity is larger are closer to each other.</p>
+            <p>In this way, user can easily group them as cluster in which only the most represented GO terms will be displayed in the chord diagram, thereby reducing the “information overload”. Following is an example of GO enrichment result visualised in MonaGO. As shown in the picture below, many enriched GO terms are redundant. An example is the redundancy between GO1 and GO2(They share 11 common genes which takes 100% of their total genes thus considered to be highly related, assuming number of overlapping genes is the distance measurement selected). Therefore they are placed right next to each other.</p>
             <center>
                 <img src="../img/cluster3.png" style="width:500px"/>
             </center>
             <p>
-            Curved lines inside the circle are indicators that the GO terms connected share common genes. User can move the cursor on a particular line to see a list of common genes shared the two connected GO terms on the detailed panel.</p>
+            Grey curved lines inside the circle are indicators that the GO terms connected share common genes. User can move the cursor on a particular line to see a list of common genes shared the two connected GO terms on the detailed panel.</p>
             
             <center>
                 <img src="../img/cluster4.png" style="width:500px"/>

@@ -522,7 +522,7 @@ var MonaGO = function(){
         if(data.nodes.length < maxNodeNum){
 	if(width==window.innerWidth*0.75){
             force = d3.layout.force()
-                .charge(-20000)
+                .charge(-18000)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
@@ -538,7 +538,7 @@ var MonaGO = function(){
         }else{
 	if(width==window.innerWidth*0.75){
             force = d3.layout.force()
-                .charge(-4000)
+                .charge(-3000)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)

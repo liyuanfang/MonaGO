@@ -178,6 +178,10 @@ def getMyLogo():
         fw.write("remote address: {}  time: {}\n".format(request.remote_addr,datetime.today()))
     return send_from_directory(root_dir+'my/img','my_logo.jpg')
 
+@app.route('/help')
+def getHelp():
+    return send_from_directory(root_dir+'templates','help.html')
+
 @app.route('/help.html')
 def getHelp():
     return send_from_directory(root_dir+'templates','help.html')
@@ -366,4 +370,4 @@ def loadConfig():
 if __name__ == '__main__':
     loadConfig()
     loadGOHier()
-    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1519, threaded = True)
+    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1527, threaded = True)
