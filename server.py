@@ -183,7 +183,7 @@ def getHelp():
     return send_from_directory(root_dir+'templates','help.html')
 
 @app.route('/help.html')
-def getHelp():
+def getHelp1():
     return send_from_directory(root_dir+'templates','help.html')
 
 @app.route('/getPic',methods=['POST','GET'])
