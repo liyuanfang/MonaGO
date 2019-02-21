@@ -404,7 +404,8 @@ var MonaGO = function(){
     		.enter().append("line")
     		.attr("class", "link")
     		.style('stroke', function(d, i ) { return strokeColor(d.type);})
-    		.style("stroke-width", 2);
+    		.style("stroke-width", 2)
+		.attr('marker-end','url(#end)');
 	 
         var node = svg.selectAll("circle.node")
             .data(struct.nodes)
@@ -424,6 +425,7 @@ var MonaGO = function(){
         .on('click',function(d,i) {
             d.fixed = true;
         });
+
 
         var nodeText = svg.selectAll("text.node")
             .data(struct.nodes)
@@ -522,7 +524,7 @@ var MonaGO = function(){
         if(data.nodes.length < maxNodeNum){
 	if(width==window.innerWidth*0.75){
             force = d3.layout.force()
-                .charge(-18000)
+                .charge(-window.innerWidth*0.75*12)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
@@ -538,7 +540,7 @@ var MonaGO = function(){
         }else{
 	if(width==window.innerWidth*0.75){
             force = d3.layout.force()
-                .charge(-3000)
+                .charge(-window.innerWidth*0.75*2)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
@@ -1756,11 +1758,12 @@ var MonaGO = function(){
 		var floatPanelTempl=window.document.createElement("div")
 
 		if (document.getElementById('go_chart_big_content')){
-			document.getElementById('go_chart_big_content').innerHTML='';
+			document.getElementById('go_chart_big_content').innerHTML="<span class='close'>&times;</span>";
 		}
 	
 		floatPanelTempl.innerHTML="<div id='go_chart_big' class='modal'><div id='go_chart_big_content' class='modal-content'><span class='close'>&times;</span><p></p></div></div>".trim()
 		document.body.appendChild(floatPanelTempl)
+
 		
 		var floatPanel=document.getElementById('go_chart_big')
 		var floatWidth=window.innerWidth*.75
@@ -1801,6 +1804,7 @@ var MonaGO = function(){
                 .attr("x", function(d) { return d.x; })
                 .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
+
             $('#go_chart').on("mouseover",mouseoverHier);
             $('#go_chart').on("mouseout",mouseoutHier);
 
@@ -1830,10 +1834,42 @@ var MonaGO = function(){
                 .attr("x", function(d) { return d.x; })
                 .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
+	    hier_group_big.append("svg:defs").selectAll("marker")
+    		.data(["end"])      // Different link/path types can be defined here
+  		.enter().append("svg:marker")    // This section adds in the arrows
+    		.attr("id", String)
+    		.attr("viewBox", "0 -5 10 10")
+    		.attr("refX", 15)
+    		.attr("refY", 0.5)
+		.attr("markerWidth", 5)
+		.attr("markerHeight", 5)
+		.attr("orient", "auto")
+		.append("svg:path")
+		.attr("d", "M0,-5L10,0L0,5");
+
             $('#go_chart').on("mouseover",mouseoverHier);
             $('#go_chart').on("mouseout",mouseoutHier);
 
             update(goid,goid2,hier_group_big,floatWidth,floatHeight);
+
+		var element="<div style=\"position:relative;left:10px;bottom:"+(window.innerHeight*.75-10)+"px;\"><button id='exporthier_big' class='btn dropdown-toggle' data-toggle='dropdown'>Save 			image<span class='caret'></span></button><div>"
+            	$('#go_chart_big_content').append(element)
+            	element= '<ul class="dropdown-menu" role="menu" id="menu">';
+             	//element+='<li><a href="" id="PDF">PDF</a></li>'
+            	element+='<li><a href="#" id="png">PNG</a></li>'
+            	element+='<li><a href="#"id="svg">SVG</a></li></ul>'
+            	$('#exporthier_big').append(element)
+		$("#exporthier_big").click(function() {
+            		$('#menu.dropdown-menu').slideToggle();
+        	})
+
+        	$('#png').click(function(){
+            	saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 5});
+        	});
+
+        	$("#svg").click(function(){
+          	   	saveSvg(document.getElementById("hier_group_big"), "hierarchy.svg", {scale: 2});
+        	});
 
         }
 	}
@@ -1889,9 +1925,8 @@ var MonaGO = function(){
 	function setexpandhierbtn(){
 		$("#expandhier").click(function() {
 		var floatPanel=document.getElementById('go_chart_big')
-		floatPanel.style.display='block';
-		
-        });
+		floatPanel.style.display='block';		
+        	});
 
 
 	}
