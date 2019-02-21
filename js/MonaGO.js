@@ -520,20 +520,39 @@ var MonaGO = function(){
             data = createD3Structure(struct,goid, goid2, width, height);
         }
         if(data.nodes.length < maxNodeNum){
+	if(width==window.innerWidth*0.75){
+            force = d3.layout.force()
+                .charge(-20000)
+                .linkDistance(20)
+                .theta(0.2)
+                .gravity(0.5)
+                .size([width, height]);
+	}else{
             force = d3.layout.force()
                 .charge(-10000)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
                 .size([width, height]);
+	}
         }else{
+	if(width==window.innerWidth*0.75){
+            force = d3.layout.force()
+                .charge(-4000)
+                .linkDistance(20)
+                .theta(0.2)
+                .gravity(0.5)
+                .size([width, height]);
+	}else{
             force = d3.layout.force()
                 .charge(-2000)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
                 .size([width, height]);
-        }
+	}
+	}
+
         svg.selectAll("line.link").remove();
         svg.selectAll("circle.node").remove();
         svg.selectAll("text.node").remove();
@@ -1744,6 +1763,9 @@ var MonaGO = function(){
 		document.body.appendChild(floatPanelTempl)
 		
 		var floatPanel=document.getElementById('go_chart_big')
+		var floatWidth=window.innerWidth*.75
+		var floatHeight=window.innerHeight*.75
+
 
 		var span=document.getElementsByClassName('close')[0];
 		span.onclick=function(){
@@ -1786,10 +1808,10 @@ var MonaGO = function(){
 
             var go_chart_big = d3.select("#go_chart_big_content").append("svg")
                 .attr("id","go_chart_big1")
-                .attr("width", 1500)
-                .attr("height", 1100);
+                .attr("width", floatWidth)
+                .attr("height", floatHeight);
+            $('#go_chart_big1').css ("top:0, left:0, position:'fixed'");
 
-            $('#go_chart_big1').css ("top:200, left:800, position:'fixed'");
             var hier_group_big = go_chart_big.append("svg:svg")
             .attr("id","hier_group_big");
 
@@ -1811,7 +1833,7 @@ var MonaGO = function(){
             $('#go_chart').on("mouseover",mouseoverHier);
             $('#go_chart').on("mouseout",mouseoutHier);
 
-            update(goid,goid2,hier_group_big,1500,1000);
+            update(goid,goid2,hier_group_big,floatWidth,floatHeight);
 
         }
 	}
@@ -1894,10 +1916,13 @@ var MonaGO = function(){
             .attr('x',0)
             .attr('y',0);
 
+		var floatWidth=window.innerWidth*.75
+		var floatHeight=window.innerHeight*.75
+
         update(goid,'fill',go_chart,width,height);
         var go_chart_big = d3.select('#'+goid_target).append("svg")
-            .attr("width", 1500)
-            .attr("height", 100);
+            .attr("width", floatWidth)
+            .attr("height", floatHeight);
 
         go_chart_big.append('rect')
             .style('fill','white')
@@ -1907,7 +1932,7 @@ var MonaGO = function(){
             .attr('x',0)
             .attr('y',0);
 
-        update(goid,'fill',go_chart_big,width,height);
+        update(goid,'fill',go_chart_big,floatWidth,floatHeight);
 	}
 
 	function createGeneListHtml(go){
@@ -2119,10 +2144,13 @@ var MonaGO = function(){
     		.attr("height", hierHeight);
     		$('#go_chart1').css ("border", "1px solid grey");
 
+		var floatWidth=window.innerWidth*.75
+		var floatHeight=window.innerHeight*.75
+
             var go_chart_big = d3.select("#"+goNameID).append("svg")
                 .attr("id","go_chart_big1")
-                .attr("width", 1500)
-                .attr("height", 1000);
+                .attr("width", floatWidth)
+                .attr("height", floatHeight);
             $('#go_chart_big1').css ("border", "1px solid grey");
 
             var hier_group = go_chart.append("svg:svg")
@@ -2153,7 +2181,7 @@ var MonaGO = function(){
         		.attr("x", function(d) { return d.x; })
         		.attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
-    		update(goDetail.GO_id,'fill',hier_group_big,1500,1000);
+    		update(goDetail.GO_id,'fill',hier_group_big,floatWidth,floatHeight);
         })
 	}
 

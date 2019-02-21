@@ -536,7 +536,7 @@ hr {
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 4; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -552,13 +552,14 @@ hr {
   margin: 5% auto; /* 15% from the top and centered */
   padding: -100px;
   border: 1px solid #888;
-  width: 1500px; /* Could be more or less, depending on screen size */
-  height: 1100px
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 80%;
 }
 
 /* The Close Button */
 .close {
   color: #aaa;
+  z-index: 5; /* Sit on top */
   float: right;
   font-size: 28px;
   font-weight: bold;
