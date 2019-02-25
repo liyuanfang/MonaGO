@@ -17,13 +17,27 @@ def createGOjsFile():
     GOjsDict={}
     for goID in file:
         parents=[]
-        for parent in list(file[goID].get_goterms_upper()):
-            print(parent.id)
-            parents.append(parent.id)
+	uppers=[]
+	for parent in file[goID].parents:
+	    parents.append(parent.id)
+	    uppers.append((parent.id,'is_a'))
+
+	if len(list(file[goID].relationship))==1:
+            for relationships in list(file[goID].relationship.values()):
+                relation=list(relationships)[0].id
+	    parents.append(relation)
+	    uppers.append([relation,list(file[goID].relationship)[0]])
+	if len(list(file[goID].relationship))>1:
+	    i=0
+            for relationships in list(file[goID].relationship.values()):
+                relation=list(relationships)[0].id
+	        parents.append(relation)
+	        uppers.append([relation,list(file[goID].relationship)[i]])
+		i+=1
         name=file[goID].name
         namespace=file[goID].namespace
         if not file[goID].is_obsolete:
-            GOjsDict[unicode(file[goID].id)]={'p':parents,'c':namespace,'n':name}
+            GOjsDict[unicode(file[goID].id)]={'p':parents,'c':namespace,'n':name, 'u':uppers}
     GOjs=open('js/GO.js','w')
     json.dump(GOjsDict,GOjs)
 

@@ -312,13 +312,14 @@ var MonaGO = function(){
             goid = go_level[0];
             level = go_level[1];
 
-            parents = GO(goid)['p'];
+            parents = GO(goid)['u'];
 
             if (parents.length > 0 ) {
                 for (var a = 0, countA = parents.length ; a < countA ; a ++ ) {
-        			parent = parents[a];
+        			parent = parents[a][0];
         			pgoid = parent;
         			pIndex = nodeIndex[pgoid];
+				pType = parents[a][1];
 
         			if (pgoid == target || pgoid==target2) {
         			  nodes[i]['is'] = 'child';
@@ -330,7 +331,18 @@ var MonaGO = function(){
                         link['source'] = pIndex;
                         link['target'] = i;
                         link['value'] = 5;
-                        //link['type'] = prel;
+			if (pType=='is_a'){
+			link['type']=1}
+			else if (pType=='part_of'){
+			link['type']=2}
+			else if (pType=='regulates'){
+			link['type']=3}
+			else if (pType=='positively_regulates'){
+			link['type']=4}
+			else if (pType=='negatively_regulates'){
+			link['type']=5}
+			else {
+			link['type']=6}
                         links.push(link)
         			}
                 }
@@ -405,7 +417,7 @@ var MonaGO = function(){
     		.attr("class", "link")
     		.style('stroke', function(d, i ) { return strokeColor(d.type);})
     		.style("stroke-width", 2)
-		.attr('marker-end','url(#end)');
+		.attr('marker-start','url(#end)');
 	 
         var node = svg.selectAll("circle.node")
             .data(struct.nodes)
@@ -446,7 +458,7 @@ var MonaGO = function(){
                   .attr("cy", function(d) { return d.y = Math.max(radiusScale(d.r), Math.min(height - radiusScale(d.r), d.y));; })
 
                 nodeText.attr("x", function(d) { return d.x; })
-                  .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; })
+                  .attr("y", function(d) { return d.y + radiusScale(d.r) - 25; })
             });
         }else{
             //if exceeds 15 nodes, display without constraint
@@ -460,7 +472,7 @@ var MonaGO = function(){
                     .attr("cy", function(d) { return d.y; })
 
                 nodeText.attr("x", function(d) { return d.x; })
-                  .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; })
+                  .attr("y", function(d) { return d.y + radiusScale(d.r) - 25; })
             }); 
         }
 
@@ -524,7 +536,7 @@ var MonaGO = function(){
         if(data.nodes.length < maxNodeNum){
 	if(width==window.innerWidth*0.75){
             force = d3.layout.force()
-                .charge(-window.innerWidth*0.75*12)
+                .charge(-window.innerHeight*1.35*12)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
@@ -540,7 +552,7 @@ var MonaGO = function(){
         }else{
 	if(width==window.innerWidth*0.75){
             force = d3.layout.force()
-                .charge(-window.innerWidth*0.75*2)
+                .charge(-window.innerHeight*1.35*2)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
@@ -1816,6 +1828,7 @@ var MonaGO = function(){
                 .attr("height", floatHeight);
             $('#go_chart_big1').css ("top:0, left:0, position:'fixed'");
 
+
             var hier_group_big = go_chart_big.append("svg:svg")
             .attr("id","hier_group_big");
 
@@ -1839,18 +1852,28 @@ var MonaGO = function(){
   		.enter().append("svg:marker")    // This section adds in the arrows
     		.attr("id", String)
     		.attr("viewBox", "0 -5 10 10")
-    		.attr("refX", 15)
+    		.attr("refX", 18)
     		.attr("refY", 0.5)
 		.attr("markerWidth", 5)
 		.attr("markerHeight", 5)
-		.attr("orient", "auto")
+		.attr('opacity',0.5)
+		.attr("orient", "auto-start-reverse")
 		.append("svg:path")
 		.attr("d", "M0,-5L10,0L0,5");
+
+
+	    hier_group_big.append('svg:image')
+		.attr('x',10)
+		.attr('y',floatHeight-220)
+		.attr('width',200)
+		.attr('height',300)
+		.attr('xlink:href','img/key.png')
 
             $('#go_chart').on("mouseover",mouseoverHier);
             $('#go_chart').on("mouseout",mouseoutHier);
 
             update(goid,goid2,hier_group_big,floatWidth,floatHeight);
+
 
 		var element="<div style=\"position:relative;left:10px;bottom:"+(window.innerHeight*.75-10)+"px;\"><button id='exporthier_big' class='btn dropdown-toggle' data-toggle='dropdown'>Save 			image<span class='caret'></span></button><div>"
             	$('#go_chart_big_content').append(element)
@@ -1859,6 +1882,8 @@ var MonaGO = function(){
             	element+='<li><a href="#" id="png">PNG</a></li>'
             	element+='<li><a href="#"id="svg">SVG</a></li></ul>'
             	$('#exporthier_big').append(element)
+
+
 		$("#exporthier_big").click(function() {
             		$('#menu.dropdown-menu').slideToggle();
         	})
@@ -1869,6 +1894,7 @@ var MonaGO = function(){
 
         	$("#svg").click(function(){
           	   	saveSvg(document.getElementById("hier_group_big"), "hierarchy.svg", {scale: 2});
+
         	});
 
         }
