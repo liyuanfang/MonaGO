@@ -428,9 +428,9 @@ var MonaGO = function(){
                 if (d.is == "root") {
                     return 'black';
                 } else if (d.is == "target" || d.is == 'child') {
-                    return 'orange';
+                    return '#654321';
                 } else {
-                    return 'lightblue';
+                    return 'grey';
                 }
             })
         .call(force.drag)
