@@ -2342,10 +2342,10 @@ var MonaGO = function(){
                     if (simDict[i][0]==goID1){
                     if (simDict[i][1]==goID2){
                     if (simDict[i][2]>0){
-                    templ=templ+'Resnik similarity between GO terms: '+parseFloat(simDict[i][2]).toFixed(3)+"</a>\n</p>"+"</a></p>Most informative ancestor: "+simDict[i][3];
+                    templ=templ+'Resnik similarity between GO terms: '+parseFloat(simDict[i][2]).toFixed(3)+"</a>\n</p>"+"</a></p>Most informative ancestor: "+simDict[i][3] + '</a>\n</p><b>GO Hierarchy:</b>';
                     }
                     else
-                    templ=templ+'Resnik similarity between GO terms: '+parseFloat(simDict[i][2]).toFixed(3);
+                    templ=templ+'Resnik similarity between GO terms: '+parseFloat(simDict[i][2]).toFixed(3) + '</a>\n</p><b>GO Hierarchy:</b>';
                     }
                     }
                     }
@@ -2360,10 +2360,10 @@ var MonaGO = function(){
                     if (simDict[i][0]==goID1){
                     if (simDict[i][1]==goID2){
                     if (simDict[i][2]>0){
-                    templ=templ+'Simrel between GO terms: '+parseFloat(simDict[i][2]).toFixed(3)+"</a>\n</p>"+"</a></p>Most informative ancestor: "+simDict[i][3];
+                    templ=templ+'Simrel between GO terms: '+parseFloat(simDict[i][2]).toFixed(3)+"</a>\n</p>"+"</a></p>Most informative ancestor: "+simDict[i][3] + '</a>\n</p><b>GO Hierarchy:</b>';
                     }
                     else
-                    templ=templ+'Simrel between GO terms: '+parseFloat(simDict[i][2]).toFixed(3);
+                    templ=templ+'Simrel between GO terms: '+parseFloat(simDict[i][2]).toFixed(3) +'</a>\n</p><b>GO Hierarchy:</b>';
                     }
                     }
                     }
