@@ -11,8 +11,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# comment added to test that I can push to git
-
 
 import sys
 import json
@@ -23,10 +21,7 @@ from datetime import datetime
 #for praser
 from flask import Flask,render_template,request,send_from_directory,Response
 
-#for pre processing the data
-from DataProcess import DataProcess4
 from DavidDataScrawler import DavidDataScrawler
-
 import logging
 import time
 
@@ -59,9 +54,18 @@ def index():
         'GOTERM_MF':'46'#melocular function direct
     }
 
+
+
+
+
     if request.method == 'GET':
         return render_template("index.html")
     else:
+
+
+
+
+
         if request.form['type'] == "manual":
             pVal = request.form['pVal']
             if request.form['inputGOs'] == "":
@@ -69,11 +73,12 @@ def index():
             else:
                 go = parseInputGOs(request.form['inputGOs'],float(str(pVal)))
 
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData = processedData(go)
+            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'], request.form['clustComp'])
+            myList=simDict
             if not matrix_count:
                 return "Failure to process data"
-            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+";"+"var array_order="+str(array_order)+";"\
-            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+"</script>"
+            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
+            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(request.form['clustComp'])+"';"+"var similarity='"+str(request.form['similarity'])+"'</script>"
 
         if request.form['type'] == "david":
             #parameters needed for querying DAVID
@@ -92,11 +97,12 @@ def index():
 
             if status == False:
                 return "Failure to get data, please make sure the identifier is correct"
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData = processedData(go)
+            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
+            myList=simDict
             if not matrix_count:
                 return "Failure to process data"
-            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+";"+"var array_order="+str(array_order)+";"\
-            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+"</script>"
+            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
+            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(request.form['clustComp'])+"';"+"var similarity='"+str(request.form['similarity'])+"'</script>"
 
 
         if request.form['type'] == "MonaGO":
@@ -104,16 +110,17 @@ def index():
             content = request.files['files3'].read()
             content_dict = json.loads(content, encoding='utf-8')
             content_dict["go_inf"] = parseInputMonagos(content_dict, float(str(pVal)))
+            similarity=content_dict['similarity'].encode('ascii', 'ignore')
+            clustComp=content_dict['clustComp'].encode('ascii', 'ignore')
 
             # content_dict = yaml.safe_load(content_dict, encoding='utf-8')
-
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData = processedData(content_dict["go_inf"])
-
+            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(content_dict["go_inf"],similarity, clustComp)
+            myList=simDict
 
             if not matrix_count:
                 return "Failure to process data"
-            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+";"+"var array_order="+str(array_order)+";"\
-            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+"</script>"
+            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
+            +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(clustComp)+"';"+"var similarity='"+str(similarity)+"'</script>"
             #data = "<script>"+ "var size = 0"+";"+"var content ="+content+";"+"</script>"
 
 
@@ -121,7 +128,6 @@ def index():
 
         with open(root_dir+'templates/chord_layout.html',"r") as fr_html:
             html = "".join(fr_html.readlines())
-
 
 
         return data+html
@@ -172,8 +178,12 @@ def getMyLogo():
         fw.write("remote address: {}  time: {}\n".format(request.remote_addr,datetime.today()))
     return send_from_directory(root_dir+'my/img','my_logo.jpg')
 
-@app.route('/help.html')
+@app.route('/help')
 def getHelp():
+    return send_from_directory(root_dir+'templates','help.html')
+
+@app.route('/help.html')
+def getHelp1():
     return send_from_directory(root_dir+'templates','help.html')
 
 @app.route('/getPic',methods=['POST','GET'])
@@ -313,7 +323,7 @@ def getDataFromDavid(inputIds,idType,annotCat,pVal):
 
 
 @logTime
-def processedData(go):
+def processedData(go, similarity, clustComp):
     '''
     generate necessary data for visualization
 
@@ -328,9 +338,19 @@ def processedData(go):
         clusterHierData:an array storing hierarcical data use to generated hierarcical tree
     '''
 
+    #for pre processing the data
+    if similarity=='Resnik':
+        from DataProcessResnikAve import DataProcess4
+    elif similarity=='Genes':
+        from DataProcessGenes import DataProcess4
+    elif similarity=='Simrel':
+        from DataProcessSimrelAve import DataProcess4
+
+
     dataProcess = DataProcess4()
     try:
-        preProcessedData = dataProcess.dataProcess(go)
+        preProcessedData = dataProcess.dataProcess(go, clustComp)
+
 
     except Exception as e:
         logger.error(str(e))
@@ -340,8 +360,8 @@ def processedData(go):
         go_hier = preProcessedData["go_hier"]
         go_inf_reord = preProcessedData["go_inf"]
         clusterHierData = preProcessedData["clusterHierData"]
-        
-        return matrix,go_index_reord,go_hier,go_inf_reord,clusterHierData
+        simDict=preProcessedData['simDict']
+        return matrix,go_index_reord,go_hier,go_inf_reord,clusterHierData, simDict
 
 
 def loadConfig():
@@ -350,4 +370,4 @@ def loadConfig():
 if __name__ == '__main__':
     loadConfig()
     loadGOHier()
-    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 80, threaded = True)
+    app.run(debug= (config["debug"]=="true"), host="0.0.0.0", port = 1641, threaded = True)

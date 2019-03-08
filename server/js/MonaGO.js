@@ -91,7 +91,6 @@ var MonaGO = function(){
 	  molecular_function:"[MF]"
 	};
 	var chordMatrix;
-	var chord;
 	var detailPanelWidth = $(window).width() * 0.25;
 
 	var controlPanelWidth = 510;
@@ -110,6 +109,7 @@ var MonaGO = function(){
 	var main_div = 0;
 	var svg ;
 	var go_chart;
+	var go_chart_big;
 	var circleSvg;
 
 	var width = detailPanelWidth - 70;
@@ -271,7 +271,7 @@ var MonaGO = function(){
 	}
 
 	//creates a D3 structure that can be inputted into the force-directed graph layout
-	function createD3Structure(goids, target) {
+	function createD3Structure(goids, target, target2, width, height) {
 
         goids = getUniqueGoid(goids);
 
@@ -312,15 +312,16 @@ var MonaGO = function(){
             goid = go_level[0];
             level = go_level[1];
 
-            parents = GO(goid)['p'];
+            parents = GO(goid)['u'];
 
             if (parents.length > 0 ) {
                 for (var a = 0, countA = parents.length ; a < countA ; a ++ ) {
-        			parent = parents[a];
+        			parent = parents[a][0];
         			pgoid = parent;
         			pIndex = nodeIndex[pgoid];
+				pType = parents[a][1];
 
-        			if (pgoid == target) {
+        			if (pgoid == target || pgoid==target2) {
         			  nodes[i]['is'] = 'child';
         			  nodes[i]['r'] = 30;
         			}
@@ -330,7 +331,18 @@ var MonaGO = function(){
                         link['source'] = pIndex;
                         link['target'] = i;
                         link['value'] = 5;
-                        //link['type'] = prel;
+			if (pType=='is_a'){
+			link['type']=1}
+			else if (pType=='part_of'){
+			link['type']=2}
+			else if (pType=='regulates'){
+			link['type']=3}
+			else if (pType=='positively_regulates'){
+			link['type']=4}
+			else if (pType=='negatively_regulates'){
+			link['type']=5}
+			else {
+			link['type']=6}
                         links.push(link)
         			}
                 }
@@ -346,6 +358,14 @@ var MonaGO = function(){
         nodes[nodeIndex[target]].x = width / 2;
         nodes[nodeIndex[target]].y = height - 50;
         nodes[nodeIndex[target]]['is'] = 'target';
+
+        if (target2!='fill'){
+        nodes[nodeIndex[target2]].fixed = true;
+        nodes[nodeIndex[target]].x = width / 3;
+        nodes[nodeIndex[target2]].x = 2*width / 3;
+        nodes[nodeIndex[target2]].y = height - 43;
+        nodes[nodeIndex[target2]]['is'] = 'target';
+        }
 
         return {'nodes' : nodes, 'links' : links};
 	}      
@@ -396,7 +416,8 @@ var MonaGO = function(){
     		.enter().append("line")
     		.attr("class", "link")
     		.style('stroke', function(d, i ) { return strokeColor(d.type);})
-    		.style("stroke-width", 2);
+    		.style("stroke-width", 2)
+		.attr('marker-start','url(#end)');
 	 
         var node = svg.selectAll("circle.node")
             .data(struct.nodes)
@@ -407,15 +428,16 @@ var MonaGO = function(){
                 if (d.is == "root") {
                     return 'black';
                 } else if (d.is == "target" || d.is == 'child') {
-                    return 'orange';
+                    return '#654321';
                 } else {
-                    return 'lightblue';
+                    return 'grey';
                 }
             })
         .call(force.drag)
         .on('click',function(d,i) {
             d.fixed = true;
         });
+
 
         var nodeText = svg.selectAll("text.node")
             .data(struct.nodes)
@@ -436,7 +458,7 @@ var MonaGO = function(){
                   .attr("cy", function(d) { return d.y = Math.max(radiusScale(d.r), Math.min(height - radiusScale(d.r), d.y));; })
 
                 nodeText.attr("x", function(d) { return d.x; })
-                  .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; })
+                  .attr("y", function(d) { return d.y + radiusScale(d.r) - 25; })
             });
         }else{
             //if exceeds 15 nodes, display without constraint
@@ -450,7 +472,7 @@ var MonaGO = function(){
                     .attr("cy", function(d) { return d.y; })
 
                 nodeText.attr("x", function(d) { return d.x; })
-                  .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; })
+                  .attr("y", function(d) { return d.y + radiusScale(d.r) - 25; })
             }); 
         }
 
@@ -500,30 +522,57 @@ var MonaGO = function(){
 	}
 
 	//recreate data structures and redraw graph with new nodes
-	function update(goid,svg,width,height) {
-        force = {};
-        struct = parentGO(goid);
-        data = createD3Structure(struct,goid);
+	function update(goid,goid2,svg,width,height) {
+        if (goid2=='fill'){
+            force = {};
+            struct = parentGO(goid);
+            data = createD3Structure(struct,goid,'fill', width, height);
+        }
+        else{
+            force = {};
+            struct = parentGO(goid).concat(parentGO(goid2));
+            data = createD3Structure(struct,goid, goid2, width, height);
+        }
         if(data.nodes.length < maxNodeNum){
+	if(width==window.innerWidth*0.75){
+            force = d3.layout.force()
+                .charge(-window.innerHeight*1.35*12)
+                .linkDistance(20)
+                .theta(0.2)
+                .gravity(0.5)
+                .size([width, height]);
+	}else{
             force = d3.layout.force()
                 .charge(-10000)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
                 .size([width, height]);
+	}
         }else{
+	if(width==window.innerWidth*0.75){
+            force = d3.layout.force()
+                .charge(-window.innerHeight*1.35*2)
+                .linkDistance(20)
+                .theta(0.2)
+                .gravity(0.5)
+                .size([width, height]);
+	}else{
             force = d3.layout.force()
                 .charge(-2000)
                 .linkDistance(20)
                 .theta(0.2)
                 .gravity(0.5)
                 .size([width, height]);
-        }
+	}
+	}
+
         svg.selectAll("line.link").remove();
         svg.selectAll("circle.node").remove();
         svg.selectAll("text.node").remove();
         drawGraph(data,svg,width,height);
 	}
+        
 
 	function getMaxPval(){
         var max = Number(that.go_inf[0].pVal);
@@ -692,10 +741,15 @@ var MonaGO = function(){
 
         text.attr('height', 'auto')
         .attr('text-anchor', 'middle')
-        .attr('font-size','9px')
+        .attr('font-size','8px')
         .text(function(d){
             if((d["percentOfOverlappingGenes"] > 0)||(d["percentOfOverlappingGenes"]==undefined))
-                return d["percentOfOverlappingGenes"];
+                if ((similarity=='Genes')||(d["percentOfOverlappingGenes"]==undefined)){
+                	return d["percentOfOverlappingGenes"];
+		}
+		else {
+			return (d["percentOfOverlappingGenes"]/100).toFixed(1);
+		}
             }).attr('style', 'text-align:center;padding:2px;margin:2px;fill:white')
         .on("click",onClusterNodeClick)
         .append("title").text(function(d, i) {return "Click to cluster"});
@@ -789,7 +843,6 @@ var MonaGO = function(){
                     .outerRadius(d["radius"]+11)
                     .startAngle(d["startAngle"])
                     .endAngle(d["endAngle"]);
-
     			return arc();
     		});*/
     		clusterArc.transition()
@@ -891,7 +944,6 @@ var MonaGO = function(){
             	.outerRadius(d["LineOuterPosition"]+5)
             	.startAngle(d["LineAngle"])
             	.endAngle(d["LineAngle"]+0.002);
-
             	return firstLine();
             });*/
 			.attrTween("d",function(d, i, a){
@@ -929,13 +981,11 @@ var MonaGO = function(){
             .transition()
             .duration(500)
             /*.attr("d",function(d){
-
                 var secondLine = d3.svg.arc()
         			.innerRadius((d["index"]>nodesSize)?d["LineInnerPosition"]+5:d["LineInnerPosition"])
         			.outerRadius(d["LineOuterPosition"]+5)
         			.startAngle(d["LineAngle"])
         			.endAngle(d["LineAngle"]+0.002);
-
                 return secondLine();
             });*/
 			.attrTween("d",function(d, i, a){
@@ -1105,6 +1155,8 @@ var MonaGO = function(){
         });
 	}
 
+
+
 	function updateMatrix(){
         var newMatrix = [];
         var newArray = [];
@@ -1132,6 +1184,8 @@ var MonaGO = function(){
         }
 	  return newMatrix;
 	}
+
+
 
 	function updateGroupSize(){
         that.groupSize = []
@@ -1191,6 +1245,12 @@ var MonaGO = function(){
 
         if(that.userHighlightChordIndex !=-1){// click when the chord is already freezed
             updateDetailPanelBasedOnChord(d,i);
+            if (similarity!='Genes'){
+                var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
+                if(overallNumOfGOTerms == 2){
+       	        createGoHierifNecessary(that.go_inf[d.source.index].GO_id,that.go_inf[d.source.subindex].GO_id)
+                 }
+            }
         }
 
         }else{
@@ -1703,9 +1763,35 @@ var MonaGO = function(){
         return node;
 	}
 
-	function createGoHierifNecessary(goid){
+	function createGoHierifNecessary(goid, goid2){
         if(typeof goid == "string"){
             $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart\"></div>")
+
+		var floatPanelTempl=window.document.createElement("div")
+
+		if (document.getElementById('go_chart_big_content')){
+			document.getElementById('go_chart_big_content').innerHTML="<span class='close'>&times;</span>";
+		}
+	
+		floatPanelTempl.innerHTML="<div id='go_chart_big' class='modal'><div id='go_chart_big_content' class='modal-content'><span class='close'>&times;</span><p></p></div></div>".trim()
+		document.body.appendChild(floatPanelTempl)
+
+		
+		var floatPanel=document.getElementById('go_chart_big')
+		var floatWidth=window.innerWidth*.75
+		var floatHeight=window.innerHeight*.75
+
+
+		var span=document.getElementsByClassName('close')[0];
+		span.onclick=function(){
+			floatPanel.style.display='none';
+		}
+		window.onclick=function(event){
+			if(event.target==floatPanel){
+				floatPanel.style.display='none';
+			}
+		}
+
             var go_chart = d3.select("#go_chart").append("svg")
                 .attr("id","go_chart1")
                 .attr("width", width)
@@ -1730,10 +1816,87 @@ var MonaGO = function(){
                 .attr("x", function(d) { return d.x; })
                 .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
+
             $('#go_chart').on("mouseover",mouseoverHier);
             $('#go_chart').on("mouseout",mouseoutHier);
 
-            update(goid,hier_group,width,height);
+            update(goid,goid2,hier_group,width,height);
+
+            var go_chart_big = d3.select("#go_chart_big_content").append("svg")
+                .attr("id","go_chart_big1")
+                .attr("width", floatWidth)
+                .attr("height", floatHeight);
+            $('#go_chart_big1').css ("top:0, left:0, position:'fixed'");
+
+
+            var hier_group_big = go_chart_big.append("svg:svg")
+            .attr("id","hier_group_big");
+
+            //   .call(zoomhier.on("zoom", zoomed));
+            hier_group_big.selectAll("line")
+                .attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            hier_group_big.selectAll("circle")
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+
+            hier_group_big.selectAll("text")
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
+
+	    hier_group_big.append("svg:defs").selectAll("marker")
+    		.data(["end"])      // Different link/path types can be defined here
+  		.enter().append("svg:marker")    // This section adds in the arrows
+    		.attr("id", String)
+    		.attr("viewBox", "0 -5 10 10")
+    		.attr("refX", 18)
+    		.attr("refY", 0.5)
+		.attr("markerWidth", 5)
+		.attr("markerHeight", 5)
+		.attr('opacity',0.5)
+		.attr("orient", "auto-start-reverse")
+		.append("svg:path")
+		.attr("d", "M0,-5L10,0L0,5");
+
+
+	    hier_group_big.append('svg:image')
+		.attr('x',10)
+		.attr('y',floatHeight-220)
+		.attr('width',200)
+		.attr('height',300)
+		.attr('xlink:href','img/key.png')
+
+            $('#go_chart').on("mouseover",mouseoverHier);
+            $('#go_chart').on("mouseout",mouseoutHier);
+
+            update(goid,goid2,hier_group_big,floatWidth,floatHeight);
+
+
+		var element="<div style=\"position:relative;left:10px;bottom:"+(window.innerHeight*.75-10)+"px;\"><button id='exporthier_big' class='btn dropdown-toggle' data-toggle='dropdown'>Save 			image<span class='caret'></span></button><div>"
+            	$('#go_chart_big_content').append(element)
+            	element= '<ul class="dropdown-menu" role="menu" id="menu">';
+             	//element+='<li><a href="" id="PDF">PDF</a></li>'
+            	element+='<li><a href="#" id="png">PNG</a></li>'
+            	element+='<li><a href="#"id="svg">SVG</a></li></ul>'
+            	$('#exporthier_big').append(element)
+
+
+		$("#exporthier_big").click(function() {
+            		$('#menu.dropdown-menu').slideToggle();
+        	})
+
+        	$('#png').click(function(){
+            	saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 5});
+        	});
+
+        	$("#svg").click(function(){
+          	   	saveSvg(document.getElementById("hier_group_big"), "hierarchy.svg", {scale: 2});
+
+        	});
+
         }
 	}
 
@@ -1751,11 +1914,23 @@ var MonaGO = function(){
 	   else if($('#exporthier').hide()){
 			$('#exporthier').show();
        }
+	   if(!$('[id="expandhier"]').hasClass("btn")){
+			var expand="<div style=\"position:relative;left:"+(width-65)+"px;bottom:"+(height+28)+"px;\"><button id='expandhier' class='btn btn-sm'><i class='fa fa-expand'></i></button><div>"
+            $('#go_chart').append(expand)
+            $('#expandhier').append(expand)
+			setexpandhierbtn();
+	   }
+	   else if($('#expandhier').hide()){
+			$('#expandhier').show();
+       }
 	}
 
 	function mouseoutHier(){
         if($('[id="exporthier"]').hasClass("btn")){
 			$('#exporthier').hide();
+        }
+        if($('[id="expandhier"]').hasClass("btn")){
+			$('#expandhier').hide();
         }
 	}
 
@@ -1773,12 +1948,21 @@ var MonaGO = function(){
         });
 	}
 
+	function setexpandhierbtn(){
+		$("#expandhier").click(function() {
+		var floatPanel=document.getElementById('go_chart_big')
+		floatPanel.style.display='block';		
+        	});
+
+
+	}
+
 	function replaceCommaWithUnderline(term){
 		return term.replace(":","_");
 	}
 
 	function createGoHierByGOId(goid){
-
+	// not actually called
         var goid_target = replaceCommaWithUnderline(goid);
 
         var go_chart = d3.select('#'+goid_target).append("svg")
@@ -1793,7 +1977,23 @@ var MonaGO = function(){
             .attr('x',0)
             .attr('y',0);
 
-        update(goid,go_chart,width,height);
+		var floatWidth=window.innerWidth*.75
+		var floatHeight=window.innerHeight*.75
+
+        update(goid,'fill',go_chart,width,height);
+        var go_chart_big = d3.select('#'+goid_target).append("svg")
+            .attr("width", floatWidth)
+            .attr("height", floatHeight);
+
+        go_chart_big.append('rect')
+            .style('fill','white')
+            .style('stroke','gray')
+            .attr('width',width)
+            .attr('height',height)
+            .attr('x',0)
+            .attr('y',0);
+
+        update(goid,'fill',go_chart_big,floatWidth,floatHeight);
 	}
 
 	function createGeneListHtml(go){
@@ -1917,6 +2117,7 @@ var MonaGO = function(){
 
         //var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a><button id='exporthier' class='btn' z-index:50'>Export Hierarchy Image</button></p> <div id='go_chart'></div> ":"";
 		var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a></p> <div id='go_chart'></div> ":"";
+
 		detailPanelTempl += goInfTempl + genesListTempl + chartTempl;
 
 		return detailPanelTempl;
@@ -2004,6 +2205,15 @@ var MonaGO = function(){
     		.attr("height", hierHeight);
     		$('#go_chart1').css ("border", "1px solid grey");
 
+		var floatWidth=window.innerWidth*.75
+		var floatHeight=window.innerHeight*.75
+
+            var go_chart_big = d3.select("#"+goNameID).append("svg")
+                .attr("id","go_chart_big1")
+                .attr("width", floatWidth)
+                .attr("height", floatHeight);
+            $('#go_chart_big1').css ("border", "1px solid grey");
+
             var hier_group = go_chart.append("svg:svg")
             hier_group.selectAll("line")
         		.attr("x1", function(d) { return d.source.x; })
@@ -2017,7 +2227,22 @@ var MonaGO = function(){
         		.attr("x", function(d) { return d.x; })
         		.attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
 
-    		update(goDetail.GO_id,hier_group,hierWidth,hierHeight);
+    		update(goDetail.GO_id,'fill',hier_group,hierWidth,hierHeight);
+
+            var hier_group_big = go_chart_big.append("svg:svg")
+            hier_group_big.selectAll("line")
+        		.attr("x1", function(d) { return d.source.x; })
+        		.attr("y1", function(d) { return d.source.y; })
+        		.attr("x2", function(d) { return d.target.x; })
+        		.attr("y2", function(d) { return d.target.y; });
+        		hier_group_big.selectAll("circle")
+        		.attr("cx", function(d) { return d.x; })
+        		.attr("cy", function(d) { return d.y; });
+        		hier_group_big.selectAll("text")
+        		.attr("x", function(d) { return d.x; })
+        		.attr("y", function(d) { return d.y + radiusScale(d.r) + 10; });
+
+    		update(goDetail.GO_id,'fill',hier_group_big,floatWidth,floatHeight);
         })
 	}
 
@@ -2035,7 +2260,7 @@ var MonaGO = function(){
 		$('#content').append(detailPanelTempl);
 
 		setUpDetailPanelListener();
-		createGoHierifNecessary(that.go_inf[i].GO_id);
+		createGoHierifNecessary(that.go_inf[i].GO_id, 'fill');
 		createGOHierForClusterGO();
 	}
 
@@ -2097,7 +2322,6 @@ var MonaGO = function(){
     }
 
 	function createChordTempl(index,d){
-
 		var totalGenesNumber=removeDuplicatedItem3(that.go_inf[d.source.index].genes.concat(that.go_inf[d.source.subindex].genes)).length
 		var geneListInHtml = "<div class='gene_content'><ol>";
 		that.dic[index].split(";").forEach(function(d,i){
@@ -2109,11 +2333,54 @@ var MonaGO = function(){
 		"</a> and <a class='go_id'>" +  that.go_inf[d.source.subindex].GO_id + " (" + that.go_inf[d.source.subindex].GO_name +")" + "</a>:\n</p>"+
 		"Number of overlapping genes: "+ that.dic[index].split(";").length+"</a>\n</p>"+"</a></p>"+
 		"Percentage of overlapping genes: "+ parseInt(that.dic[index].split(";").length / totalGenesNumber*100)+"%" +"</a>\n</p>" + geneListInHtml;
+                if (similarity=='Resnik'){
+                var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
+                    if (overallNumOfGOTerms == 2){
+                    goID1=that.go_inf[d.source.index].GO_id
+                    goID2=that.go_inf[d.source.subindex].GO_id
+                    for (var i=0; i<simDict.length; i++){
+                    if (simDict[i][0]==goID1){
+                    if (simDict[i][1]==goID2){
+                    if (simDict[i][2]>0){
+                    templ=templ+'Resnik similarity between GO terms: '+parseFloat(simDict[i][2]).toFixed(3)+"</a>\n</p>"+"</a></p>Most informative ancestor: "+simDict[i][3] + '</a>\n</p><b>GO Hierarchy:</b>';
+                    }
+                    else
+                    templ=templ+'Resnik similarity between GO terms: '+parseFloat(simDict[i][2]).toFixed(3) + '</a>\n</p><b>GO Hierarchy:</b>';
+                    }
+                    }
+                    }
+                    }
+                }
+                if (similarity=='Simrel'){
+                var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
+                    if (overallNumOfGOTerms == 2){
+                    goID1=that.go_inf[d.source.index].GO_id
+                    goID2=that.go_inf[d.source.subindex].GO_id
+                    for (var i=0; i<simDict.length; i++){
+                    if (simDict[i][0]==goID1){
+                    if (simDict[i][1]==goID2){
+                    if (simDict[i][2]>0){
+                    templ=templ+'Simrel between GO terms: '+parseFloat(simDict[i][2]).toFixed(3)+"</a>\n</p>"+"</a></p>Most informative ancestor: "+simDict[i][3] + '</a>\n</p><b>GO Hierarchy:</b>';
+                    }
+                    else
+                    templ=templ+'Simrel between GO terms: '+parseFloat(simDict[i][2]).toFixed(3) +'</a>\n</p><b>GO Hierarchy:</b>';
+                    }
+                    }
+                    }
+                    }
+                }
 		return templ;
+                
 	}
 
 	function mouseover_chord(d, i) {
         updateDetailPanelBasedOnChord(d,i)
+        if (similarity!='Genes'){
+            var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
+            if(overallNumOfGOTerms == 2){
+	    createGoHierifNecessary(that.go_inf[d.source.index].GO_id, that.go_inf[d.source.subindex].GO_id)
+            }
+        }
 	}
 
 
@@ -2288,7 +2555,7 @@ var MonaGO = function(){
 		  $('#content').append(detailPanelTempl);
 
 		  setUpDetailPanelListener();
-		  createGoHierifNecessary(that.go_inf[i].GO_id);
+		  createGoHierifNecessary(that.go_inf[i].GO_id, 'fill');
 
 		  chordLayout.classed("fade", function(p) {
 				  return p.source.index != i
@@ -2554,7 +2821,7 @@ var MonaGO = function(){
            .enter().append("svg:g").attr("class","labeltext");
 
         gt.attr("transform", function(d) {
-            label_angle = (d.startAngle + d.endAngle) / 2 * 180 / Math.PI - 90 + 2;
+            label_angle = (d.startAngle + d.endAngle) / 2 * 180 / Math.PI - 90 -4;
             var node_angle2 = [];
             var index;
             var lineIndex;
@@ -2709,10 +2976,45 @@ var MonaGO = function(){
 	function setUpControlPanel(){
 
 	    if (existReload == false){
-		    var element = '&nbsp<label>Cluster GO term according to the minimum percentage of common gene(s)</label> \
+                    if (similarity == 'Resnik'){
+                        if (clustComp == 'ave'){
+		    var element = '&nbsp<label>Cluster GO term according to average Resnik similarity between terms</label> \
 			    <div id="slider" class="sliderBar"></div>\
 			    <input type="text" id="input_slider"/>';
-
+                        }
+                        if (clustComp == 'min'){
+		    var element = '&nbsp<label>Cluster GO term according to minimum Resnik similarity between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                        if (clustComp == 'max'){
+		    var element = '&nbsp<label>Cluster GO term according to maximum Resnik similarity between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                    }
+                    if (similarity == 'Simrel'){
+                        if (clustComp == 'ave'){
+		    var element = '&nbsp<label>Cluster GO term according to average simRel between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                        if (clustComp == 'min'){
+		    var element = '&nbsp<label>Cluster GO term according to minimum simRel between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                        if (clustComp == 'max'){
+		    var element = '&nbsp<label>Cluster GO term according to maximum simRel between terms</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                        }
+                    }
+                    if (similarity == 'Genes'){
+		    var element = '&nbsp<label>Cluster GO term according to minimum percentage of common gene(s)</label> \
+			    <div id="slider" class="sliderBar"></div>\
+			    <input type="text" id="input_slider"/>';
+                    }
 		    //add save image button
 		    element += '<div class="control-panel-button">';
 		    element += '<button type="button" id="editor_save" class="btn dropdown-toggle" data-toggle="dropdown">Save image    <span class="caret"></span></button>'
@@ -2750,16 +3052,22 @@ var MonaGO = function(){
             orientation: 'horizontal', // Orient the slider vertically
             //behaviour: 'tap-drag', // Move handle on tap, bar is draggable
             range: { // Slider can select '0' to '100'
-
               'min': minPercentOfOverlappingGens,
 
               'max': maxPercentOfOverlappingGens
-            }
+	    }
         });
 
+	if (similarity=="Genes"){
         that.ranger.noUiSlider.on('update',function(values,handle){
             inputFormat.value = parseInt(values[handle] );
         });
+	}
+	else{
+        that.ranger.noUiSlider.on('update',function(values,handle){
+            inputFormat.value = (values[handle]/100 ).toFixed(2);
+        });
+	}
 
         that.ranger.noUiSlider.on('change', function( values, handle ) {
             var level = getLevelFromPercentOfOverlappingGenes(values.toString());
@@ -2854,7 +3162,7 @@ var MonaGO = function(){
     		var save_file = "{\"size\":" + that.MonaGOData.size + "," + "\"go_inf\":" + JSON.stringify(that.MonaGOData.go_inf) + "," + "\"clusterHierData\":" +JSON.stringify(that.MonaGOData.clusterHierData)
     		+ "," + "\"matrix\":" + JSON.stringify(that.MonaGOData.matrix) + "," +"\"array_order\":" + JSON.stringify(that.MonaGOData.array_order) + "," + "\"goNodes\":" + JSON.stringify(goNodes)
     		+ "," + "\"groupSize\":" + JSON.stringify(that.MonaGOData.groupSize) + "," + "\"nodeCollapse\":" + nodeCollapse
-    		+ "," + "\"clickCollapseNodeArr\":" + JSON.stringify(that.clickCollapseNodeArr) + "}";
+    		+ "," + "\"clickCollapseNodeArr\":" + JSON.stringify(that.clickCollapseNodeArr) +','+"\"similarity\":" + JSON.stringify(that.MonaGOData.similarity)+','+"\"clustComp\":" + JSON.stringify(that.MonaGOData.clustComp)  + "}";
 
             post("/export", {
                 filename: 'file',
@@ -3108,7 +3416,7 @@ var MonaGO = function(){
             that.go_inf[i].genes = d.genes.split(";");
         });
 
-        that.MonaGOData = {"size":size,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData}
+        that.MonaGOData = {"size":size,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData,'similarity':similarity, 'clustComp':clustComp}
 
         perparePvalue();
         perpareChord();
@@ -3143,7 +3451,7 @@ var MonaGO = function(){
         that.clusterHierData = content["clusterHierData"];
         nodesSize = content["size"];
         maxNodeIndex = content["size"];
-        that.MonaGOData = {"size":nodesSize,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData};
+        that.MonaGOData = {"size":nodesSize,"go_inf":that.go_inf_ori, "matrix": matrix, "array_order":array_order, "groupSize": that.groupSize, "clusterHierData": clusterHierData,'similarity':similarity, 'clustComp':clustComp};
         that.maxNumOfOverlappingGens = that.clusterHierData[0][3];
         that.minNumOfOverlappingGens = that.clusterHierData[that.clusterHierData.length-1][3];
         that.maxPercentOfOverlappingGens = that.clusterHierData[0][4];
@@ -3199,13 +3507,3 @@ if(size != 0){
 }
 
 })();
-
-
-
-
-
-
-
-
-
-

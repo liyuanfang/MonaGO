@@ -1,0 +1,1267 @@
+<html><head><script language="JavaScript">
+var page='tools';
+</script><title>DAVID: Functional Annotation Tools</title><link rel="stylesheet" type="text/css" href="template.css"><script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script><script type="text/javascript" src="scripts/jtip.js"></script><link rel="stylesheet" type="text/css" href="css/jtip.css"><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-74367-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script></head><body class="template">
+
+<table width="980">
+   <tr class="header"><td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="/css/header.css">
+	<link rel="stylesheet" type="text/css" href="/css/progressBar.css">
+	 <script type="text/javascript" src="/scripts/header_menu.js"></script>
+	<script type="text/javascript" src="/scripts/progressBar.js"></script>
+	<script language="JavaScript"> 
+	
+	
+	function GBClick(parent, child) { 
+	window.location = parent; 
+	window.open(child); 
+	
+	} 
+	
+</script> 
+
+
+	<title>DAVID Bioinformatics 6.7</title>
+
+	
+
+
+
+
+<table bgcolor="#366599" width="100%" cellpadding="0" cellspacing="0">
+  <tr> 
+    						<td>
+							<table>
+								<tr>	
+									<td align="center"><a href="/home.jsp"><img src="/graphics/david_logo2.jpg" style="border: 0px solid ; " align="middle" alt="The Database for Annotation, Visualization and Integrated Discovery"></a>
+									</td>
+									<td>
+										<table>
+											<tr><td align="center" class="title1">Analysis Wizard</td>
+												
+											</tr>
+											<tr>
+												<td class="title2">DAVID Bioinformatics Resources 6.8, NIAID/NIH</td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+  </tr>
+  <!--<tr><td><marquee><font color="white">Text to scroll</font></marquee></td></tr>-->
+  
+<tr> 
+    <td>
+<div id="chromemenu">
+<ul>
+<li><a href="home.jsp">Home</a></li>
+<li><a href="tools.jsp">Start Analysis</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu1');">Shortcut to DAVID Tools</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu2');">Technical Center</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu5');">Downloads &amp; APIs</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu3');">Term of Service</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu6');">Why DAVID?</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu4');">About Us</a></li>
+</ul>
+</div>
+
+<!--1th drop down menu -->                                                   
+<div id="dropmenu1" class="dropmenudiv" style="width: 270px;">
+<a href="summary.jsp">Functional Annotation<br>    <font size="-2">- Functional Annotation Clustering</font> <font size="-1" color="red"></font><br>    <font size="-2">- Functional Annotation Chart</font><br>    <font size="-2">- Functional Annotation Table</font></a>
+<a href="gene2gene.jsp">Gene Functional Classification</a>
+
+<a href="conversion.jsp">Gene ID Conversion</a>
+<a href="list.jsp">Gene Name Batch Viewer<font size="-1" color="red"></font></a>
+<a href="javascript:GBClick('summary.jsp','GB.jsp')">NIAID Pathogen Annotation Browser</a>
+
+
+</div>
+
+
+<!--2nd drop down menu -->                                                
+<div id="dropmenu2" class="dropmenudiv" style="width: 275px;">
+--------- <b>System Notes</b> -------------------
+<a href="forum/cgi-bin/ikonboard.cgi?act=ST&amp;f=8&amp;t=28&amp;st=#entry1" target="_blank">Daily Server Maiteinance Schedule</a>
+<a href="./content.jsp?file=system.html">System Requirements</a>
+<a href="./content.jsp?file=FAQs.html#23">Limitation of Large Gene List</a>
+--------- <b>I have questions!</b> ---------------
+<a href="./content.jsp?file=list_manager.html#upload">Input Data Format &amp; Demo Gene Lists</a>
+<a href="./content.jsp?file=FAQs.html#25">Which DAVID Tools to Use?</a>
+<a href="/helps/tutorial.pdf" target="_blank">Powerpoint Brief Demo
+</a><a href="http://www.ncbi.nlm.nih.gov/sites/entrez?db=pubmed&amp;cmd=search&amp;term=19131956,19033363,18841237,17576678,17784955,17980028,14519205,12734009" target="_blank">DAVID Methods/Algorithms in Papers</a>
+<a href="./content.jsp?file=FAQs.html">FAQ</a>
+<a href="./search.jsp">Search DAVID Site</a>
+<a href="forum/" target="_blank">DAVID Forum <font size="-1" color="red"></font></a>
+<a href="./content.jsp?file=Contact.html">Contact Us</a> 
+--------- <b>Versions &amp; Updates</b> ------------
+<a href="./content.jsp?file=update.html">DAVID Knowledgebase Update</a>
+<a href="./content.jsp?file=release.html">Release Information &amp; Version History</a>
+<a href="forum/cgi-bin/ikonboard.cgi?act=ST;f=8;t=1" target="_blank">Retirement of Previous Versions</a>
+--------- <b>Tool Manuals</b> --------------------
+<a href="./content.jsp?file=functional_annotation.html">Functional Annotation Tool</a>
+<a href="./content.jsp?file=functional_classification.html">Gene Functional Classification</a>
+<a href="./content.jsp?file=conversion.html">Gene ID Conversion Tool</a>
+<a href="./content.jsp?file=linear_search.html">Gene Name Batch Viewer</a>
+<a href="./content.jsp?file=gb.html">NIAID Pathogen Annotation Browser</a>
+</div>
+
+<!--3rd anchor link and menu -->                                                 
+<div id="dropmenu3" class="dropmenudiv">
+<a href="./content.jsp?file=Licensing.html">Licensing Information</a>
+<a href="./content.jsp?file=AccessibilityStatement.html">Accessibility Statement</a>
+<a href="./content.jsp?file=citation.htm">Citing DAVID</a>
+</div>
+
+<!--4th anchor link and menu -->                                                 
+<div id="dropmenu4" class="dropmenudiv" style="width: 220px;">
+<a href="./content.jsp?file=about_us.html">Who Are We?</a>
+<a href="./content.jsp?file=Acknowledgement.htm">Credits &amp; Contributions</a>
+<a href="./content.jsp?file=Collaborators.html">Our Bioinformatics Collabrators</a>
+<a href="forum/viewforum.php?f=10&amp;sid=ed0d7d8819dadd130286d28c8d19b993" target="_blank">DAVID News <font size="-1" color="red"></font></a>
+<a href="./content.jsp?file=LHRI_Publications.html">LHRI Publications</a>
+<a href="./content.jsp?file=DAVID_Publications.html">DAVID Publications</a>
+<a href="./content.jsp?file=Contact.html">Contact Us</a> 
+</div>
+
+<!--5th anchor link and menu -->                                                 
+<div id="dropmenu5" class="dropmenudiv" style="width: 270px;">
+<a href="knowledgebase/DAVID_knowledgebase.html" target="_blank">Download DAVID Knowledgebase<font size="-1" color="red"></font></a>
+<!--<a target="_blank" href="content.jsp?file=WS.html">DAVID Web Services<font color=red><I> ***New***</I></font></a>-->
+<a target="_blank" href="content.jsp?file=WS.html">DAVID Web Services</a>
+<a href="ease/ease1.htm" target="_blank">Download Standalone <i>EASE</i></a>
+<a href="/content.jsp?file=DAVID_API.html">DAVID API Services<font size="-1" color="red"></font></a>
+</div>
+
+<!--6th anchor link and menu -->                                                 
+<div id="dropmenu6" class="dropmenudiv" style="width: 250px;">
+<a href="http://scholar.google.com/citations?user=dMn7gzYAAAAJ" target="_blank">DAVID Cited by <font color="red">&gt;21,000</font> Publications</a>
+<!--a href="http://scholar.google.com/scholar?as_epq=EASE&as_occt=title&as_sauthors=sherman+lempicki" target=_blank>EASE Cited by <font color=red>>770</font> Papers</a-->
+<a href="forum/viewtopic.php?f=8&amp;t=100" target="_blank">Referenced by <font color="red"><i>Nature</i></font> Papers</a>
+<a href="http://books.google.com/books?lr=&amp;num=50&amp;as_brr=0&amp;q=david%3A+Database+Annotation+Visualization++Integrated+Discovery" target="_blank">DAVID in Scientific Books</a>
+<!--<a href="./content.jsp?file=web.html">Recommendations</a>-->
+<a href="./content.jsp?file=fact.html">Fact Sheet</a>
+</div>
+
+</td>
+  </tr>
+
+  
+</table>
+<div id="progress" class="prog-border">
+<div id="bar" class="prog-bar">
+  <div id="barText" class="prog-text"></div>
+</div>
+</div>	
+<div align="center">
+<!-- <font color=red><b>*** DAVID will be down from 7am EST Saturday 8/20/2011 for a duration of ~8 hours due to maintenance in our data center.  This interval could potentially be shorter depending on the progress of the work.  We apologize for any inconvenience. ***</b></font> -->
+
+<!-- <font color=red><b>*** DAVID will be down from 5pm EST Friday 6/24/2011 to 3pm EST Sunday 6/26/2011 due to maintenance in our data center.  This interval could potentially be shorter depending on the progress of the work.  We apologize for any inconvenience. ***</b></font> -->
+
+<!-- <font color=red><b>*** We are currently accepting Beta users for our new DAVID Web Service which allows access to DAVID from various programming languages.  Please <a href="mailto:bsherman@mail.nih.gov?cc=jiaox3@mail.nih.gov&amp;subject=DAVID Web Service Beta Test"> contact us</a> for access. ***</b></font> -->
+<!-- <font color=red><b>*** The Gene Symbol mapping for list upload and conversion has changed.  Please see the <a href="forum/cgi-bin/ikonboard.cgi?act=ST;f=11;t=18;r=1">DAVID forum announcement</a> for details.</b></font>-->
+<!-- <font color=red><b>*** Announcing the new DAVID Web Service which allows access to DAVID from various programming languages. <a target="_blank" href="content.jsp?file=WS.html"> More info...</a> ***</b></font> -->
+
+<!--<font color=red><b>*** DAVID 6.8 will be down for maintenance on Thursday, 2/23/2016, from 9AM-1PM EST ***</b></font>-->
+<font color="red"><b><br>*** Welcome to DAVID 6.8 ***<br>***  If you are looking for <a target="_blank" href="https://david-d.ncifcrf.gov">DAVID 6.7</a>, please visit our <a target="_blank" href="https://david-d.ncifcrf.gov">development site</a>. ***</b></font>
+<!-- <font color=red><b><br>*** Welcome to DAVID 6.8 with updated Knowledgebase (<a target="_blank" href="content.jsp?file=release.html"> more info</a>). ***<br>***  If you are looking for <a target="_blank" href="https://david-d.ncifcrf.gov">DAVID 6.7</a>, please visit our <a target="_blank" href="https://david-d.ncifcrf.gov">development site</a>. ***</b></font>-->
+
+<!-- <font color=red><b><br>*** Welcome to DAVID 6.8 with updated Knowledgebase (<a target="_blank" href="content.jsp?file=release.html"> more info</a>). ***<br>***  The DAVID 6.7 server is currently down for maintenance. ***</b></font> -->
+<!--<br><br><font color=red><b>*** Please read: Due to data center maintenance, DAVID will be offline from Friday, June 17th @ 4pm EST through Sunday, June 19th with the possibility of being back online sooner. ***</b></font>-->
+
+
+</div>
+<script type="text/javascript">setProgress2(0);showProgress();</script>
+
+
+
+
+
+<!-- ae_prompt HTML code -->
+<div id="aep_ovrl" style="display: none;"> </div>
+<div id="aep_ww" style="display: none;">
+<div id="aep_win">
+<div id="aep_t"></div>
+<div id="aep_w"><span id="aep_prompt"></span>
+<br><input type="text" id="aep_text" onkeypress="if((event.keyCode==10)||(event.keyCode==13)) ae_clk(1); if (event.keyCode==27) ae_clk(0);"><br>
+<div><input type="button" id="aep_ok" onclick="ae_clk(1);" value="OK">
+<input type="button" id="aep_cancel" onclick="ae_clk(0);" value="Cancel">
+</div></div>
+</div>
+</div>
+<!-- ae_prompt HTML code -->
+
+
+
+
+
+
+
+
+</td></tr>
+  
+    <tr>  <table>
+   <tr valign="top"><td>
+
+
+
+
+
+
+ 
+ 
+ 
+
+
+
+
+
+<link rel="stylesheet" type="text/css" href="css/tabPane.css">
+<link href="css/summary.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/tabPane.js"></script>
+<script type="text/javascript" src="scripts/summary.js"></script>
+<script type="text/javascript" src="scripts/sidebar.js"></script>
+<script type="text/javascript" src="scripts/progressBar.js"></script>
+<title></title>
+<script type="text/javascript">setProgress2(0);
+if (window.parent && window.parent.synchTab)
+  window.parent.synchTab(window.name);
+</script>
+<script language="JavaScript">
+//var page='sidebar';
+</script>
+
+
+
+
+<form method="post" action="" name="frmManager" id="frmManager" enctype="multipart/form-data">
+
+
+
+
+
+
+
+<script type="text/javascript">setProgress2(20);</script>
+
+<input type="Hidden" name="idType" value="AFFYMETRIX_3PRIME_IVT_ID">
+<input type="Hidden" name="uploadType" value="list">
+<input type="Hidden" name="multiList" value="false">
+<input type="Hidden" name="Mode" value="paste">
+<input type="Hidden" name="useIndex" value="null">
+<input type="Hidden" name="usePopIndex" value="null">
+<input type="Hidden" name="demoIndex" value="null">
+<input type="Hidden" name="ids" value="1007_s_at,1053_at,117_at,121_at,1255_g_at,1294_at,1316_at,1320_at,1405_i_at,1431_at,1438_at,1487_at,1494_f_at,1598_g_at">
+<input type="Hidden" name="removeIndex" value="null">
+<input type="Hidden" name="renameIndex" value="null">
+<input type="Hidden" name="renamePopIndex" value="null">
+<input type="Hidden" name="newName" value="null">
+<input type="Hidden" name="combineIndex" value="null">
+<input type="Hidden" name="selectedSpecies" value=",0">
+<input type="Hidden" name="SESSIONID" value="CCC1B14F5D4F">
+<input type="Hidden" name="uploadHTML" value="null">
+<input type="Hidden" name="managerHTML" value="null">
+<input type="hidden" name="sublist" id="sublist">
+<input type="hidden" name="rowids" id="rowids">
+<input type="Hidden" name="convertedListName" value="null">
+<input type="Hidden" name="convertedPopName" value="null">
+
+<base target="_self" onkeydown="return catchEnter();">
+
+<ul id="tablist">
+<li><a href="Upload a Gene List or Population" class="current" onclick="return expandcontent('divUpload', this)" theme="#9FB6CD">  Upload  </a></li>
+<li><a href="Gene List Manager" onclick="return expandcontent('divManager', this)" theme="#6699CC">  List  </a></li>
+<li><a href="Population List Manager" onclick="return expandcontent('divPop', this)" theme="#336699">  Background </a></li>
+
+</ul>
+
+<div id="tabcontentcontainer" style="height: 1000px">
+
+		   <!--Upload div section-->
+			<div id="divUpload" class="tabcontent">
+			  <table border="0" cellpadding="2" width="100%" align="top">
+				<tr>
+						  <td class="sidebar_header"><br>Upload Gene List<br><br></td>
+				</tr>
+				<tr><td>
+					
+					<font class="regular"><a href="javascript:demoList(page,'1');">Demolist 1</a></font>
+					<font class="regular"><a href="javascript:demoList(page,'2');">Demolist 2</a></font>
+					</td></tr>
+					<tr><td>
+					<font class="regular"><a href="/helps/list_manager.html#upload" target="_blank">Upload Help</a></font>
+					</td></tr>
+					
+			
+					<tr><td class="sidebar_subheader"><br>Step
+					1: Enter Gene List
+			
+					</td></tr>
+			
+			
+				<tr>
+				  <td align="left" height="15">
+					<font class="regular">A: Paste a list</font>
+				  </td>
+				</tr>
+			
+				<tr>
+				  <td valign="top" align="left">
+					
+					<textarea rows="4" id="LISTBox" class="paste" name="pasteBox"></textarea>
+					<script type="text/javascript">clearPaste();</script>
+					<input type="Button" value="Clear" onclick="clearPaste();" name="B3" class="upload">
+				  </td>
+				</tr>
+				<tr>
+								  <td align="left" height="8">
+									<b><font color="white" face="Verdana" size="2">Or </font></b>
+								  </td>
+				</tr>
+				<tr><td>
+							
+							<font class="regular">B:Choose From a File</font>
+							</td>
+								</tr>
+								<tr>
+								  <td align="left" height="25">
+											  <p style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
+											  
+											  <input type="file" class="browse" name="fileBrowser" accept="text/plain" size="14">
+											  
+											  </p>
+								  </td>
+								</tr>
+								<tr><td><input type="checkbox" name="cbMulti" id="cbMulti">Multi-List File <a href="/helps/multilist.html" class="jTip" id="Multi-list File Upload" name="Multi-list File Upload"><img style="border:0px;" src="images/help-icon.png"></a></td></tr>
+							   
+							
+				
+			<tr><td> </td></tr>
+			<tr><td class="sidebar_subheader">Step 2: Select Identifier
+						
+								</td></tr>
+								<tr><td>
+								<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
+								  <font face="Verdana" size="1">
+								  <select id="IDT" size="1" name="Identifier">
+							  
+											
+										
+									  	<option value="AFFYMETRIX_3PRIME_IVT_ID">AFFYMETRIX_3PRIME_IVT_ID</option>
+											
+										
+									  	<option value="AFFYMETRIX_EXON_ID">AFFYMETRIX_EXON_ID</option>
+											
+										
+									  	<option value="AGILENT_CHIP_ID">AGILENT_CHIP_ID</option>
+											
+										
+									  	<option value="AGILENT_ID">AGILENT_ID</option>
+											
+										
+									  	<option value="AGILENT_OLIGO_ID">AGILENT_OLIGO_ID</option>
+											
+										
+									  	<option value="APHIDBASE_ID">APHIDBASE_ID</option>
+											
+										
+									  	<option value="BEEBASE_ID">BEEBASE_ID</option>
+											
+										
+									  	<option value="BEETLEBASE_ID">BEETLEBASE_ID</option>
+											
+										
+									  	<option value="BGD_ID">BGD_ID</option>
+											
+										
+									  	<option value="CGNC_ID">CGNC_ID</option>
+											
+										
+									  	<option value="CRYPTODB_ID">CRYPTODB_ID</option>
+											
+										
+									  	<option value="DICTYBASE_ID">DICTYBASE_ID</option>
+											
+										
+									  	<option value="ENSEMBL_GENE_ID">ENSEMBL_GENE_ID</option>
+											
+										
+									  	<option value="ENSEMBL_TRANSCRIPT_ID">ENSEMBL_TRANSCRIPT_ID</option>
+											
+										
+									  	<option value="ENTREZ_GENE_ID">ENTREZ_GENE_ID</option>
+											
+										
+									  	<option value="FLYBASE_GENE_ID">FLYBASE_GENE_ID</option>
+											
+										
+									  	<option value="GENBANK_ACCESSION">GENBANK_ACCESSION</option>
+											
+										
+									  	<option value="GENOMIC_GI_ACCESSION">GENOMIC_GI_ACCESSION</option>
+											
+										
+									  	<option value="GENPEPT_ACCESSION">GENPEPT_ACCESSION</option>
+											
+										
+									  	<option value="LOCUS_TAG">LOCUS_TAG</option>
+											
+										
+									  	<option value="MGI_ID">MGI_ID</option>
+											
+										
+									  	<option value="MIRBASE_ID">MIRBASE_ID</option>
+											
+										
+									  	<option value="MRNA_GI_ACCESSION">MRNA_GI_ACCESSION</option>
+											
+										
+									  	<option value="NASONIABASE_ID">NASONIABASE_ID</option>
+											
+										
+									  	<option value="OFFICIAL_GENE_SYMBOL">OFFICIAL_GENE_SYMBOL</option>
+											
+										
+									  	<option value="PROTEIN_GI_ACCESSION">PROTEIN_GI_ACCESSION</option>
+											
+										
+									  	<option value="PSEUDOCAP_ID">PSEUDOCAP_ID</option>
+											
+										
+									  	<option value="REFSEQ_MRNA">REFSEQ_MRNA</option>
+											
+										
+									  	<option value="REFSEQ_PROTEIN">REFSEQ_PROTEIN</option>
+											
+										
+									  	<option value="RGD_ID">RGD_ID</option>
+											
+										
+									  	<option value="SGD_ID">SGD_ID</option>
+											
+										
+									  	<option value="TAIR_ID">TAIR_ID</option>
+											
+										
+									  	<option value="UNIGENE">UNIGENE</option>
+											
+										
+									  	<option value="UNIPROT_ACCESSION">UNIPROT_ACCESSION</option>
+											
+										
+									  	<option value="UNIPROT_ID">UNIPROT_ID</option>
+											
+										
+									  	<option value="VECTORBASE_ID">VECTORBASE_ID</option>
+											
+										
+									  	<option value="WORMBASE_GENE_ID">WORMBASE_GENE_ID</option>
+											
+										
+									  	<option value="XENBASE_ID">XENBASE_ID</option>
+											
+										
+									  	<option value="ZFIN_ID">ZFIN_ID</option>
+								
+										<option value="NA">Not Sure </option>
+							 
+									  </select>
+							
+									  </font>
+							
+									</p><br>
+								  </td>
+								</tr>
+						<tr>
+			          <td class="sidebar_subheader"><br>Step 3: List Type</td>
+			        </tr>
+			        <tr>
+			          <td class="sidebar_subheader"> 
+			            <table>
+							<tr>
+								<td class="sidebar_text">Gene List</td>
+			              		<td>
+			                  <input type="radio" name="rbUploadType" value="list">
+			                </td>
+							</tr>
+							<tr>
+								<td class="sidebar_text">Background</td>
+			              		<td><input type="radio" name="rbUploadType" value="population"></td>
+							</tr>
+						</table>
+			            
+			          </td>
+        </tr>
+        <tr><td>
+        <table>			
+	            <tr><td class="sidebar_subheader"><br>
+	                  Step 4: Submit List </td>
+	              </tr></table>
+              <input type="button" onclick="uploadList(page);" value="Submit List" name="B52" class="upload">
+        </td></tr>
+			</table>
+			</div>
+
+
+
+
+
+
+
+			<!--List manager div-->
+			<div id="divManager" class="tabcontent">
+				<table border="0" cellpadding="2" width="100%" align="top">
+					<tr>
+						<td class="sidebar_header"><br>Gene List Manager<br><br></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="left">
+							<font class="regular">Select to limit annotations by one or more species   
+											<u><a href="/helps/list_manager.html#list" target="_blank">
+												Help
+											</a></u>
+									</font>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="top">
+<p align="left" style="word-spacing: 0; margin: 0"><font face="Verdana" size="1"> 
+              <select size="4" class="lists" multiple name="speciesList" style="z-index: -1;">
+              </select>
+              </font> </p>
+            <p align="left" style="word-spacing: 0; margin: 0">
+							<font face="Verdana" size="1">
+							<input onclick="selectSpecies(page);" type="button" name="B1" value="Select Species" class="list">
+							</font>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" align="top" colspan="2">
+							<p style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0" align="left">
+								<b><font color="white" face="Verdana" size="1"><br> </font><font color="white" face="Verdana" size="2">List Manager</font><font color="white" face="Verdana" size="1">    </font></b><u><font color="#0000FF" size="1" face="Verdana"><a href="javascript:OpenHelp('manager');"><b><font color="white">Help</font></b></a></font></u>
+							</p>
+						</td>
+					</tr>
+					
+					<tr>
+						<td valign="top" align="top" colspan="2"> 
+							<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0"> 
+								<font face="Verdana" size="1"> 
+									
+              <select size="3" name="myLists" id="myLists" class="lists" multiple>
+              </select>
+								</font> 
+							</p>
+							<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
+								<font color="white" face="Verdana" size="1">
+									<b>Select List to:</b>
+								</font>
+							</p>
+							<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
+								</p><table><tr><td><input onclick="useList(page);" type="button" name="B100" value="Use" class="list"></td>
+									<td><input onclick="renameList(page);" type="button" name="B1" value="Rename" class="list"></td></tr>
+									<tr><td><input onclick="removeList(page);" type="button" name="B1" value="Remove" class="list"></td>
+									<td><input onclick="combineList(page);" type="button" name="B1" value="Combine" class="list"></td></tr>
+									</table>
+									<table>
+									<tr> 
+									              <td><button class="term" onclick="ShowGeneList();" type="button" value="Show Gene List" name="B23">Show Gene List</button></td>
+    									</tr></table>
+									
+							
+						</td>
+					</tr>
+					
+				</table>
+				<table><tr><td>
+				
+				<div id="unmapped" name="unmapped"><a href="unmapped.jsp" target="_blank">View Unmapped Ids</a></div>
+				
+				</td></tr></table>
+			</div>
+			<!--End List manager div-->
+			
+			
+			
+			<!--Population manager div-->
+			<div id="divPop" class="tabcontent">
+				<table border="0" cellpadding="2" width="100%" align="top">
+							<tr>
+								<td class="sidebar_header"><br>Population Manager<br><br></td>
+							</tr>
+							<tr>
+						<td colspan="2" align="left">
+							<p align="left">
+								<b>
+									<font color="white" face="Verdana" size="1">
+										<br>Select a background   
+											<u><a href="/helps/list_manager.html#background" target="_blank">
+												<font color="white">Help</font>
+											</a></u>
+									</font></b></p>
+						</td>
+					</tr>
+				<tr> 
+				  <td valign="top" align="top" colspan="2"> 
+					<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0; width: 100%;"> 
+					  <font face="Verdana" size="1"> 
+					  
+					  <select size="4" class="lists" name="popLists" id="popLists">
+					  </select>
+					  
+					  </font> </p>
+					<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0"> 
+					  <font color="white" face="Verdana" size="1"> <b>Select List to:</b> 
+					  </font> </p>
+					<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0"> 
+					  <font face="Verdana" size="1"> 
+					  <input onclick="usePopList(page);" type="button" name="B100Pop" value="Use" class="back">
+					  <input onclick="renamePop(page);" type="button" name="B1Pop" value="Rename" class="back">
+					  </font> </p>
+				  </td>
+				</tr>
+			  
+			  <tr>
+			  						<td colspan="2" align="left">
+			  							<p align="left">
+			  								<b>
+			  									<font color="white" face="Verdana" size="1">
+			  										<br>Affymetrix 3' IVT Backgrounds   
+			  											<u><a href="/helps/list_manager.html#background" target="_blank">
+			  												<font color="white">Help</font>
+			  											</a></u>
+			  									</font></b></p>
+			  						</td>
+					</tr>
+					<tr> 
+									  <td valign="top" align="top" colspan="2"> 
+										<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0;&gt; 
+										  &lt;font face=" verdana size="1" color="white"> 
+										  </p><div style="overflow: auto; height: 60px; width: 100%;" name="affyBGs" id="affyBGs">
+										  	<font face="Verdana" size="1" color="white">
+										  	<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Affymetrix Barley Genome Array">Affymetrix Barley Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Affymetrix Bsubtilis Genome Array">Affymetrix Bsubtilis Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Affymetrix Mu19KsubA">Affymetrix Mu19KsubA
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Affymetrix Mu19KsubB">Affymetrix Mu19KsubB
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Affymetrix Mu19KsubC">Affymetrix Mu19KsubC
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Arabidopsis ATH1-121501 Genome Array">Arabidopsis ATH1-121501 Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Arabidopsis Genome Array">Arabidopsis Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Bovine Array">Bovine Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~C. elegans Genome Array">C. elegans Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Canine Array">Canine Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Canine_2 Genome Array">Canine_2 Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Chicken Array">Chicken Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Citrus Genome Array">Citrus Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Cotton Genome Array">Cotton Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Drosophila Genome Array">Drosophila Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Drosophila_2 Array">Drosophila_2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~E. coli Genome Antisense Array">E. coli Genome Antisense Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~E. coli Genome Sense Array">E. coli Genome Sense Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~E_coli_2 Array">E_coli_2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~GeneChip TEST3 Array">GeneChip TEST3 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Human Genome U133 Plus Set">HT Human Genome U133 Plus Set
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Human Genome U133A">HT Human Genome U133A
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Human Genome U133B">HT Human Genome U133B
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Mouse Genome MG-430A">HT Mouse Genome MG-430A
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Mouse Genome MG-430B">HT Mouse Genome MG-430B
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Rat Focus Array">HT Rat Focus Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HT Rat Genome 230">HT Rat Genome 230
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Hu35KsubA Array">Hu35KsubA Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Hu35KsubB Array">Hu35KsubB Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Hu35KsubC Array">Hu35KsubC Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Hu35KsubD Array">Hu35KsubD Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Cancer Biology Array">Human Cancer Biology Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome Focus Array">Human Genome Focus Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U133 Plus 2 Array">Human Genome U133 Plus 2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U133 Plus 2 Perfect Match Peg Array">Human Genome U133 Plus 2 Perfect Match Peg Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U133A 2 Array">Human Genome U133A 2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U133A Array">Human Genome U133A Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U133B Array">Human Genome U133B Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U95A Array">Human Genome U95A Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U95Av2 Array">Human Genome U95Av2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U95B Array">Human Genome U95B Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U95C Array">Human Genome U95C Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U95D Array">Human Genome U95D Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Human Genome U95E Array">Human Genome U95E Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~HumanGeneFL Array">HumanGeneFL Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Maize Array">Maize Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Medicago truncutala Genome Array">Medicago truncutala Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mouse Genome 430 2 Array">Mouse Genome 430 2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mouse Genome 430 2 Perfect Match Peg Array">Mouse Genome 430 2 Perfect Match Peg Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mouse Genome 430A 2 Array">Mouse Genome 430A 2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mouse Genome MOE430A Array">Mouse Genome MOE430A Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mouse Genome MOE430B Array">Mouse Genome MOE430B Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mu11KsubA Array">Mu11KsubA Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Mu11KsubB Array">Mu11KsubB Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Murine Genome U74A Array">Murine Genome U74A Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Murine Genome U74Av2 Array">Murine Genome U74Av2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Murine Genome U74B Array">Murine Genome U74B Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Murine Genome U74Bv2 Array">Murine Genome U74Bv2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Murine Genome U74C Array">Murine Genome U74C Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Murine Genome U74Cv2 Array">Murine Genome U74Cv2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~P. aeruginosa Genome Array">P. aeruginosa Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Plasmodium Anopheles Array">Plasmodium Anopheles Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Poplar Genome Array">Poplar Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Porcine Array">Porcine Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Expression Array 230 2">Rat Expression Array 230 2
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Genome 230 2 Perfect Match Peg Array">Rat Genome 230 2 Perfect Match Peg Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Genome RAE230A Array">Rat Genome RAE230A Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Genome RAE230B Array">Rat Genome RAE230B Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Genome U34A Array">Rat Genome U34A Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Genome U34B Array">Rat Genome U34B Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Genome U34C Array">Rat Genome U34C Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Neurobiology U34 Array">Rat Neurobiology U34 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Tox FX">Rat Tox FX
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rat Toxicology U34 Array">Rat Toxicology U34 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rhesus Genome Array">Rhesus Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Rice Array">Rice Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~S. aureus Array">S. aureus Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Soybean Array">Soybean Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Sugar Cane Genome Array">Sugar Cane Genome Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Tomato Array">Tomato Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~U133_X3P Array">U133_X3P Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Vitis_Vinifera Array">Vitis_Vinifera Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~wheat Array">wheat Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~X_laevis_2 Array">X_laevis_2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Xenopus_laevis Array">Xenopus_laevis Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Xenopus_tropicalis Array">Xenopus_tropicalis Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Yeast Genome S98 Array">Yeast Genome S98 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Yeast_2 Array">Yeast_2 Array
+											<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_3PRIME_IVT_ID~Zebrafish Array">Zebrafish Array
+											</font>
+										  </div>
+										   
+									  </td>
+				</tr>
+				<tr><td><br></td></tr>
+				<tr>
+							  						<td colspan="2" align="left">
+							  							<p align="left">
+							  								<b>
+							  									<font color="white" face="Verdana" size="1">
+							  										<br>Affymetrix Exon Backgrounds   
+							  											<u><a href="/helps/list_manager.html#background" target="_blank">
+							  												<font color="white">Help</font>
+							  											</a></u>
+							  									</font></b></p>
+							  						</td>
+									</tr>
+									<tr> 
+													  <td valign="top" align="top" colspan="2"> 
+														<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0;&gt; 
+														  &lt;font face=" verdana size="1" color="white"> 
+														  </p><div style="overflow: auto; height: 60px; width: 100%;" name="affyBGs" id="affyBGs">
+														  	<font face="Verdana" size="1" color="white">
+														  	<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_EXON_ID~HuEx-1_0-st-v2">HuEx-1_0-st-v2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_EXON_ID~HuGene-1_0-st-v1">HuGene-1_0-st-v1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_EXON_ID~MoEx-1_0-st-v1">MoEx-1_0-st-v1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_EXON_ID~MoGene-1_0-st-v1">MoGene-1_0-st-v1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_EXON_ID~RaEx-1_0-st-v1">RaEx-1_0-st-v1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_EXON_ID~RaGene-1_0-st-v1">RaGene-1_0-st-v1
+															</font>
+														  </div>
+														   
+													  </td>
+								</tr>
+				<tr><td><br></td></tr>
+				<tr>
+							  						<td colspan="2" align="left">
+							  							<p align="left">
+							  								<b>
+							  									<font color="white" face="Verdana" size="1">
+							  										<br>Affymetrix SNP Backgrounds   
+							  											<u><a href="/helps/list_manager.html#background" target="_blank">
+							  												<font color="white">Help</font>
+							  											</a></u>
+							  									</font></b></p>
+							  						</td>
+									</tr>
+									<tr> 
+													  <td valign="top" align="top" colspan="2"> 
+														<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0;&gt; 
+														  &lt;font face=" verdana size="1" color="white"> 
+														  </p><div style="overflow: auto; height: 60px; width: 100%;" name="affyBGs" id="affyBGs">
+														  	<font face="Verdana" size="1" color="white">
+														  	<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~cSNP_I+II_20KPanel_R1">cSNP_I+II_20KPanel_R1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~cSNP_I_10KPanel_R1">cSNP_I_10KPanel_R1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Cytogenetics_Array">Cytogenetics_Array
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~DMET_Panel">DMET_Panel
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~GenomeWideSNP_5">GenomeWideSNP_5
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~GenomeWideSNP_6">GenomeWideSNP_6
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~HT_GenomeWide_6_p1">HT_GenomeWide_6_p1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~HuGeneFocused50K">HuGeneFocused50K
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Immune_and_Inflam_9KPanel_R1">Immune_and_Inflam_9KPanel_R1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~MALD_3KPanel_R1">MALD_3KPanel_R1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Mapping10K_Xba131">Mapping10K_Xba131
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Mapping10K_Xba142">Mapping10K_Xba142
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Mapping250K_Nsp">Mapping250K_Nsp
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Mapping250K_Sty">Mapping250K_Sty
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Mapping50K_Hind240">Mapping50K_Hind240
+															<br><input type="checkbox" onclick="addBackground(this);" value="AFFYMETRIX_SNP_ID~Mapping50K_Xba240">Mapping50K_Xba240
+															</font>
+														  </div>
+														   
+													  </td>
+								</tr>
+				<tr><td><br></td></tr>
+				<!--Agilent backgrounds-->
+				<tr>
+							  						<td colspan="2" align="left">
+							  							<p align="left">
+							  								<b>
+							  									<font color="white" face="Verdana" size="1">
+							  										<br>Agilent Backgrounds   
+							  											<u><a href="/helps/list_manager.html#background" target="_blank">
+							  												<font color="white">Help</font>
+							  											</a></u>
+							  									</font></b></p>
+							  						</td>
+									</tr>
+									<tr> 
+													  <td valign="top" align="top" colspan="2"> 
+														<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0"> 
+														  <font face="Verdana" size="1" color="white"> 
+														  <div style="overflow: auto; height: 60px; width: 100%;" name="affyBGs" id="affyBGs">
+														  	<font face="Verdana" size="1" color="white">
+														  	<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~HumanCpGIsland">HumanCpGIsland
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~HumanENCODE">HumanENCODE
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~HumanPromoter">HumanPromoter
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~HumanPromoter2">HumanPromoter2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~MouseCpGIsland">MouseCpGIsland
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter1">ZebrafishExpandedPromoter1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter2">ZebrafishExpandedPromoter2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter3">ZebrafishExpandedPromoter3
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter4">ZebrafishExpandedPromoter4
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter5">ZebrafishExpandedPromoter5
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter6">ZebrafishExpandedPromoter6
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter7">ZebrafishExpandedPromoter7
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter8">ZebrafishExpandedPromoter8
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishExpandedPromoter9">ZebrafishExpandedPromoter9
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishProximalPromoter1">ZebrafishProximalPromoter1
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_CHIP_ID~ZebrafishProximalPromoter2">ZebrafishProximalPromoter2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Arabidopsis3">Arabidopsis3
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Caenorhabditiselegans">Caenorhabditiselegans
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Canine">Canine
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Chicken">Chicken
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Frog">Frog
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~HumanGenome">HumanGenome
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~MouseV2">MouseV2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~RatGenome">RatGenome
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~RatGenome,RatV2">RatGenome,RatV2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~RatV2">RatV2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Rice">Rice
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~YeasetV2">YeasetV2
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_ID~Zebrafish">Zebrafish
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~HumanGenomeCGH105A">HumanGenomeCGH105A
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~HumanGenomeCGH244A">HumanGenomeCGH244A
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~HumanGenomeCGH44B">HumanGenomeCGH44B
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~HumanGenomeCGH44K">HumanGenomeCGH44K
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~MouseGenomeCGH105A">MouseGenomeCGH105A
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~MouseGenomeCGH244A">MouseGenomeCGH244A
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~MouseGenomeCGH44A">MouseGenomeCGH44A
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~MouseGenomeCGH44K">MouseGenomeCGH44K
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~RatGenomeCGH105A">RatGenomeCGH105A
+															<br><input type="checkbox" onclick="addBackground(this);" value="AGILENT_OLIGO_ID~RatGenomeCGH244A">RatGenomeCGH244A
+															</font>
+														  </div>
+														  </font> </p>
+													  </td>
+				</tr>
+				
+				<tr><td><br></td></tr>
+								<!--Illumina backgrounds-->
+								<tr>
+											  						<td colspan="2" align="left">
+											  							<p align="left">
+											  								<b>
+											  									<font color="white" face="Verdana" size="1">
+											  										<br>Illumina Backgrounds   
+											  											<u><a href="/helps/list_manager.html#background" target="_blank">
+											  												<font color="white">Help</font>
+											  											</a></u>
+											  									</font></b></p>
+											  						</td>
+													</tr>
+													<tr> 
+																	  <td valign="top" align="top" colspan="2"> 
+																		<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0"> 
+																		  <font face="Verdana" size="1" color="white"> 
+																		  <div style="overflow: auto; height: 60px; width: 100%;" name="affyBGs" id="affyBGs">
+																		  	<font face="Verdana" size="1" color="white">
+																		  	<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~HumanHT-12_V3_0_R2_11283641_A">HumanHT-12_V3_0_R2_11283641_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~HumanRef-8_V2_0_R4_11223162_A">HumanRef-8_V2_0_R4_11223162_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~HumanRef-8_V3_0_R1_11282963_A_WGDASL">HumanRef-8_V3_0_R1_11282963_A_WGDASL
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~HumanRef-8_V3_0_R2_11282963_A">HumanRef-8_V3_0_R2_11282963_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~HumanWG-6_V2_0_R4_11223189_A">HumanWG-6_V2_0_R4_11223189_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~HumanWG-6_V3_0_R2_11282955_A">HumanWG-6_V3_0_R2_11282955_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~IBCv2">IBCv2
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~MouseRef-8_V1_1_R4_11234312_A">MouseRef-8_V1_1_R4_11234312_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~MouseRef-8_V2_0_R2_11278551_A">MouseRef-8_V2_0_R2_11278551_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~MouseWG-6_V1_1_R4_11234304_A">MouseWG-6_V1_1_R4_11234304_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~MouseWG-6_V2_0_R2_11278593_A">MouseWG-6_V2_0_R2_11278593_A
+																			<br><input type="checkbox" onclick="addBackground(this);" value="ILLUMINA_ID~RatRef-12_V1_0_R4_11222119_A">RatRef-12_V1_0_R4_11222119_A
+</font>
+																		  </div>
+																		  </font> </p>
+																	  </td>
+				</tr>
+				
+				<!--*******************************************User Requested Backgrounds**********************************************-->
+				
+				
+				
+				<tr>
+											  						<td colspan="2" align="left">
+											  							<p align="left">
+											  								<b>
+											  									<font color="white" face="Verdana" size="1">
+											  										<br>User Requested Backgrounds    
+											  											<u><a href="/helps/list_manager.html#background" target="_blank">
+											  												<font color="white">Help</font>
+											  											</a></u>
+											  											<br><br>****Please note that these backgrounds have been submitted by users without QC from the DAVID Team
+											  									</font></b></p>
+											  						</td>
+													</tr>
+													<tr> 
+																	  <td valign="top" align="top" colspan="2"> 
+																		<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0;&gt; 
+																		  &lt;font face=" verdana size="1" color="white"> 
+																		  </p><div style="overflow: auto; height: 60px; width: 100%;" name="affyBGs" id="affyBGs">
+																		  	<font face="Verdana" size="1" color="white">
+																		  	<br><input type="checkbox" onclick="addBackground(this);" value="ENSEMBL_GENE_ID~STICKLEBACK_HUMAN_HOMOLOG">STICKLEBACK_HUMAN_HOMOLOG
+																			
+																			</font>
+																		  </div>
+																		   
+																	  </td>
+												</tr>
+				<tr><td><br></td></tr>
+				
+				
+				
+				<!--******************************************End user requested backgrounds-->
+				
+				
+				
+				
+				
+					</table>
+						
+							
+						
+			</div>
+			<!--End Population manager div-->		
+
+</div>
+
+
+
+            
+</form>
+
+
+<script language="javascript">
+var FM = document.frmManager;
+var a_option;
+
+		
+
+		FM.Mode.value="";
+	
+	//setProgress2(100);
+	
+		//alert('selectedSpecies:,0');
+		FM.selectedSpecies.value=null;
+	
+	//setProgress2(100);
+	FM.speciesList.options.length= 0;a_option = document.createElement("OPTION");a_option.text = "- Use All Species -";a_option.value = "- Use All Species -";FM.speciesList.options[FM.speciesList.length]=a_option;
+a_option = document.createElement("OPTION");a_option.text = "Homo sapiens(14)";a_option.value = "0";FM.speciesList.options[FM.speciesList.length]=a_option;
+FM.speciesList.options[1].selected=true;
+FM.myLists.options.length= 0;
+a_option = document.createElement("OPTION");a_option.text = "List_1";a_option.value = "0";FM.myLists.options[FM.myLists.length]=a_option;
+FM.myLists.options.selectedIndex=0;FM.popLists.options.length= 0;
+a_option = document.createElement("OPTION");a_option.text = "Homo sapiens";a_option.value = "0";FM.popLists.options[FM.popLists.length]=a_option;
+FM.popLists.options.selectedIndex=0;
+
+
+		if(document.getElementById("unmapped")!=null)
+		{
+			document.getElementById("unmapped").style.visibility="hidden";
+
+		}
+
+	
+
+
+if(document.getElementById("myLists")!=null&&document.getElementById("myLists").options.length>0)
+{
+initialtab=[2, "divManager"]
+enablepersistence=false;
+}
+else if(document.getElementById("popLists")!=null&&document.getElementById("popLists").options.length>0)
+{
+initialtab=[1, "divUpload"]
+enablepersistence=false;
+}
+	
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</td>
+<td>    </td>
+      <td>
+		<table class="main">
+			<tr><td>
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" type="text/css" href="template.css">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-74367-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+		<table class="main">
+			<tr><td>
+
+
+
+
+
+
+
+						
+
+
+<link rel="shortcut icon" href="favicon.ico">
+<link href="css/summary.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/summary.js"></script>
+
+
+<table class="summary"><tr><td>
+ <script type="text/javascript">setProgress2(25);setLabel('Gathering Data');</script>
+
+
+ 
+
+ 
+
+
+<table cellpadding="2" cellspacing="2" border="0" style="text-align: left; width: 700px;">
+  <tbody>
+    <tr align="center">
+      <td style="vertical-align: top;" rowspan="1" colspan="2"><big><span style="font-weight: bold;"><big><span style="font-family: arial; color: rgb(54, 101, 153);">Analysis Wizard</span></big><br>
+      <br>
+      </span></big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; width: 30px;"><br>
+      </td>
+      <td style="vertical-align: top; text-align: right;"><a href="/forum/" target="_blank">Tell us how you like the tool</a><br>
+      <a href="/content.jsp?file=Contact.html">Contact us for
+questions</a> </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;" rowspan="1" colspan="3"><big style="font-family: arial; color: rgb(54, 101, 153);"></big>
+      <ul style="font-family: arial;">
+      </ul>
+      <span style="color: rgb(102, 102, 102);"> </span><big style="font-family: arial; color: rgb(102, 102, 102);"><img src="/images/check.gif" title="" alt="" align="middle"> Step
+1. Successfully submitted gene list</big><big style="font-family: arial; color: rgb(54, 101, 153);"><br>
+
+		
+	            <small style="font-family: arial; color: rgb(102, 102, 102);">Current Gene List: List_1</small> <br>
+	
+
+	            <small style="font-family: arial; color: rgb(102, 102, 102);">Current Background: Homo sapiens</small><br><br>
+			  
+        
+	
+      Step 2. Analyze above gene list with one
+of DAVID tools</big><font size="3" style="color: rgb(54, 101, 153);"><big></big></font><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">
+      <table cellpadding="2" cellspacing="2" border="0" style="text-align: left; width: 100%;">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><img src="/images/arrwDown.gif" title="" alt=""><br>
+            </td>
+            <td style="vertical-align: top; text-align: right;"><a href="/content.jsp?file=FAQs.html#25" target="_blank">Which
+DAVID tools to use?</a></td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><img src="/images/arrow.gif" title="" alt="" align="middle"> <a href="summary.jsp" style="color: rgb(54, 101, 153);"><font size="3" style="color: rgb(54, 101, 153);"><big></big><small><big>Functional
+Annotation Tool</big></small></font>
+      <ul>
+        <li><font size="3" style="color: rgb(54, 101, 153);"><small><big>Functional
+Annotation Clustering</big></small></font></li>
+        <li><font size="3" style="color: rgb(54, 101, 153);"><small><big>Functional
+Annotation Chart</big></small></font></li>
+        <li><font size="3" style="color: rgb(54, 101, 153);"><small><big>Functional
+Annotation Table</big></small></font></li>
+      </ul></a>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><img src="/images/arrow.gif" border="0" title="" alt="" align="middle"> <a href="gene2gene.jsp" style="color: rgb(54, 101, 153);"><font size="3" style="color: rgb(54, 101, 153);"><small><big>Gene
+Functional Classification Tool</big></small></font></a></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><img src="/images/arrow.gif" title="" alt="" align="middle"> <a href="conversion.jsp" style="color: rgb(54, 101, 153);"><font size="3" style="color: rgb(54, 101, 153);"><small><big>Gene
+ID Conversion Tool</big></small></font></a></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><img src="/images/arrow.gif" title="" alt="" align="middle"> <a href="list.jsp" style="color: rgb(54, 101, 153);"><font size="3" style="color: rgb(54, 101, 153);"><small><big> 
+Gene Name Batch Viewer</big></small></font></a></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<script type="text/javascript">hideProgress();</script>
+</td></tr></table>
+
+
+
+
+
+</td></tr>
+            		
+          	</table>
+
+
+
+
+
+</td></tr>
+            		
+          	</table>
+      </td>
+   </tr> 
+</table>
+   </tr> 
+</table>
+
+<table width="980">
+<tr><td align="center"> 
+
+<br><br>
+<hr style="height: 2px; width: 700px; align: center">
+<table width="100%">
+        <tr><td align="center"> <font size="2">Please cite  <a href="/content.jsp?file=citation.htm"><font color="#0000FF">
+        <i>Nature Protocols 2009; 4(1):44</i> &amp; <i>Nucleic Acids Res. 2009;37(1):1</i></font></a> within any publication that makes use of any methods inspired
+        by <b>DAVID</b></font>.<!--
+        <font size="2"><b>Please cite the following reference within
+        any publication that makes use of any methods</b> </font>
+        -->
+        </td></tr>
+      <table cellspacing="0" cellpadding="0" align="center">
+        <tr>
+          <td align="center"> <a href="https://www.leidos.com/about/companies/leidos-biomedical-research" target="_blank"><img src="/graphics/leidos-logo.jpg" height="39" border="0"></a>        </td>
+          <td align="center"><a href="http://www.niaid.nih.gov/default.htm" target="_blank"><img border="0" src="/graphics/niaid_logo.gif" height="60"></a>        </td>
+          <td align="center"><a href="http://www-fbsc.ncifcrf.gov/" target="_blank"><img border="0" src="/graphics/abcc_text.gif" height="37"></a>        </td>
+          <td align="center">
+            <p align="right"><a href="http://web.ncifcrf.gov/" target="_blank"><img border="0" src="/graphics/nic_frederick.gif" height="45"></a>         
+          </p></td>
+          <td align="center">
+ <a href="http://www.nih.gov" target="_blank"><img src="/graphics/nihlogo.gif" height="54" border="0" align="top"></a>        
+          </td>
+          <td align="center">
+            <a href="http://www.firstgov.gov/" target="_blank"><img border="0" src="/graphics/firstgov_sm.gif" height="31"></a>        
+          </td>
+          <td align="center">
+            <a href="http://www.os.dhhs.gov/" target="_blank"><img border="0" src="/graphics/Department_Of_Health_And_HR.gif" height="34" align="left"></a>
+          </td>
+        </tr>
+       <tr> <td colspan="7" align="right"> <a href="/content.jsp?file=Licensing.html">Term of Service </a>| <a href="/content.jsp?file=Contact.html">Contact Us</a> | <a href="/site_map.jsp">Site Map</a></td></tr>
+      </table>
+</table>
+    
+</td></tr>
+</table>
+
+</body></html>

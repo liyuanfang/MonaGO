@@ -15,13 +15,35 @@
 <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
 <script src="js/nouislider.min.js"></script>
 
+<script type='text/javascript'>
+function showClusterCompare(similarityVal){
+    if (similarityVal=='Genes'){
+        $('#clusterCompare').hide();
+    }
+    else{
+        $('#clusterCompare').show();
+    }
+}
+function showClusterCompareDavid(similarityVal){
+    if (similarityVal=='Genes'){
+        $('#clusterCompareDavid').hide();
+    }
+    else{
+        $('#clusterCompareDavid').show();
+    }
+}
+</script>
+
+
 <form method="post" action="" name="frmManager" id="frmManager" enctype="multipart/form-data">
 <input type="Hidden" name="listType" value="null">
 <input type="Hidden" name="annotCat" value="null">
 <input type="Hidden" name="Mode" value="null">
 <input type="Hidden" name="pVal" value="null">
 <input type="Hidden" name="type" value="null">
-;
+<input type="Hidden" name="similarity" value="null">
+<input type="Hidden" name="clustComp" value="null">
+
 
 <div class="dummy_header"></div>
 
@@ -70,11 +92,44 @@
 						<div style="display: flex; margin-left: 15px;">
 			            	<div id="slider_manual" class="sliderBar"></div>
           					<input type="text" id="input_slider_manual"/>
-
+						<br>
 
 						</div>
 
+					<div class="distance">
 
+	        			<h2><span class="label label-primary" title="choose distance measurement based on common genes or semantic similarity">Choose Distance Measurement</span></h2>
+
+	        			<br>
+
+									  <select id="selectPicker" class="selectpicker" data-width="300px" size="10" name="similaritySelectManual"
+									          onchange = "showClusterCompare(this.options[this.selectedIndex].value)">
+										  	<option value="Genes">Number of overlapping genes</option>
+										  	<option value="Resnik">Resnik similarity between GO terms</option>
+										  	<option value="Simrel">Simrel between GO terms</option>
+											
+
+										  </select>
+
+
+						<br>
+
+					</div>
+
+                                        <div id='clusterCompare' style='display:none'>
+
+	        			<h2><span class="label label-primary" title="Choose how to compare similarity scores between clusters of GO terms. Average takes the average similarity between every combination, minimum considers the most informative ancestor common to all GO terms, and maximum considers the most informative ancestor common to any combination.">Advanced option</span></h2>
+	        			<br>
+
+									  <select class='selectPicker' name="clusterCompare">
+										  	<option value="ave">Average</option>
+										  	<option value="min">Minimum</option>
+										  	<option value="max">Maximum</option>
+											
+
+										  </select>
+
+                                        </div>
 
 
 					<div class="btn btn-success btn-rounded btn-lg submit-btn" onclick="manualSubmitClicked()">Submit</div>
@@ -236,6 +291,7 @@
 
 					</div>
 
+
 					<div class="step4">
 
 	        			<h2><span class="label label-primary" title="choose Gene Ontology annotation type">Step 4: Choose Annotation Type</span></h2>
@@ -245,7 +301,7 @@
 							<select class="selectpicker show-tick" data-width="500px" name="annotType" multiple>
 
 				            	<option value="GOTERM_BP" selected>Biological Process</option>
-								<option value="GOTERM_MF">Molecular Function</option>
+						<option value="GOTERM_MF">Molecular Function</option>
 				            	<option value="GOTERM_CC">Cellular Component</option>
 
 				            </select>
@@ -254,6 +310,45 @@
 						<br>
 
 					</div>
+
+					<div class="step5">
+
+	        			<h2><span class="label label-primary" title="choose distance measurement based on common genes or semantic similarity">Step 5: Choose Distance Measurement</span></h2>
+
+	        			<br>
+
+									  <select class="selectpicker" data-width="300px" size="10" name="similaritySelectDavid"
+									          onchange = "showClusterCompareDavid(this.options[this.selectedIndex].value)">
+
+										  	<option value="Genes">Number of overlapping genes</option>
+										  	<option value="Resnik">Resnik similarity between GO terms</option>
+										  	<option value="Simrel">Simrel between GO terms</option>
+
+
+										  </select>
+
+
+						<br>
+
+					</div>
+
+
+
+                                        <div id='clusterCompareDavid' style='display:none'>
+
+	        			<h2><span class="label label-primary" title="Choose how to compare similarity scores between clusters of GO terms. Average takes the average similarity between every combination, minimum considers the most informative ancestor common to all GO terms, and maximum considers the most informative ancestor common to any combination.">Advanced option</span></h2>
+	        			<br>
+
+									  <select class='selectPicker' name="clusterCompareDavid">
+										  	<option value="ave">Average</option>
+										  	<option value="min">Minimum</option>
+										  	<option value="max">Maximum</option>
+											
+
+										  </select>
+
+                                        </div>
+
 					<div class="btn btn-success btn-rounded btn-lg submit-btn" onclick="davidSubmitClicked()">Submit</div>
 				</div>
 
@@ -267,7 +362,7 @@
 
 
    <div class="footer">
-		<p><t>MonaGO is a visualization tool for Gene Ontology (GO) enrichment analysis. It makes use of GO annotation information from <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a>. For more information please check the <a href="help.html">help page</a>.</p>
+		<p><t>MonaGO is a visualization tool for Gene Ontology (GO) enrichment analysis. It makes use of GO annotation information from <a href="https://david.ncifcrf.gov/" target="_blank">DAVID</a>. For more information please check the <a href="help">help page</a>.</p>
 	</div>     
 
 
@@ -287,6 +382,7 @@
 	var inputFormat_manual = document.getElementById('input_slider_manual');
 	var inputFormat_monago = document.getElementById('input_slider_monago');
 	var inputFormat = document.getElementById('input_slider');
+
 	var demoGenes = "1007_s_at,1053_at,117_at,121_at,1255_g_at,1294_at,1316_at,1320_at,1405_i_at,1431_at,1438_at,1487_at,1494_f_at,1598_g_at";
 	
 	var demoGO_csvFormat = `GO:0042221,1.08E-04,"cytochrome P450 family 2 subfamily A member 6(CYP2A6);thyroid hormone receptor, alpha(THRA);replication factor C subunit 2(RFC2);paired box 8(PAX8);cytochrome P450 family 2 subfamily E member 1(CYP2E1);protein tyrosine phosphatase, non-receptor type 21(PTPN21);C-C motif chemokine ligand 5(CCL5);estrogen related receptor alpha(ESRRA);guanylate cyclase activator 1A(GUCA1A);EPH receptor B3(EPHB3);growth arrest specific 6(GAS6"
@@ -524,6 +620,8 @@ GO:0042330,0.049042278,C-C motif chemokine ligand 5(CCL5);EPH receptor B3(EPHB3)
 
 		FM.annotCat.value = annotList.toString();
 
+
+
 		if(type == "david"){
 			if((FM.inputIds.value == "") && ((!FM.files1.value))){
 				alert("Error: Please upload csv file or paste a list in step 1.");
@@ -531,7 +629,15 @@ GO:0042330,0.049042278,C-C motif chemokine ligand 5(CCL5);EPH receptor B3(EPHB3)
 			}
 
 
-			
+					for(var i=0;i<3;i++){
+			if(FM.similaritySelectDavid[i].selected)
+				FM.similarity.value=FM.similaritySelectDavid[i].value;
+		        }
+
+					for(var i=0;i<3;i++){
+			if(FM.clusterCompareDavid[i].selected)
+				FM.clustComp.value=FM.clusterCompareDavid[i].value;
+		        }
 
 			if(FM.annotCat.value == ""){
 				alert("Error: Please select annotation type in step 4.");
@@ -539,14 +645,26 @@ GO:0042330,0.049042278,C-C motif chemokine ligand 5(CCL5);EPH receptor B3(EPHB3)
 				return false;
 			}
 			FM.pVal.value = $("#input_slider").val();
-		}
+		        }
 
 		if(type == "manual"){
 			if((FM.inputGOs.value == "") && (!FM.files2.value)){
 				alert("Error: Please upload csv file or paste GO terms");
 				return false;
 			}
+
+					for(var i=0;i<3;i++){
+			if(FM.similaritySelectManual[i].selected)
+				FM.similarity.value=FM.similaritySelectManual[i].value;
+		        }
+					for(var i=0;i<3;i++){
+			if(FM.clusterCompare[i].selected)
+				FM.clustComp.value=FM.clusterCompare[i].value;
+		        }
 			FM.pVal.value = $("#input_slider_manual").val();
+
+
+
 		}
 		if(type == "MonaGO"){
 			if(!FM.files3.value){
