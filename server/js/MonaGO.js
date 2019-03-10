@@ -2820,6 +2820,9 @@ var MonaGO = function(){
         	 .data(chord.groups)
            .enter().append("svg:g").attr("class","labeltext");
 
+	gt.attr("font-family", "arial");
+
+
         gt.attr("transform", function(d) {
             label_angle = (d.startAngle + d.endAngle) / 2 * 180 / Math.PI - 90 -4;
             var node_angle2 = [];

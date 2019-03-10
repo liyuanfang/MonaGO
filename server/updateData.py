@@ -1,3 +1,6 @@
+# before running this file, the file 'goa_uniprot_all_gaf.gz' needs to be downloaded from ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/UNIPROT/ and saved to the folder data.
+
+
 import json
 import networkx as nx
 import unicodedata
@@ -87,7 +90,8 @@ def getAnnotations():
             try:
                 annotDict[goID]+=1
             except KeyError:
-                print(goID)
+		print(goID)
+                annotDict[goID]=1
     return annotDict
 
 
@@ -100,3 +104,10 @@ def createAnnotationDict():
 
 
 createAnnotationDict()
+
+
+
+
+# then remake IC and P dictionaries
+import makeICdict
+import makePDict
