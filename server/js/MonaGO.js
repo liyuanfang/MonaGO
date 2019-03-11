@@ -571,6 +571,8 @@ var MonaGO = function(){
         svg.selectAll("circle.node").remove();
         svg.selectAll("text.node").remove();
         drawGraph(data,svg,width,height);
+	force.size([width*0.99,height*0.99]);
+	force.resume();
 	}
         
 
