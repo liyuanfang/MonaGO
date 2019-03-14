@@ -556,30 +556,58 @@ GO:0042330,0.049042278,C-C motif chemokine ligand 5(CCL5);EPH receptor B3(EPHB3)
 
 	function davidSubmitClicked(){
 		var res = uploadList("david");
-		if(res) showLoadingIcon();
+		if(res){
+		showLoadingIcon();
+        	window.onpagehide=function(){
+            		hideLoadingIcon()
+        
+        	}
+		}
 	}
 
 	function manualSubmitClicked(){
 		var res = uploadList("manual");
-		if(res) showLoadingIcon();
+		if(res){
+		showLoadingIcon();
+        	window.onpagehide =function(){
+            		hideLoadingIcon()
+        
+        	}
+		}
 	}
 	function MonaGO_SubmitClicked(){
 		var res = uploadList("MonaGO");
-		if(res) showLoadingIcon();
+		if(res){
+		showLoadingIcon();
+        	window.onpagehide =function(){
+            		hideLoadingIcon()
+        
+        	}
+		}
 	}
 
 	function showLoadingIcon(){
 		if($("body .background").length==0){
 			var $backGround = $("body").append('<div class="background"/>');
-
 			var bodyHeight = $("body").height();
 			$(".background").css("height",bodyHeight);
-
 			$backGround.append('<div class="loadingBar"><div class="loading_icon"/></div>');
 			$(".loadingBar").css("top",bodyHeight/2);
 		}
-	}
+		else{
+			var bodyHeight = $("body").height();
+			$(".background").css("height",bodyHeight);
+			$('.loadingBar').show()
+		}
 
+
+		
+	}
+	function hideLoadingIcon(){
+		$(".background").css("height",0);
+		$('.loadingBar').hide()
+
+	}
 
 
 	function uploadList(type){
@@ -685,7 +713,6 @@ GO:0042330,0.049042278,C-C motif chemokine ligand 5(CCL5);EPH receptor B3(EPHB3)
 		FM.target="";
 		FM.submit();
 
-		$(".submit-btn").attr('disabled','disabled'); 
 		return true;
 
 	}
