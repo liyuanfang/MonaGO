@@ -38,7 +38,7 @@ with open("config.ini","r") as fr:
         config.update({opition[0]:opition[1].strip()})
 
 if(config["remote_server"]=="true"):
-    root_dir = "/home/ubuntu/"
+    root_dir = "/home/ubuntu/monaGoWebsite/server/"
 else:
     root_dir = ""
 
