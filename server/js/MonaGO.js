@@ -1880,7 +1880,7 @@ var MonaGO = function(){
 		var element="<div style=\"position:relative;left:10px;bottom:"+(window.innerHeight*.75-10)+"px;\"><button id='exporthier_big' class='btn dropdown-toggle' data-toggle='dropdown'>Save 			image<span class='caret'></span></button><div>"
             	$('#go_chart_big_content').append(element)
             	element= '<ul class="dropdown-menu" role="menu" id="menu">';
-             	//element+='<li><a href="" id="PDF">PDF</a></li>'
+             	element+='<li><a href="#" id="pdf">PDF</a></li>'
             	element+='<li><a href="#" id="png">PNG</a></li>'
             	element+='<li><a href="#"id="svg">SVG</a></li></ul>'
             	$('#exporthier_big').append(element)
@@ -1899,6 +1899,21 @@ var MonaGO = function(){
 
         	});
 
+        	$("#pdf").click(function(){
+
+			svgAsPngUri(document.getElementById("hier_group_big"),{scale: 5},function(data){
+				var imgForPDF = new Image();
+				imgForPDF.src = data;
+				imgForPDF.onload = function() {
+                			var doc = new jsPDF('p', 'mm', 'a4', true);
+                			doc.addImage(data, 'PNG', 0, 0, 250, 250/imgForPDF.width*imgForPDF.height, '', 'FAST');
+                			doc.save('hierarchy.pdf');
+				}
+
+			})
+        	});
+
+
         }
 	}
 
@@ -1907,7 +1922,7 @@ var MonaGO = function(){
 			var element="<div style=\"position:relative;left:10px;bottom:"+(height-5)+"px;\"><button id='exporthier' class='btn dropdown-toggle' data-toggle='dropdown'>Save image<span class='caret'></span></button><div>"
             $('#go_chart').append(element)
             element= '<ul class="dropdown-menu" role="menu" id="menu">';
-             //element+='<li><a href="" id="PDF">PDF</a></li>'
+            element+='<li><a href="#" id="pdf">PDF</a></li>'
             element+='<li><a href="#" id="png">PNG</a></li>'
             element+='<li><a href="#"id="svg">SVG</a></li></ul>'
             $('#exporthier').append(element)
@@ -1947,6 +1962,17 @@ var MonaGO = function(){
 
         $("#svg").click(function(){
              saveSvg(document.getElementById("hier_group"), "hierarchy.svg", {scale: 2});
+        });
+        $("#pdf").click(function(){
+		svgAsPngUri(document.getElementById("hier_group"),{scale: 5},function(data){
+			var imgForPDF = new Image();
+			imgForPDF.src = data;
+			imgForPDF.onload = function() {
+                		var doc = new jsPDF('p', 'mm', 'a4', true);				
+                		doc.addImage(data, 'PNG', 0, 175-140/imgForPDF.width*imgForPDF.height, 250, 250/imgForPDF.width*imgForPDF.height, '', 'FAST');
+                		doc.save('hierarchy.pdf');
+			}
+		})
         });
 	}
 
@@ -3149,9 +3175,14 @@ var MonaGO = function(){
         });
         $('#PDF').click(function(){
             svgAsPngUri(document.getElementById("main_vis"),{scale: 3},function(data){
-                var doc = new jsPDF('p', 'mm', 'a4', true);
-                doc.addImage(data, 'PNG', 0, 0, 250, 250/widthToheightRatio, '', 'FAST');
-                doc.save('pic.pdf');
+		var imgForPDF = new Image();
+		imgForPDF.src = data;
+		imgForPDF.onload = function() {
+                	var doc = new jsPDF('p', 'mm', 'a4', true);
+                	doc.addImage(data, 'PNG', 0, 0, 250, 250/imgForPDF.width*imgForPDF.height, '', 'FAST');
+                	doc.save('diagram.pdf');
+		}
+
             })
 
         });

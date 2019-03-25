@@ -96,7 +96,7 @@ def index():
             go,status = getDataFromDavid(inputIds,idType,annotCat,pVal)
 
             if status == False:
-                return "Failure to get data, please make sure the identifier is correct"
+                return "Failure to get data, please make sure the identifier is correct and try again.\nOtherwise, get enriched GO terms at https://david.ncifcrf.gov/summary.jsp and then use option 1"
             matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
             myList=simDict
             if not matrix_count:
