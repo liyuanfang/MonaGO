@@ -1228,7 +1228,7 @@ var MonaGO = function(){
     		  .on("click", click_chord);
 
 		chordLayout.classed("fade", function(p) {
-            return 1;
+            return 0;
 		});
 	}
 
