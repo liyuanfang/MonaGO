@@ -3195,7 +3195,7 @@ var MonaGO = function(){
 
     		nodeCollapse = $("#input_slider").val()
 
-    		var save_file = "{\"size\":" + that.MonaGOData.size + "," + "\"go_inf\":" + JSON.stringify(that.MonaGOData.go_inf) + "," + "\"clusterHierData\":" +JSON.stringify(that.MonaGOData.clusterHierData)
+    		var save_file = "{\"size\":" + that.MonaGOData.size + "," + "\"go_inf\":" + JSON.stringify(go_inf_input) + "," + "\"clusterHierData\":" +JSON.stringify(that.MonaGOData.clusterHierData)
     		+ "," + "\"matrix\":" + JSON.stringify(that.MonaGOData.matrix) + "," +"\"array_order\":" + JSON.stringify(that.MonaGOData.array_order) + "," + "\"goNodes\":" + JSON.stringify(goNodes)
     		+ "," + "\"groupSize\":" + JSON.stringify(that.MonaGOData.groupSize) + "," + "\"nodeCollapse\":" + nodeCollapse
     		+ "," + "\"clickCollapseNodeArr\":" + JSON.stringify(that.clickCollapseNodeArr) +','+"\"similarity\":" + JSON.stringify(that.MonaGOData.similarity)+','+"\"clustComp\":" + JSON.stringify(that.MonaGOData.clustComp)  + "}";

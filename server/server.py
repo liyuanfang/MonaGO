@@ -77,7 +77,7 @@ def index():
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
-            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
+            data = "<script>"+"var go_inf_input="+str(go)+";"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
             +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(request.form['clustComp'])+"';"+"var similarity='"+str(request.form['similarity'])+"'</script>"
 
         if request.form['type'] == "david":
@@ -101,7 +101,7 @@ def index():
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
-            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
+            data = "<script>"+"var go_inf_input="+str(go)+";"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
             +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(request.form['clustComp'])+"';"+"var similarity='"+str(request.form['similarity'])+"'</script>"
 
 
@@ -119,7 +119,7 @@ def index():
 
             if not matrix_count:
                 return "Failure to process data"
-            data = "<script>"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
+            data = "<script>"+"var go_inf_input="+str(content_dict["go_inf"])+";"+"var go_inf="+str(go_inf_reord)+";"+"var matrix="+str(matrix_count)+';'+'var simDict='+str(myList)+";"+"var array_order="+str(array_order)+";"\
             +"var clusterHierData="+str(clusterHierData) +";"+"var size="+str(len(go_inf_reord))+";"+"var goNodes="+str(go_hier)+";"+"var clustComp='"+str(clustComp)+"';"+"var similarity='"+str(similarity)+"'</script>"
             #data = "<script>"+ "var size = 0"+";"+"var content ="+content+";"+"</script>"
 
@@ -284,7 +284,7 @@ def parseInputMonagos(content_dict,pVal):
     goDictContainer = []
     num = len(content_dict["go_inf"])
     for index_monago in range(num):
-        content_dict["go_inf"][index_monago]["genes"] = ';'.join(map(str, content_dict["go_inf"][index_monago]["genes"]))
+        #content_dict["go_inf"][index_monago]["genes"] = ';'.join(map(str, content_dict["go_inf"][index_monago]["genes"]))
         pVal_each = float(str(content_dict["go_inf"][index_monago]["pVal"]))
         count = str(content_dict["go_inf"][index_monago]["count"])
         genes = str(content_dict["go_inf"][index_monago]["genes"])
