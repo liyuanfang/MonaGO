@@ -1891,11 +1891,64 @@ var MonaGO = function(){
         	})
 
         	$('#png').click(function(){
-            	saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 5});
+	    	if (!!(window.chrome)){
+		var decoded;
+		svgAsPngUri(document.getElementById("hier_group_big"),{scale: 5},function(data){
+			var base64str=data.substr(22);
+			decoded = atob(base64str);		
+			console.log(decoded.length)
+			if (decoded.length<1556502){
+				console.log("SAVE")
+				saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 5});
+			}
+
+			else{
+			svgAsPngUri(document.getElementById("hier_group_big"),{scale: 4},function(data){
+				var base64str=data.substr(22);
+				decoded = atob(base64str);
+				console.log(decoded.length)
+				if (decoded.length<1556502){
+					saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 4});
+				}
+
+				else{
+				svgAsPngUri(document.getElementById("hier_group_big"),{scale: 3},function(data){
+					var base64str=data.substr(22);
+					decoded = atob(base64str)
+					console.log(decoded.length)					
+					if (decoded.length<1556502){
+						saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 3});
+					}
+					else{
+						svgAsPngUri(document.getElementById("hier_group_big"),{scale: 2.5},function(data){
+						var base64str=data.substr(22);
+						decoded = atob(base64str)
+						console.log(decoded.length)					
+						if (decoded.length<1556502){
+							saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 2.5});
+							alert("Image is too big to save as PNG in Chrome and so resolution has been reduced. For better quality image, either save in a different format, or export MonaGO file and try again in a different browser.")
+						}
+						else{
+							alert("Image is too big to save as PNG in Chrome. Either save in a different format, or export MonaGO file and try again in a different browser.")
+						}
+					});
+					}
+				});
+
+				}
+			});
+
+			}
+		});
+
+	    	}
+	    	else{
+			saveSvgAsPng(document.getElementById("hier_group_big"), "hierarchy.png", {scale: 5});
+		    }
         	});
 
         	$("#svg").click(function(){
-          	   	saveSvg(document.getElementById("hier_group_big"), "hierarchy.svg", {scale: 2});
+          	   	saveSvg(document.getElementById("hier_group_big"), "hierarchy.svg", {scale: 1});
 
         	});
 
@@ -1904,6 +1957,7 @@ var MonaGO = function(){
 			svgAsPngUri(document.getElementById("hier_group_big"),{scale: 5},function(data){
 				var imgForPDF = new Image();
 				imgForPDF.src = data;
+				
 				imgForPDF.onload = function() {
                 			var doc = new jsPDF('p', 'mm', 'a4', true);
                 			doc.addImage(data, 'PNG', 0, 0, 250, 250/imgForPDF.width*imgForPDF.height, '', 'FAST');
@@ -1957,7 +2011,61 @@ var MonaGO = function(){
         })
 
         $('#png').click(function(){
-            saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 5});
+	    	if (!!(window.chrome)){
+		var decoded;
+		svgAsPngUri(document.getElementById("hier_group"),{scale: 5},function(data){
+			var base64str=data.substr(22);
+			decoded = atob(base64str);		
+			console.log(decoded.length)
+			if (decoded.length<1556502){
+				console.log("SAVE")
+				saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 5});
+			}
+
+			else{
+			svgAsPngUri(document.getElementById("hier_group"),{scale: 4},function(data){
+				var base64str=data.substr(22);
+				decoded = atob(base64str);
+				console.log(decoded.length)
+				if (decoded.length<1556502){
+					saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 4});
+				}
+
+				else{
+				svgAsPngUri(document.getElementById("hier_group"),{scale: 3},function(data){
+					var base64str=data.substr(22);
+					decoded = atob(base64str)
+					console.log(decoded.length)					
+					if (decoded.length<1556502){
+						saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 3});
+					}
+					else{
+						svgAsPngUri(document.getElementById("hier_group"),{scale: 2.5},function(data){
+						var base64str=data.substr(22);
+						decoded = atob(base64str)
+						console.log(decoded.length)					
+						if (decoded.length<1556502){
+							saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 2.5});
+							alert("Image is too big to save as PNG in Chrome and so resolution has been reduced. For better quality image, either save in a different format, or export MonaGO file and try again in a different browser.")
+						}
+						else{
+							alert("Image is too big to save as PNG in Chrome. Either save in a different format, or export MonaGO file and try again in a different browser.")
+						}
+					});
+					}
+				});
+
+				}
+			});
+
+			}
+		});
+
+	    	}
+	    	else{
+			saveSvgAsPng(document.getElementById("hier_group"), "hierarchy.png", {scale: 5});
+		    }
+
         });
 
         $("#svg").click(function(){
@@ -3171,7 +3279,83 @@ var MonaGO = function(){
         });
 
         $('#PNG').click(function(){
-            saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 5});
+	    	if (!!(window.chrome)){
+		var decoded;
+		svgAsPngUri(document.getElementById("main_vis"),{scale: 5},function(data){
+			var base64str=data.substr(22);
+			decoded = atob(base64str);		
+			console.log(decoded.length)
+			if (decoded.length<1556502){
+				console.log("SAVE")
+				saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 5});
+			}
+
+			else{
+			svgAsPngUri(document.getElementById("main_vis"),{scale: 4},function(data){
+				var base64str=data.substr(22);
+				decoded = atob(base64str);
+				console.log(decoded.length)
+				if (decoded.length<1556502){
+					saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 4});
+				}
+
+				else{
+				svgAsPngUri(document.getElementById("main_vis"),{scale: 3},function(data){
+					var base64str=data.substr(22);
+					decoded = atob(base64str)
+					console.log(decoded.length)					
+					if (decoded.length<1556502){
+						saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 3});
+					}
+					else{
+						svgAsPngUri(document.getElementById("main_vis"),{scale: 2},function(data){
+						var base64str=data.substr(22);
+						decoded = atob(base64str)
+						console.log(decoded.length)					
+						if (decoded.length<1556502){
+							saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 2});
+							alert("Image is too big to save as PNG in Chrome and so resolution has been reduced. For better quality image, either save in a different format, or export MonaGO file and try again in a different browser.")
+						}
+						else{
+							svgAsPngUri(document.getElementById("main_vis"),{scale: 1.5},function(data){
+							var base64str=data.substr(22);
+							decoded = atob(base64str)
+							console.log(decoded.length)					
+							if (decoded.length<1556502){
+								saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 1.5});
+								alert("Image is too big to save as PNG in Chrome and so resolution has been reduced. For better quality image, either save in a different format, or export MonaGO file and try again in a different browser.")
+							}
+							else{
+								svgAsPngUri(document.getElementById("main_vis"),{scale: 1},function(data){
+								var base64str=data.substr(22);
+								decoded = atob(base64str)
+								console.log(decoded.length)					
+								if (decoded.length<1556502){
+									saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 1});
+									alert("Image is too big to save as PNG in Chrome and so resolution has been reduced. For better quality image, either save in a different format, or export MonaGO file and try again in a different browser.")
+								}
+								else{
+									alert("Image is too big to save as PNG in Chrome. Either save in a different format, or export MonaGO file and try again in a different browser.")
+								}
+							});
+							}
+						});
+						}
+					});
+					}
+				});
+
+				}
+			});
+
+			}
+		});
+
+	    	}
+	    	else{
+			saveSvgAsPng(document.getElementById("main_vis"), "diagram.png", {scale: 5});
+		    }
+
         });
         $('#PDF').click(function(){
             svgAsPngUri(document.getElementById("main_vis"),{scale: 3},function(data){
