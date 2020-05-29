@@ -264,7 +264,7 @@ def parseInputGOs(go_csvFormat,pVal):
             go_inf = getGONameAndCatergory(cols[0])
 
             if go_inf != "":
-                go_cat,go_name = go_inf.split(",")
+                go_cat,go_name = go_inf.split(",",1)
                 if float(str(cols[1])) < pVal:
                     goDictContainer.append({"count": count,"genes":str(cols[2].strip("\r\"")), "GO_id": str(cols[0]), "GO_name": go_name, "cat": go_cat,
                         "pVal": str(cols[1])})
