@@ -338,6 +338,15 @@ def processedData(go, similarity, clustComp):
         clusterHierData:an array storing hierarcical data use to generated hierarcical tree
     '''
 
+
+
+    # redefine any go terms that are 'alternative ids' as their main id
+    alt_ids = json.load(open(root_dir +"js/alt.js"))
+    for index, id in enumerate(go):
+        if id['GO_id'] in alt_ids.keys():
+            id['GO_id'] = str(alt_ids[id['GO_id']])
+
+
     #for pre processing the data
     if similarity=='Resnik':
         from DataProcessResnikAve import DataProcess4

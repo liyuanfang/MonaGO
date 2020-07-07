@@ -10,6 +10,28 @@ from Bio.UniProt.GOA import gafiterator
 
 
 
+def alternative_ids():
+    # recreates alt.js file so that alternative ids are redirected into their main ID
+    from goatools import obo_parser
+
+    file = open('data/go-basic.obo')
+    alt_dict = {}
+    id = ''
+    for line in file:
+        if line.startswith('id:'):
+            id = line.replace('id: ','')
+            id = id.strip()
+        if line.startswith('alt_id'):
+            alt_id = line.replace('alt_id: ','')
+            alt_id = alt_id.strip()
+            alt_dict[alt_id] = id
+    alt_js=open('js/alt.js','w')
+    json.dump(alt_dict,alt_js)
+
+
+alternative_ids()
+
+
 def createGOjsFile():
     # recreates GO.js file so that ontology is up to date
     import json
