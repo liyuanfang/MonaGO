@@ -27,6 +27,10 @@ import time
 
 from logTime import logTime
 
+# creating specific error when multiple graphs are used for semantic calculations
+class SemanticsError(Exception):
+        pass
+
 logging.basicConfig(filename="debug.txt",level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -73,7 +77,10 @@ def index():
             else:
                 go = parseInputGOs(request.form['inputGOs'],float(str(pVal)))
 
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'], request.form['clustComp'])
+            try:
+                matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'], request.form['clustComp'])
+            except SemanticsError:
+                return "Cannot measure semantic similarity across multiple roots. Use a single function annotation, or measure similarity between terms using number of overlapping genes"
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
@@ -97,7 +104,10 @@ def index():
 
             if status == False:
                 return "Failure to get data, please make sure the identifier is correct and try again.\nOtherwise, get enriched GO terms at https://david.ncifcrf.gov/summary.jsp and then use option 1"
-            matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
+            try:
+                matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
+            except SemanticsError:
+                return "Cannot measure semantic similarity across multiple roots. Use a single function annotation, or measure similarity between terms using number of overlapping genes"
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
@@ -360,7 +370,8 @@ def processedData(go, similarity, clustComp):
     try:
         preProcessedData = dataProcess.dataProcess(go, clustComp)
 
-
+    except KeyError:
+        raise SemanticsError
     except Exception as e:
         logger.error(str(e))
     else:
