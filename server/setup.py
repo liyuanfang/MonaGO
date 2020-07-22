@@ -12,3 +12,4 @@ if __name__ == '__main__':
     install('biopython')
     install('goatools')
     install('DavidDataScrawler')
+    install('BioPython==1.76')
