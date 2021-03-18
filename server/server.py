@@ -103,7 +103,16 @@ def index():
             go,status = getDataFromDavid(inputIds,idType,annotCat,pVal)
 
             if status == False:
-                return "Failure to get data, please make sure the identifier is correct and try again.\nOtherwise, get enriched GO terms at https://david.ncifcrf.gov/summary.jsp and then use option 1"
+                # check whether issue is because david is down
+                # try process demo genes...
+                demoGo, demoStatus = getDataFromDavid('1007_s_at,1053_at,117_at,121_at,1255_g_at,1294_at,1316_at,1320_at,1405_i_at,1431_at,1438_at,1487_at,1494_f_at,1598_g_at', 'AFFYMETRIX_3PRIME_IVT_ID', '30', '0.05')
+                if demoStatus==False:
+                    with open(root_dir + 'templates/ErrorDavid.html', "r") as fr_html:
+                        html = "".join(fr_html.readlines())
+                    return html
+                else:
+
+                    return "Could not get GO enrichment data from the inputs entered. Please make sure the gene list and identifier are correct and try again. "
             try:
                 matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
             except SemanticsError:
@@ -327,7 +336,7 @@ def getDataFromDavid(inputIds,idType,annotCat,pVal):
         go = davidScrawler.run()
     except Exception as e:
         logger.error(str(e))
-        return [],False
+        return e,False
     else:
         return go,True
 

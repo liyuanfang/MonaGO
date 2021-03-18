@@ -1,6 +1,6 @@
 <html><head><script language="JavaScript">
 var page='tools';
-</script><title>DAVID: Functional Annotation Tools</title><link rel="stylesheet" type="text/css" href="template.css"><script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script><script type="text/javascript" src="scripts/jtip.js"></script><link rel="stylesheet" type="text/css" href="css/jtip.css"><script type="text/javascript">
+</script><title>DAVID: Functional Annotation Tools</title><link rel="stylesheet" type="text/css" href="template.css?v=1"><script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script><script type="text/javascript" src="scripts/jtip.js"></script><link rel="stylesheet" type="text/css" href="css/jtip.css"><script type="text/javascript">
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-74367-1']);
@@ -30,25 +30,30 @@ var page='tools';
 
 
 
+
+
 	
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap-4.5.2-dist/bootstrap.min.css">
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="/css/header.css">
 	<link rel="stylesheet" type="text/css" href="/css/progressBar.css">
 	 <script type="text/javascript" src="/scripts/header_menu.js"></script>
 	<script type="text/javascript" src="/scripts/progressBar.js"></script>
-	<script language="JavaScript"> 
-	
-	
-	function GBClick(parent, child) { 
-	window.location = parent; 
-	window.open(child); 
-	
-	} 
-	
-</script> 
+	<script language="JavaScript">
 
 
-	<title>DAVID Bioinformatics 6.7</title>
+	function GBClick(parent, child) {
+	window.location = parent;
+	window.open(child);
+
+	}
+
+</script>
+
+
+	<title>DAVID Bioinformatics 6.8</title>
 
 	
 
@@ -56,16 +61,16 @@ var page='tools';
 
 
 <table bgcolor="#366599" width="100%" cellpadding="0" cellspacing="0">
-  <tr> 
+  <tr>
     						<td>
 							<table>
-								<tr>	
+								<tr>
 									<td align="center"><a href="/home.jsp"><img src="/graphics/david_logo2.jpg" style="border: 0px solid ; " align="middle" alt="The Database for Annotation, Visualization and Integrated Discovery"></a>
 									</td>
 									<td>
 										<table>
 											<tr><td align="center" class="title1">Analysis Wizard</td>
-												
+
 											</tr>
 											<tr>
 												<td class="title2">DAVID Bioinformatics Resources 6.8, NIAID/NIH</td>
@@ -79,7 +84,7 @@ var page='tools';
   </tr>
   <!--<tr><td><marquee><font color="white">Text to scroll</font></marquee></td></tr>-->
   
-<tr> 
+<tr>
     <td>
 <div id="chromemenu">
 <ul>
@@ -89,70 +94,58 @@ var page='tools';
 <li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu2');">Technical Center</a></li>
 <li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu5');">Downloads &amp; APIs</a></li>
 <li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu3');">Term of Service</a></li>
-<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu6');">Why DAVID?</a></li>
-<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu4');">About Us</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu6');">About DAVID</a></li>
+<li><a onmouseover="cssdropdown.dropit(this,event,'dropmenu4');">About LHRI</a></li>
 </ul>
 </div>
 
-<!--1th drop down menu -->                                                   
+<!--1th drop down menu -->
 <div id="dropmenu1" class="dropmenudiv" style="width: 270px;">
 <a href="summary.jsp">Functional Annotation<br>    <font size="-2">- Functional Annotation Clustering</font> <font size="-1" color="red"></font><br>    <font size="-2">- Functional Annotation Chart</font><br>    <font size="-2">- Functional Annotation Table</font></a>
 <a href="gene2gene.jsp">Gene Functional Classification</a>
 
 <a href="conversion.jsp">Gene ID Conversion</a>
 <a href="list.jsp">Gene Name Batch Viewer<font size="-1" color="red"></font></a>
-<!-- <a href="javascript:GBClick('summary.jsp','GB.jsp')">NIAID Pathogen Annotation Browser</a> 
+<!-- <a href="javascript:GBClick('summary.jsp','GB.jsp')">NIAID Pathogen Annotation Browser</a>
  -->
 
 </div>
 
 
-<!--2nd drop down menu -->                                                
+<!--2nd drop down menu -->
 <div id="dropmenu2" class="dropmenudiv" style="width: 275px;">
---------- <b>System Notes</b> -------------------
-<!--<a href="forum/cgi-bin/ikonboard.cgi?act=ST&f=8&t=28&st=#entry1" target=_blank>Daily Server Maiteinance Schedule</a>-->
-<a href="./content.jsp?file=system.html">System Requirements</a>
-<a href="./content.jsp?file=FAQs.html#23">Limitation of Large Gene List</a>
---------- <b>I have questions!</b> ---------------
-<a href="./content.jsp?file=list_manager.html#upload">Input Data Format &amp; Demo Gene Lists</a>
-<a href="./content.jsp?file=FAQs.html#25">Which DAVID Tools to Use?</a>
-<a href="/helps/tutorial.pdf" target="_blank">Powerpoint Brief Demo
-</a><a href="/content.jsp?file=DAVID_Publications.html" target="_blank">DAVID Methods/Algorithms in Papers</a>
+<!--<a href="/cgi-bin/ikonboard.cgi?act=ST&f=8&t=28&st=#entry1" target=_blank>Daily Server Maiteinance Schedule</a>-->
+<a href="./content.jsp?file=documentation.html">Documentation</a>
+<a href="/helps/tutorial.pdf" target="_blank">Tutorial</a>
+<a href="./content.jsp?file=documentation.html#LargeList" target="_blank">Limitations for Large Gene Lists</a>
+<a href="https://david-bioinformatics.freeforums.net" target="_blank">DAVID Forum <font size="-1" color="red"></font></a>
 <a href="./content.jsp?file=FAQs.html">FAQ</a>
-<a href="./search.jsp">Search DAVID Site</a>
-<a href="https://groups.google.com/forum/#!forum/daviduserforum" target="_blank">DAVID Forum <font size="-1" color="red"></font></a>
-<a href="./content.jsp?file=Contact.html">Contact Us</a> 
---------- <b>Versions &amp; Updates</b> ------------
-<a href="./content.jsp?file=update.html">DAVID Knowledgebase Update</a>
-<a href="./content.jsp?file=release.html">Release Information &amp; Version History</a>
-<!--<a href="forum/cgi-bin/ikonboard.cgi?act=ST;f=8;t=1" target=_blank>Retirement of Previous Versions</a>-->
---------- <b>Tool Manuals</b> --------------------
-<a href="./content.jsp?file=functional_annotation.html">Functional Annotation Tool</a>
-<a href="./content.jsp?file=functional_classification.html">Gene Functional Classification</a>
-<a href="./content.jsp?file=conversion.html">Gene ID Conversion Tool</a>
-<a href="./content.jsp?file=linear_search.html">Gene Name Batch Viewer</a>
-<a href="./content.jsp?file=gb.html">NIAID Pathogen Annotation Browser</a>
+
+<!--<a href="https://groups.google.com/forum/#!forum/daviduserforum" target=_blank>DAVID Forum <font size=-1 color=red></font></a>-->
+
+
+<!--<a href="./content.jsp?file=gb.html">NIAID Pathogen Annotation Browser</a>-->
 </div>
 
-<!--3rd anchor link and menu -->                                                 
+<!--3rd anchor link and menu -->
 <div id="dropmenu3" class="dropmenudiv">
 <a href="./content.jsp?file=Licensing.html">Licensing Information</a>
 <a href="./content.jsp?file=AccessibilityStatement.html">Accessibility Statement</a>
 <a href="./content.jsp?file=citation.htm">Citing DAVID</a>
 </div>
 
-<!--4th anchor link and menu -->                                                 
+<!--4th anchor link and menu -->
 <div id="dropmenu4" class="dropmenudiv" style="width: 220px;">
 <a href="./content.jsp?file=about_us.html">Who Are We?</a>
-<a href="./content.jsp?file=Acknowledgement.htm">Credits &amp; Contributions</a>
-<a href="./content.jsp?file=Collaborators.html">Our Bioinformatics Collabrators</a>
+
 <!--<a href="forum/viewforum.php?f=10&sid=ed0d7d8819dadd130286d28c8d19b993" target=_blank>DAVID News <font size=-1 color=red></font></a>-->
 <a href="./content.jsp?file=LHRI_Publications.html">LHRI Publications</a>
-<a href="./content.jsp?file=DAVID_Publications.html">DAVID Publications</a>
-<a href="./content.jsp?file=Contact.html">Contact Us</a> 
+<a href="./content.jsp?file=LHRI_Presentations.html">LHRI Presentations</a>
+
+
 </div>
 
-<!--5th anchor link and menu -->                                                 
+<!--5th anchor link and menu -->
 <div id="dropmenu5" class="dropmenudiv" style="width: 270px;">
 <a href="knowledgebase/DAVID_knowledgebase.html" target="_blank">Download DAVID Knowledgebase<font size="-1" color="red"></font></a>
 <!--<a target="_blank" href="content.jsp?file=WS.html">DAVID Web Services<font color=red><I> ***New***</I></font></a>-->
@@ -161,14 +154,17 @@ var page='tools';
 <a href="/content.jsp?file=DAVID_API.html">DAVID API Services<font size="-1" color="red"></font></a>
 </div>
 
-<!--6th anchor link and menu -->                                                 
+<!--6th anchor link and menu -->
 <div id="dropmenu6" class="dropmenudiv" style="width: 250px;">
-<a href="http://scholar.google.com/citations?user=dMn7gzYAAAAJ" target="_blank">DAVID Cited by <font color="red">&gt;21,000</font> Publications</a>
-<!--a href="http://scholar.google.com/scholar?as_epq=EASE&as_occt=title&as_sauthors=sherman+lempicki" target=_blank>EASE Cited by <font color=red>>770</font> Papers</a-->
-<!--<a href="forum/viewtopic.php?f=8&t=100" target=_blank>Referenced by <font color=red><I>Nature</I></font> Papers</a>-->
+<!--<a href="http://scholar.google.com/citations?user=dMn7gzYAAAAJ" target=_blank>DAVID Cited by <font color=red>>21,000</font> Publications</a>-->
+<a href="./content.jsp?file=DAVID_Publications.html">DAVID Publications</a>
 <a href="http://books.google.com/books?lr=&amp;num=50&amp;as_brr=0&amp;q=david%3A+Database+Annotation+Visualization++Integrated+Discovery" target="_blank">DAVID in Scientific Books</a>
 <!--<a href="./content.jsp?file=web.html">Recommendations</a>-->
 <a href="./content.jsp?file=fact.html">Fact Sheet</a>
+<a href="./content.jsp?file=Acknowledgements.html">Credits &amp; Contributions</a>
+<a href="./content.jsp?file=release.html">Version</a>
+<a href="./content.jsp?file=update.html">Update</a>
+<a href="./content.jsp?file=Contact.html">Contact Us</a>
 </div>
 
 </td>
@@ -180,7 +176,7 @@ var page='tools';
 <div id="bar" class="prog-bar">
   <div id="barText" class="prog-text"></div>
 </div>
-</div>	
+</div>
 <div align="center">
 <!-- <font color=red><b>*** DAVID will be down from 7am EST Saturday 8/20/2011 for a duration of ~8 hours due to maintenance in our data center.  This interval could potentially be shorter depending on the progress of the work.  We apologize for any inconvenience. ***</b></font> -->
 
@@ -191,7 +187,7 @@ var page='tools';
 <!-- <font color=red><b>*** Announcing the new DAVID Web Service which allows access to DAVID from various programming languages. <a target="_blank" href="content.jsp?file=WS.html"> More info...</a> ***</b></font> -->
 
 <!--<font color=red><b>*** DAVID 6.8 will be down for maintenance on Thursday, 2/23/2016, from 9AM-1PM EST ***</b></font>-->
-<font color="red"><b><br>*** Welcome to DAVID 6.8 ***<br>***  If you are looking for <a target="_blank" href="https://david-d.ncifcrf.gov">DAVID 6.7</a>, please visit our <a target="_blank" href="https://david-d.ncifcrf.gov">development site</a>. ***</b></font>
+<!--<font color=red><b><br>*** Welcome to DAVID 6.8 ***<br>***  If you are looking for <a target="_blank" href="https://david-d.ncifcrf.gov">DAVID 6.7</a>, please visit our <a target="_blank" href="https://david-d.ncifcrf.gov">development site</a>. ***</b></font>-->
 <!-- <font color=red><b><br>*** Welcome to DAVID 6.8 with updated Knowledgebase (<a target="_blank" href="content.jsp?file=release.html"> more info</a>). ***<br>***  If you are looking for <a target="_blank" href="https://david-d.ncifcrf.gov">DAVID 6.7</a>, please visit our <a target="_blank" href="https://david-d.ncifcrf.gov">development site</a>. ***</b></font>-->
 
 <!-- <font color=red><b><br>*** Welcome to DAVID 6.8 with updated Knowledgebase (<a target="_blank" href="content.jsp?file=release.html"> more info</a>). ***<br>***  The DAVID 6.7 server is currently down for maintenance. ***</b></font> -->
@@ -225,7 +221,6 @@ var page='tools';
 
 
 
-
 </td></tr>
   
     <tr>  <table>
@@ -244,11 +239,17 @@ var page='tools';
 
 
 
-<link rel="stylesheet" type="text/css" href="css/tabPane.css">
-<link href="css/summary.css" rel="stylesheet" type="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css" href="css/tabPane.css?v=2">
+<link href="css/summary.css?v=1" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/speciesAutoComplete.css?v=1">
+
+<script src="scripts/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="scripts/tabPane.js"></script>
 <script type="text/javascript" src="scripts/summary.js"></script>
-<script type="text/javascript" src="scripts/sidebar.js"></script>
+<script type="text/javascript" src="scripts/sidebar.js?v=7"></script>
+<script type="text/javascript" src="scripts/typeahead.bundle.js"></script>
+<script type="text/javascript" src="scripts/speciesAutoComplete.js?v=4"></script>
 <script type="text/javascript" src="scripts/progressBar.js"></script>
 <title></title>
 <script type="text/javascript">setProgress2(0);
@@ -272,21 +273,22 @@ if (window.parent && window.parent.synchTab)
 
 <script type="text/javascript">setProgress2(20);</script>
 
-<input type="Hidden" name="idType" value="UNIPROT_ID">
+<input type="Hidden" name="idType" value="AFFYMETRIX_3PRIME_IVT_ID">
 <input type="Hidden" name="uploadType" value="list">
 <input type="Hidden" name="multiList" value="false">
 <input type="Hidden" name="Mode" value="paste">
 <input type="Hidden" name="useIndex" value="null">
 <input type="Hidden" name="usePopIndex" value="null">
 <input type="Hidden" name="demoIndex" value="null">
-<input type="Hidden" name="ids" value="AP3B1_HUMAN,BRD4_HUMAN,BRD2_HUMAN,CWC27_HUMAN,ZCH18_HUMAN,CTL2_HUMAN,MPPB_HUMAN,YIF1A_HUMAN,AT1B1_HUMAN,ACADM_HUMAN,ETFA_HUMAN,STOM_HUMAN,VKGC_HUMAN,VATA_HUMAN,PSMD8_HUMAN,REEP5_HUMAN,MPPA_HUMAN,ANO6_HUMAN,PREP_HUMAN,ZNT9_HUMAN,FAKD5_HUMAN,ZNT7_HUMAN,GCP3_HUMAN,COQ8B_HUMAN,SAAL1_HUMAN,REEP6_HUMAN,INT4_HUMAN,ODC_HUMAN,GCP2_HUMAN,SYTM_HUMAN,RTN4_HUMAN,FA8A1_HUMAN,AASS_HUMAN,AKP8L_HUMAN,AAR2_HUMAN,BZW2_HUMAN,U3IP2_HUMAN,PABP1_HUMAN,CSK22_HUMAN,CSK2B_HUMAN,G3BP1_HUMAN,PABP4_HUMAN,LARP1_HUMAN,FA98A_HUMAN,SNIP1_HUMAN,RENT1_HUMAN,MOV10_HUMAN,G3BP2_HUMAN,DDX21_HUMAN,RBM28_HUMAN,RL36_HUMAN,GOGA7_HUMAN,ZDHC5_HUMAN,DPOLA_HUMAN,PRI1_HUMAN,PRI2_HUMAN,DPOA2_HUMAN,GT251_HUMAN,PKP2_HUMAN,AP2A2_HUMAN,ALR_HUMAN,ERGI1_HUMAN,AP2M1_HUMAN,GRPE1_HUMAN,TBCA_HUMAN,SBNO1_HUMAN,BCKD_HUMAN,AKAP8_HUMAN,MYCB2_HUMAN,SLU7_HUMAN,RIPK1_HUMAN,UBP2L_HUMAN,TYSD1_HUMAN,PDZ11_HUMAN,PRC2B_HUMAN,UBAP2_HUMAN,ZN318_HUMAN,CRTC3_HUMAN,UBP54_HUMAN,Z3H7A_HUMAN,LAR4B_HUMAN,RBM41_HUMAN,HTF4_HUMAN,PPIL3_HUMAN,PKHA5_HUMAN,TBKB1_HUMAN,CTRO_HUMAN,HSBP1_HUMAN,PCNT_HUMAN,FR1OP_HUMAN,KAP2_HUMAN,KAPCA_HUMAN,KAP3_HUMAN,RADI_HUMAN,CENPF_HUMAN,TLE1_HUMAN,TLE3_HUMAN,TLE5_HUMAN,GOGA3_HUMAN,GOGA2_HUMAN,GOGB1_HUMAN,GRAP1_HUMAN,CE350_HUMAN,MYOME_HUMAN,CP135_HUMAN,CEP68_HUMAN,CNTRL_HUMAN,RB6I2_HUMAN,GCC2_HUMAN,CLIP4_HUMAN,NIN_HUMAN,CE112_HUMAN,MIPO1_HUMAN,UBP13_HUMAN,GCC1_HUMAN,JKIP1_HUMAN,CK5P2_HUMAN,AKAP9_HUMAN,GORS1_HUMAN,FYCO1_HUMAN,CA050_HUMAN,CP250_HUMAN,TBK1_HUMAN,HOOK1_HUMAN,NINL_HUMAN,AGAL_HUMAN,IMDH2_HUMAN,SIR5_HUMAN,NTF2_HUMAN,ARF6_HUMAN,RNF41_HUMAN,S27A2_HUMAN,IF4E2_HUMAN,NCPR_HUMAN,GDS1_HUMAN,WASC4_HUMAN,FKB15_HUMAN,GGYF2_HUMAN,IDE_HUMAN,TIM10_HUMAN,ALG11_HUMAN,PO210_HUMAN,TIM29_HUMAN,DJC11_HUMAN,T10B_HUMAN,TIM9_HUMAN,HDAC2_HUMAN,GPX1_HUMAN,TRM1_HUMAN,ATP5L_HUMAN,VAS1_HUMAN,SGMR1_HUMAN,AT133_HUMAN,ADAS_HUMAN,CYB5B_HUMAN,ACSL3_HUMAN,NB5R3_HUMAN,RALA_HUMAN,COMT_HUMAN,RAB5C_HUMAN,RAB7A_HUMAN,RAB8A_HUMAN,RAB2A_HUMAN,RAB10_HUMAN,RAB14_HUMAN,RHOA_HUMAN,RAB1A_HUMAN,GBB1_HUMAN,GBG5_HUMAN,LMAN2_HUMAN,MOGS_HUMAN,TOIP1_HUMAN,MARC1_HUMAN,QSOX2_HUMAN,HS2ST_HUMAN,NDUF2_HUMAN,SCPDL_HUMAN,SCRB1_HUMAN,NAT14_HUMAN,DCAKD_HUMAN,F162A_HUMAN,TIM14_HUMAN,SELS_HUMAN,PGES2_HUMAN,RAB18_HUMAN,MPP10_HUMAN,SRP72_HUMAN,ATE1_HUMAN,NSD2_HUMAN,SRP19_HUMAN,SRP54_HUMAN,RT25_HUMAN,DDX10_HUMAN,LARP7_HUMAN,MEPCE_HUMAN,NGDN_HUMAN,EXOS8_HUMAN,SYNM_HUMAN,NOL10_HUMAN,CCD86_HUMAN,SPCS_HUMAN,EXOS5_HUMAN,EXOS3_HUMAN,AATF_HUMAN,HECD1_HUMAN,RT02_HUMAN,RT05_HUMAN,EXOS2_HUMAN,RT27_HUMAN,T2FB_HUMAN,FBN1_HUMAN,FBN2_HUMAN,NU214_HUMAN,NUP62_HUMAN,DCAF7_HUMAN,IF4H_HUMAN,NUP54_HUMAN,MIB1_HUMAN,SPART_HUMAN,NEK9_HUMAN,ZN503_HUMAN,NUP88_HUMAN,NUP58_HUMAN,MAT2B_HUMAN,FBLN5_HUMAN,PPT1_HUMAN,CUL2_HUMAN,MA7D1_HUMAN,THTPA_HUMAN,ZY11B_HUMAN,TIM8B_HUMAN,RBX1_HUMAN,ELOC_HUMAN,ELOB_HUMAN,HMOX1_HUMAN,TRI59_HUMAN,AR6P6_HUMAN,VPS39_HUMAN,CLCC1_HUMAN,VPS11_HUMAN,SUN2_HUMAN,ALG5_HUMAN,STML2_HUMAN,NUP98_HUMAN,RAE1L_HUMAN,MTCH1_HUMAN,HEAT3_HUMAN,MDN1_HUMAN,PLOD2_HUMAN,TOR1A_HUMAN,STC2_HUMAN,TPA_HUMAN,ITB1_HUMAN,CISD3_HUMAN,CO6A1_HUMAN,PVR_HUMAN,DNMT1_HUMAN,LYOX_HUMAN,PCSK6_HUMAN,INHBE_HUMAN,NPC2_HUMAN,MFGM_HUMAN,OS9_HUMAN,NPTX1_HUMAN,PLGT2_HUMAN,PLGT3_HUMAN,ERO1B_HUMAN,PLD3_HUMAN,FXRD2_HUMAN,CHSS2_HUMAN,PUSL1_HUMAN,EMC1_HUMAN,GGH_HUMAN,ERLEC_HUMAN,I17RA_HUMAN,NGLY1_HUMAN,H6ST2_HUMAN,SDF2_HUMAN,NEUR1_HUMAN,GDF15_HUMAN,TM2D3_HUMAN,ERP44_HUMAN,EDEM3_HUMAN,SIL1_HUMAN,OFUT1_HUMAN,SMOC1_HUMAN,PKHF2_HUMAN,FXL12_HUMAN,UGGG2_HUMAN,CHPF2_HUMAN,ATS1_HUMAN,HYOU1_HUMAN,FKBP7_HUMAN,ADAM9_HUMAN,FKB10_HUMAN,NHRF1_HUMAN,CHM2A_HUMAN,CSDE1_HUMAN,TOM70_HUMAN,MARK3_HUMAN,MARK2_HUMAN,DPH5_HUMAN,DCTP1_HUMAN,MARK1_HUMAN,PTBP2_HUMAN,BAG5_HUMAN,UBXN8_HUMAN,GPAA1_HUMAN,WFS1_HUMAN,MRP1_HUMAN,PAR2_HUMAN,SCAP_HUMAN,D19L1_HUMAN,SGMR2_HUMAN,ZNT6_HUMAN,TAPT1_HUMAN,ERMP1_HUMAN,NLRX1_HUMAN,RETR3_HUMAN,PIGO_HUMAN,FACR2_HUMAN,ECSIT_HUMAN,ALG8_HUMAN,TM39B_HUMAN,GHITM_HUMAN,ACAD9_HUMAN,NFIP2_HUMAN,BCS1_HUMAN,CIA30_HUMAN,TMED5_HUMAN,NDUB9_HUMAN,PIGS_HUMAN">
+<input type="Hidden" name="ids" value="1007_s_at,1053_at,117_at,121_at,1255_g_at,1294_at,1316_at,1320_at,1405_i_at,1431_at,1438_at,1487_at,1494_f_at,1598_g_at">
 <input type="Hidden" name="removeIndex" value="null">
 <input type="Hidden" name="renameIndex" value="null">
 <input type="Hidden" name="renamePopIndex" value="null">
 <input type="Hidden" name="newName" value="null">
 <input type="Hidden" name="combineIndex" value="null">
 <input type="Hidden" name="selectedSpecies" value=",0">
-<input type="Hidden" name="SESSIONID" value="BA239018BD7E">
+<input type="Hidden" name="uploadSpecies" id="uploadSpecies">
+<input type="Hidden" name="SESSIONID" value="D57F3C13CA0C">
 <input type="Hidden" name="uploadHTML" value="null">
 <input type="Hidden" name="managerHTML" value="null">
 <input type="hidden" name="sublist" id="sublist">
@@ -370,8 +372,8 @@ if (window.parent && window.parent.synchTab)
 								</td></tr>
 								<tr><td>
 								<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
-								  <font face="Verdana" size="1">
-								  <select id="IDT" size="1" name="Identifier">
+								  
+								  <select class="idTypeList" id="Identifier" size="1" name="Identifier" onchange="SpeciesSelectVisibility(this.value)">
 
 								
 
@@ -430,6 +432,9 @@ if (window.parent && window.parent.synchTab)
 								
 
 									  	<option value="GENPEPT_ACCESSION">GENPEPT_ACCESSION</option>
+								
+
+									  	<option value="GRAMENE_ID">GRAMENE_ID</option>
 								
 
 									  	<option value="LOCUS_TAG">LOCUS_TAG</option>
@@ -495,11 +500,21 @@ if (window.parent && window.parent.synchTab)
 
 									  </select>
 
-									  </font>
+									 
 
 									</p><br>
 								  </td>
 								</tr>
+										<tr>
+										  <td>
+										    <div id="speciesSelectDiv" name="speciesSelectDiv">
+											<label class="sidebar_subheader" for="speciesSelect">Step 2a: Select species</label>
+											<input id="speciesSelect" name="speciesSelect" type="text" class="typeahead tt-query" autocomplete="off" spellcheck="false" placeholder="Type your species name or id (e.g. Homo sapiens; 9606)">
+										    </div>
+										    <script>SpeciesSelectVisibility("hide");</script>
+										  </td>
+										</tr>
+										
 						<tr>
 			          <td class="sidebar_subheader"><br>Step 3: List Type</td>
 			        </tr>
@@ -553,12 +568,12 @@ if (window.parent && window.parent.synchTab)
 					</tr>
 					<tr>
 						<td colspan="2" align="top">
-<p align="left" style="word-spacing: 0; margin: 0"><font face="Verdana" size="1">
+<p align="left" style="word-spacing: 0; margin: 0"><font>
               <select size="4" class="lists" multiple name="speciesList" style="z-index: -1;">
               </select>
               </font> </p>
             <p align="left" style="word-spacing: 0; margin: 0">
-							<font face="Verdana" size="1">
+							<font>
 							<input onclick="selectSpecies(page);" type="button" name="B1" value="Select Species" class="list">
 							</font>
 							</p>
@@ -567,7 +582,7 @@ if (window.parent && window.parent.synchTab)
 					<tr>
 						<td valign="top" align="top" colspan="2">
 							<p style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0" align="left">
-								<b><font color="white" face="Verdana" size="1"><br> </font><font color="white" face="Verdana" size="2">List Manager</font><font color="white" face="Verdana" size="1">    </font></b><u><font color="#0000FF" size="1" face="Verdana"><a href="javascript:OpenHelp('manager');"><b><font color="white">Help</font></b></a></font></u>
+								<b><font color="white"><br> </font><font color="white" face="Verdana" size="2">List Manager</font><font color="white">    </font></b><u><font color="#0000FF"><a href="javascript:OpenHelp('manager');"><b><font color="white">Help</font></b></a></font></u>
 							</p>
 						</td>
 					</tr>
@@ -575,15 +590,15 @@ if (window.parent && window.parent.synchTab)
 					<tr>
 						<td valign="top" align="top" colspan="2">
 							<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
-								<font face="Verdana" size="1">
+								<font>
 
               <select size="3" name="myLists" id="myLists" class="lists" multiple>
               </select>
 								</font>
 							</p>
 							<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
-								<font color="white" face="Verdana" size="1">
-									<b>Select List to:</b>
+								<font color="white">
+									<br><b>Select List to:</b>
 								</font>
 							</p>
 							<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
@@ -604,7 +619,7 @@ if (window.parent && window.parent.synchTab)
 				</table>
 				<table><tr><td>
 
-				<div id="unmapped" name="unmapped"><a href="unmapped.jsp" target="_blank">View Unmapped Ids</a></div>
+				<div id="unmapped" name="unmapped"><br><a href="unmapped.jsp" target="_blank">View Unmapped Ids</a></div>
 
 				</td></tr></table>
 			</div>
@@ -622,7 +637,7 @@ if (window.parent && window.parent.synchTab)
 						<td colspan="2" align="left">
 							<p align="left">
 								<b>
-									<font color="white" face="Verdana" size="1">
+									<font color="white">
 										<br>Select a background   
 											<u><a href="/helps/list_manager.html#background" target="_blank">
 												<font color="white">Help</font>
@@ -633,14 +648,14 @@ if (window.parent && window.parent.synchTab)
 				<tr>
 				  <td valign="top" align="top" colspan="2">
 					<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0; width: 100%;">
-					  <font face="Verdana" size="1">
+					  <font>
 
 					  <select size="4" class="lists" name="popLists" id="popLists">
 					  </select>
 
 					  </font> </p>
 					<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
-					  <font color="white" face="Verdana" size="1"> <b>Select List to:</b>
+					  <font color="white"> <b>Select List to:</b>
 					  </font> </p>
 					<p align="left" style="word-spacing: 0; line-height: 100%; text-indent: 0; margin: 0">
 					  <font face="Verdana" size="1">
@@ -1005,8 +1020,7 @@ var a_option;
 	
 	//setProgress2(100);
 	FM.speciesList.options.length= 0;a_option = document.createElement("OPTION");a_option.text = "- Use All Species -";a_option.value = "- Use All Species -";FM.speciesList.options[FM.speciesList.length]=a_option;
-a_option = document.createElement("OPTION");a_option.text = "Homo sapiens(322)";a_option.value = "0";FM.speciesList.options[FM.speciesList.length]=a_option;
-a_option = document.createElement("OPTION");a_option.text = "Unknown(10)";a_option.value = "-1";FM.speciesList.options[FM.speciesList.length]=a_option;
+a_option = document.createElement("OPTION");a_option.text = "Homo sapiens(14)";a_option.value = "0";FM.speciesList.options[FM.speciesList.length]=a_option;
 FM.speciesList.options[1].selected=true;
 FM.myLists.options.length= 0;
 a_option = document.createElement("OPTION");a_option.text = "List_1";a_option.value = "0";FM.myLists.options[FM.myLists.length]=a_option;
@@ -1014,6 +1028,14 @@ FM.myLists.options.selectedIndex=0;FM.popLists.options.length= 0;
 a_option = document.createElement("OPTION");a_option.text = "Homo sapiens";a_option.value = "0";FM.popLists.options[FM.popLists.length]=a_option;
 FM.popLists.options.selectedIndex=0;
 
+
+		if(document.getElementById("unmapped")!=null)
+		{
+			document.getElementById("unmapped").style.visibility="hidden";
+
+		}
+
+	
 
 
 if(document.getElementById("myLists")!=null&&document.getElementById("myLists").options.length>0)
@@ -1230,12 +1252,12 @@ Gene Name Batch Viewer</big></small></font></a></td>
         </td></tr>
       <table cellspacing="0" cellpadding="0" align="center">
         <tr>
-          <td align="center"> <a href="https://www.leidos.com/about/companies/leidos-biomedical-research" target="_blank"><img src="/graphics/leidos-logo.jpg" height="39" border="0"></a>        </td>
+          <td align="center"> <a href="https://frederick.cancer.gov" target="_blank"><img src="/graphics/fnlcr-logo-black.png" height="39" border="0"></a>        </td>
           <td align="center"><a href="http://www.niaid.nih.gov/default.htm" target="_blank"><img border="0" src="/graphics/niaid_logo.gif" height="60"></a>        </td>
           <td align="center"><a href="http://www-fbsc.ncifcrf.gov/" target="_blank"><img border="0" src="/graphics/abcc_text.gif" height="37"></a>        </td>
-          <td align="center">
-            <p align="right"><a href="http://web.ncifcrf.gov/" target="_blank"><img border="0" src="/graphics/nic_frederick.gif" height="45"></a>         
-          </p></td>
+          <!--<td align="center">
+            <p align="right"><a href="http://web.ncifcrf.gov/" target="_blank"><img border="0" src="/graphics/nic_frederick.gif"  height="45"></a> &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+          </td>-->
           <td align="center">
  <a href="http://www.nih.gov" target="_blank"><img src="/graphics/nihlogo.gif" height="54" border="0" align="top"></a>        
           </td>
@@ -1246,10 +1268,13 @@ Gene Name Batch Viewer</big></small></font></a></td>
             <a href="http://www.os.dhhs.gov/" target="_blank"><img border="0" src="/graphics/Department_Of_Health_And_HR.gif" height="34" align="left"></a>
           </td>
         </tr>
-       <tr> <td colspan="7" align="right"> <a href="/content.jsp?file=Licensing.html">Term of Service </a>| <a href="/content.jsp?file=Contact.html">Contact Us</a> | <a href="/site_map.jsp">Site Map</a></td></tr>
+       <tr> <td colspan="7" align="right"> <a href="/content.jsp?file=Licensing.html">Term of Service </a>| <a href="/content.jsp?file=Contact.html">Contact Us</a></td></tr>
+ <!-- | <a href="/site_map.jsp">Site Map</a></td></tr>-->
       </table>
 </table>
     
+    <script type="text/javascript">hideProgress();</script>
+
 </td></tr>
 </table>
 
