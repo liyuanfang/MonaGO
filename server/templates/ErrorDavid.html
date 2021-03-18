@@ -1,0 +1,179 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+head{
+    font-family:Verdana, Geneva, sans-serif;
+    font-size: 30px;
+}
+
+body{
+    font-family:Verdana, Geneva, sans-serif;
+    font-size: 20px;
+}
+fieldset{
+    background: rgba(255, 152, 0, 0.47);
+}
+h1{
+    font-family:"Candal", sans-serif;
+    text-align: center;
+    font-size: 48px;
+    color: rgb(76, 78, 239);
+}
+h2{
+    color: black;
+}
+h3{
+    color: black;
+}
+ul#navMenu{
+    padding:0;
+    margin-bottom:7px;
+    margin-left: 7px;
+}
+ul#navMenu li{
+    display:inline;
+}
+ul#navMenu li a{
+    background-color: #A98DD8; /*black;*/
+    color: #27537A; /*white;*/
+    padding: 7px 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px
+    height: 18px;
+    /*border-radius: 4px 4px 0 0;*/
+}
+ul#navMenu li a:hover, ul#navMenu li a:active{
+    background-color:#ab82ff; /*gray;*/
+}
+ul#email li{
+    display:inline;
+}
+ul#opt_menu li {
+    list-style-type:none;
+    padding:2px 10px;
+}
+legend{
+    font-size:24px;
+}
+div#form{
+    background: rgba(255, 152, 0, 0.47);
+    padding: 10px 25px 10px 25px;
+}
+input[type="submit"] {
+    font-size: 14px;
+    color: #ffffff;
+    padding: 2px 15px;
+    background: -moz-linear-gradient(
+    top,
+    #73a1e6 0%,
+    #0342ff);
+    background: -webkit-gradient(
+    linear, left top, left bottom,
+    from(darkgray),
+    to(lightgray));
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    border: 4px solid #5586c2;
+    border: 2px solid #545454;
+    -moz-box-shadow:
+    0px 0px 0px rgba(000,000,000,0),
+    inset 0px 0px 0px rgba(087,087,087,0);
+    -webkit-box-shadow:
+    0px 0px 0px rgba(000,000,000,0),
+    inset 0px 0px 0px rgba(087,087,087,0);
+    box-shadow:
+    0px 0px 0px rgba(000,000,000,0),
+    inset 0px 0px 0px rgba(087,087,087,0);
+    text-shadow:
+    0px 1px 0px rgba(000,000,000,0.4),
+    0px -1px 0px rgba(255,255,255,0.3);
+    align:center;
+}
+div#sampleBED{
+    margin: 10px;
+    margin: 0 auto;
+    width: 200px;
+    padding: 5px;
+    height: 60px;
+    border: 2px solid black;
+    text-align:center;
+}
+label#sampleBED{
+    padding-top:1px;
+    font-family:courier;
+    font-style:italic;
+    font-size:14px;
+    float:none;
+}
+label{
+    display:block;
+    float:left;
+}
+textarea{
+    background:#F1F1F1;
+}
+.demo{
+    color:blue;
+    text-decoration: underline;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size:12px;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+.tooltip {
+    text-decoration: none;
+    color: black;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.header{
+    text-align: center;
+    height: 200px;
+}
+
+.header-img{
+    max-height: 100%;
+}
+</style>
+
+
+<link rel="icon" type="image/x-icon" href="data:image/png;base64,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">
+
+<html>
+    <head>
+<strong>
+<br>Communication with DAVID is down. <br><br>
+Please try again later. <br><br><br>
+</strong>
+    </head>
+    <body>
+To bypass this issue, get enriched GO terms manually from DAVID using the following steps:<br><br>
+<p> 1. Upload gene list to <a href="https://david.ncifcrf.gov/summary.jsp">https://david.ncifcrf.gov/summary.jsp</a> as shown below
+<center><img src="../img/david1.png" style="width:150px"/></center></p>
+<p>2. Select Functional Annotation Chart</p>
+<p>3. Edit url of pop up window based on the desired annotation type:<br> 
+ <div style="padding-left: 50px">
+<p>'annot=30' for Biological Process</p>
+<p>'annot=38' for Cellular Component</p>
+<p>'annot=46' for Molecular Function</p>
+</div>
+</p>
+<p>4. Convert the information in this chart into a CSV file using the formatting of the demo shown in Option 1 of Monago</p>
+<center><img src="../img/csv_location.png" style="width:500px"/></center>
+    </body>
+</html>
