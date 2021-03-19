@@ -110,6 +110,7 @@ var MonaGO = function(){
 	var svg ;
 	var go_chart;
 	var go_chart_big;
+	var genes_list_text;
 	var circleSvg;
 
 	var width = detailPanelWidth - 70;
@@ -1890,6 +1891,11 @@ var MonaGO = function(){
             		$('#menu.dropdown-menu').slideToggle();
         	})
 
+	$('#savelist').click(function(){
+saveTextAs(genes_list_text, "genes.txt");
+
+	});
+
         	$('#png').click(function(){
 	    	if (!!(window.chrome)){
 		var decoded;
@@ -2009,6 +2015,11 @@ var MonaGO = function(){
 		$("#exporthier").click(function() {
             $('#menu.dropdown-menu').slideToggle();
         })
+
+	$('#savelist').click(function(){
+saveTextAs(genes_list_text, "genes.txt");
+
+	});
 
         $('#png').click(function(){
 	    	if (!!(window.chrome)){
@@ -2229,6 +2240,8 @@ var MonaGO = function(){
         }
 	}
 
+
+
 	function createDetailPanelTempl(i){
 		var detailPanelTempl = "";
 
@@ -2248,7 +2261,13 @@ var MonaGO = function(){
 		   
 
 		var geneListInHtml = createGeneListHtml(that.go_inf[i]);
-		var genesListTempl = "<a class='prop-field gene_dropmenu'>Genes:</a><b id='caret_gene' class='caret rotate180'></b>"+geneListInHtml+"</p>";
+
+        genes_list_text = "";
+        that.go_inf[i].genes.forEach(function(d,i){
+            var tmp = ""+ d + "\n";
+            genes_list_text+=tmp;
+        });
+		var genesListTempl = "<a class='prop-field gene_dropmenu'>Genes:</a><b id='caret_gene' class='caret rotate180'></b>"+geneListInHtml+"<button id='savelist' class='btn' z-index:50'>Save list</button></p>";
 
 
         //var chartTempl = (numOfGOTerms == 1)?"<p><a class='prop-field'>GO Hierarchy: </a><button id='exporthier' class='btn' z-index:50'>Export Hierarchy Image</button></p> <div id='go_chart'></div> ":"";
