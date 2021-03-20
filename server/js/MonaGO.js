@@ -1767,6 +1767,7 @@ var MonaGO = function(){
 	}
 
 	function createGoHierifNecessary(goid, goid2){
+
         if(typeof goid == "string"){
             $('#content').append("<div style=\"position:relative;\"><div id=\"go_chart\"></div>")
 
@@ -2016,10 +2017,6 @@ saveTextAs(genes_list_text, "genes.txt");
             $('#menu.dropdown-menu').slideToggle();
         })
 
-	$('#savelist').click(function(){
-saveTextAs(genes_list_text, "genes.txt");
-
-	});
 
         $('#png').click(function(){
 	    	if (!!(window.chrome)){
@@ -2178,7 +2175,12 @@ saveTextAs(genes_list_text, "genes.txt");
         			   "<p> <a class='prop-field'>P-value: </a>" + goDetailArr.pVal + "</p>";
 
         var geneListInHtml = createGeneListHtml(goDetailArr);
-        var genesListTempl = "<a class='prop-field gene_dropmenu'>Genes:</a><b id='caret_gene' class='caret rotate180'></b>"+geneListInHtml+"</p>";
+        genes_list_text = "";
+        goDetailArr.genes.forEach(function(d,i){
+            var tmp = ""+ d + "\n";
+            genes_list_text+=tmp;
+        });
+        var genesListTempl = "<a class='prop-field gene_dropmenu'>Genes:</a><b id='caret_gene' class='caret rotate180'></b>"+geneListInHtml+"<button id='savelist' class='btn' z-index:50'>Save list</button></p>";
 
         goDetail += genesListTempl;
         goDetail += "<div id='"+ replaceCommaWithUnderline(goDetailArr.GO_id) +"'>" +"</div>";
@@ -2479,15 +2481,18 @@ saveTextAs(genes_list_text, "genes.txt");
 	function createChordTempl(index,d){
 		var totalGenesNumber=removeDuplicatedItem3(that.go_inf[d.source.index].genes.concat(that.go_inf[d.source.subindex].genes)).length
 		var geneListInHtml = "<div class='gene_content'><ol>";
+        genes_list_text = "";
 		that.dic[index].split(";").forEach(function(d,i){
 			 var tmp = "<li>" + " <n class='gene_name'>"+ d + "</n> "+ "</li>";
 			 geneListInHtml+=tmp;
+			var tmp = ""+ d + "\n";
+            		genes_list_text+=tmp;
 		});
 		geneListInHtml += "</ol></div>";
 		templ = "<p>Overlapping genes between <a class='go_id'>" + that.go_inf[d.source.index].GO_id + " (" + that.go_inf[d.source.index].GO_name + ")" +
 		"</a> and <a class='go_id'>" +  that.go_inf[d.source.subindex].GO_id + " (" + that.go_inf[d.source.subindex].GO_name +")" + "</a>:\n</p>"+
 		"Number of overlapping genes: "+ that.dic[index].split(";").length+"</a>\n</p>"+"</a></p>"+
-		"Percentage of overlapping genes: "+ parseInt(that.dic[index].split(";").length / totalGenesNumber*100)+"%" +"</a>\n</p>" + geneListInHtml;
+		"Percentage of overlapping genes: "+ parseInt(that.dic[index].split(";").length / totalGenesNumber*100)+"%" +"</a>\n</p>" + geneListInHtml +"<button id='savelist' class='btn' z-index:50'>Save list</button></p>";
                 if (similarity=='Resnik'){
                 var overallNumOfGOTerms = getNumOfGOTerms(that.go_inf[d.source.index].GO_id)+getNumOfGOTerms(that.go_inf[d.source.subindex].GO_id);
                     if (overallNumOfGOTerms == 2){
@@ -2524,6 +2529,10 @@ saveTextAs(genes_list_text, "genes.txt");
                     }
                     }
                 }
+	$('#savelist').click(function(){
+saveTextAs(genes_list_text, "genes.txt");
+
+	});
 		return templ;
                 
 	}
