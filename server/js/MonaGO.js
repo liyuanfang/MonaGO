@@ -111,6 +111,7 @@ var MonaGO = function(){
 	var go_chart;
 	var go_chart_big;
 	var genes_list_text;
+	var reduced_GOterm_list;
 	var circleSvg;
 
 	var width = detailPanelWidth - 70;
@@ -439,7 +440,6 @@ var MonaGO = function(){
             d.fixed = true;
         });
 
-
         var nodeText = svg.selectAll("text.node")
             .data(struct.nodes)
             .enter().append("text")
@@ -447,6 +447,7 @@ var MonaGO = function(){
             .text(function(d) { return d.name;})
             //.each(insertLinebreaks)
             .call(force.drag);
+	
 
         if(struct.nodes.length < maxNodeNum){
             force.on("tick", function(e) {
@@ -3190,6 +3191,7 @@ saveTextAs(genes_list_text, "genes.txt");
 			element += '<li><a href="" id="PNG">PNG</a></li>'
 			element += '<li><a href=""id="SVG">SVG</a></li></ul>'
 		    element += '<button id="export" class="btn" z-index:100">Export File</button>';
+		    element += '&nbsp&nbsp&nbsp&nbsp&nbsp<button id="save_reduced" class="btn" z-index:100">Reduced GO term list</button>';
 		    element += '</div>';
 		    element +=  '<button id="arrow_controlPanel" class="arrowBar arrow"></button>';
 
@@ -3402,6 +3404,24 @@ saveTextAs(genes_list_text, "genes.txt");
         $('#SVG').click(function(){
             saveSvg(document.getElementById("main_vis"), "diagram.svg", {scale: 2});
         });
+
+	$('#save_reduced').click(function(){
+		reduced_GOterm_list = "";
+		var clusternode = $('.clusterNodeView');
+		for (var i = 0;i < that.go_inf.length;i++){
+			GO_string = that.go_inf[i].GO_name;
+			if (typeof GO_string == 'string'){
+				reduced_GOterm_list += GO_string;
+			}
+			else{
+				reduced_GOterm_list += GO_string[0];
+			}
+			
+
+		}
+		saveTextAs(reduced_GOterm_list, "reducedGOterms.txt");
+		
+	});
 
         $('#export').click(function(){
 
@@ -3629,6 +3649,7 @@ saveTextAs(genes_list_text, "genes.txt");
             nodeObj = {"index":d.index,"angle":(d.startAngle+d.endAngle)/2,"radius":r1};
             chordGroupsNodePosition.push(nodeObj);
         });
+
 	}
 
 	function clusterGO(nodeCollapse){

@@ -285,6 +285,7 @@ path.chord {
   z-index:1;
 }
 
+
 /*for drop down menu*/
 
 .dropbtn {
@@ -525,7 +526,7 @@ hr {
 
 .control-panel-button{
     margin-top: 30;
-    margin-left: 200px;
+    margin-left: 50px;
 }
 
 .fade{
