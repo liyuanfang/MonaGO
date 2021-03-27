@@ -1,7 +1,9 @@
 # MonaGO
+Use Monago web app at https://monago.erc.monash.edu/
 
 
-## Window
+Or run locally using the following steps
+## Windows
 
 (1) Install python2.7  
 (2) Install dependent packages using **python setup.py**  
