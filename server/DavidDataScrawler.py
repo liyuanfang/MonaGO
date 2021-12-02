@@ -18,6 +18,9 @@ import threading
 import logging
 
 from logTime import logTime
+# creating specific error when no functional annotation chart is returned
+class ChartError(Exception):
+        pass
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -136,7 +139,10 @@ class DavidDataScrawler(object):
         #logger.debug('go:{}'.format(go))
 
         if not go:
-            raise Exception("get GO terms failed") 
+            if parser.davidSuccess:
+                raise Exception("no GO enrichment")
+            else:
+                raise Exception("get GO terms failed")
 
         #logger.debug('geneIds:{}'.format(geneIds))
 
@@ -259,7 +265,7 @@ class DavidDataScrawler(object):
 
         def __init__(self,request):
             HTMLParser.__init__(self)
-
+            self.davidSuccess = False
             self.request = request
             self.go_inf = []
             self.geneLists = {}
@@ -269,10 +275,12 @@ class DavidDataScrawler(object):
 
             #get GO_id,GO_name,p-value,count
             if tag == "a":
+                if 'home' in str(attrs[0][1]):
+                    self.davidSuccess=False
+                if 'functional_annotation' in str(attrs[0][1]):
+                    self.davidSuccess=True
                 m = re.search('(data/download/chart_\w+.txt)',attrs[0][1])
-                
                 if m!=None:
-                #if exists
                     url = 'https://david.ncifcrf.gov/'+m.group(0)
                     res = self.request.get(url,verify = False)
                     self._parseGO(res.content)

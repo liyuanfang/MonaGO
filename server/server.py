@@ -109,14 +109,26 @@ def index():
                 if demoStatus==False:
                     with open(root_dir + 'templates/ErrorDavid.html', "r") as fr_html:
                         html = "".join(fr_html.readlines())
+
                     return html
                 else:
-
-                    return "Could not get GO enrichment data from the inputs entered. Please make sure the gene list and identifier are correct and try again. "
+                    # if data was processed through david but no enrichment data was output
+                    if 'enrichment' in str(go):
+                        # try all annotators
+                        inputGO, inputStatus = getDataFromDavid(inputIds,idType,'30,38,46',pVal)
+                        if inputStatus==True:
+                            return "The input was processed through DAVID but no GO enrichment was associated with this data. The visualisation therefore could not be created. <br><br>However, this gene set may have associated GO enrichment data under a different Annotation Type. <br>To obtain a MonaGO visualisation for this gene set, please modify the selection in Step 4 appropriately."
+                        else:
+                            return "The input was processed through DAVID. However, no GO enrichment was associated with this data. The visualisation therefore could not be created. <br><br>To try a different input, go back and refresh the page to ensure the previous input has cleared."
+                    # if data wasn't processed through david
+                    else:
+                        return "Could not process input data through DAVID. <br><br>Please ensure gene list is in correct format (see 'Upload File Format for an example of the correct CSV format, or 'click to paste' the demo genes for an example of the correct list format). <br><br>Also make sure the identifier selected (in Step 2) is correct. <br><br>To try a new input, go back and refresh the page to ensure the previous input has cleared. "
             try:
                 matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'],request.form['clustComp'])
             except SemanticsError:
                 return "Cannot measure semantic similarity across multiple roots. Use a single function annotation, or measure similarity between terms using number of overlapping genes"
+            except AttributeError:
+                return "Enrichment data not adequate to make chord diagram."
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
@@ -241,7 +253,7 @@ def parseInputIdsFromCSV(file):
     for line in data.split("\n"):
         if line.strip("\n\r") != "":
             if line == "geneID":
-                continue 
+                continue
             inputId.append(line)
     return ','.join(inputId)
 
@@ -319,7 +331,7 @@ def parseInputMonagos(content_dict,pVal):
 def getDataFromDavid(inputIds,idType,annotCat,pVal):
     '''
     send https request to David and get GO information
-    
+
     Args:
         inputIds:a list of gene ids
         idType:the type of gene ids, such as AFFYMETRIX_3PRIME_IVT_ID
@@ -381,6 +393,8 @@ def processedData(go, similarity, clustComp):
 
     except KeyError:
         raise SemanticsError
+    except AttributeError as e:
+        raise AttributeError
     except Exception as e:
         logger.error(str(e))
     else:
