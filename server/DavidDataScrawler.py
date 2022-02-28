@@ -59,8 +59,8 @@ class DavidDataScrawler(object):
         if self._checkSuccess(res):
             logger.debug("upload gene success")
 
-            url_1 = 'https://david.ncifcrf.gov/chartReport.jsp?annot={0}&currentList=0'.format(self.annotCat)
-            url_2 = 'https://david.ncifcrf.gov/list.jsp'
+            url_1 = 'https://david-d.ncifcrf.gov/chartReport.jsp?annot={0}&currentList=0'.format(self.annotCat)
+            url_2 = 'https://david-d.ncifcrf.gov/list.jsp'
 
             thread1 = myThread(1, s, url_1)
             thread2 = myThread(2, s, url_2)
@@ -176,7 +176,7 @@ class DavidDataScrawler(object):
                          'convertedPopName': (None,'null'),'pasteBox': (None,inputIds),'Identifier': (None,idType) ,
                          'selectedSpecies': (None,',0') , 'speciesList': (None,'0'), 'rbUploadType':(None,'list')}
 
-        r = s.post('https://david.ncifcrf.gov/tools.jsp', files=data,  verify=False)
+        r = s.post('https://david-d.ncifcrf.gov/tools.jsp', files=data,  verify=False)
 
         return r.content
 
@@ -281,7 +281,7 @@ class DavidDataScrawler(object):
                     self.davidSuccess=True
                 m = re.search('(data/download/chart_\w+.txt)',attrs[0][1])
                 if m!=None:
-                    url = 'https://david.ncifcrf.gov/'+m.group(0)
+                    url = 'https://david-d.ncifcrf.gov/'+m.group(0)
                     res = self.request.get(url,verify = False)
                     self._parseGO(res.content)
 
