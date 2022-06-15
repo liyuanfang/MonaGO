@@ -26,6 +26,8 @@ import logging
 import time
 
 from logTime import logTime
+import networkx as nx
+
 
 # creating specific error when multiple graphs are used for semantic calculations
 class SemanticsError(Exception):
@@ -81,6 +83,8 @@ def index():
                 matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'], request.form['clustComp'])
             except SemanticsError:
                 return "Cannot measure semantic similarity across multiple roots. Use a single function annotation, or measure similarity between terms using number of overlapping genes"
+            except nx.NetworkXError as e:
+                return "Error: "+str(e)+"<br><br>Your input contains GO terms that could not be found in our GO-hierarchy database. Consequently, semantic similarities could not be calculated. <br><br>Please remove any obsolete GO terms from your input or replace them with the appropriate replacement term. "
             myList=simDict
             if not matrix_count:
                 return "Failure to process data"
@@ -395,6 +399,8 @@ def processedData(go, similarity, clustComp):
         raise SemanticsError
     except AttributeError as e:
         raise AttributeError
+    except nx.NetworkXError as e:
+        raise nx.NetworkXError(e)
     except Exception as e:
         logger.error(str(e))
     else:
