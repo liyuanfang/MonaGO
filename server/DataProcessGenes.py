@@ -181,6 +181,7 @@ class DataProcess4():
                         k = k - 1
 
             return preorder
+        print("preOrder okay?")
 
     def to_tree(self, Z, rd=False):
         """
@@ -224,12 +225,12 @@ class DataProcess4():
         d = [None] * (n * 2 - 1)
 
         # Create the nodes corresponding to the n original objects.
-        for i in xrange(0, n):
+        for i in range(0, n):
             d[i] = DataProcess4.ClusterNode(i)
 
         nd = None
 
-        for i in xrange(0, n - 1):
+        for i in range(0, n - 1):
             fi = int(Z[i, 0])
             fj = int(Z[i, 1])
             # print str(fi) + " " + str(fj)
@@ -266,13 +267,18 @@ class DataProcess4():
             return n * j - (j * (j + 1) / 2) + (i - j - 1)
 
     def pdist(self, Z, n):
-        D = np.ndarray(n * (n - 1) / 2, dtype=np.double)
+        D = np.ndarray(int(n * (n - 1) / 2), dtype=np.double) #Original Code
+        #D = np.ndarray(int(n * (n - 1) / 2), dtype=np.int) #Attempt to coerce everything into int
+      
         for i in range(n):
             for j in range(n):
                 if i < j:
-                    D[n * i - (i * (i + 1) / 2) + (j - i - 1)] = Z[i][j]
+                    D[int(n * i - (i * (i + 1) / 2) + (j - i - 1))] = Z[i][j]
+        print("pdist okay?")
         return D
-
+        
+    
+    
     def linkage(self, dists, dists1, Z, n, method):
         """
         Perform hierarchy clustering.
@@ -291,57 +297,74 @@ class DataProcess4():
             4: median 5: ward 6: weighted
         """
         # inter-cluster dists
-        D = np.ndarray(n * (n - 1) / 2, dtype=np.int)
-        D_num = np.ndarray(n * (n - 1) / 2, dtype=np.int)
+        print("linkageokay?_1")
+        #D = np.ndarray(n * (n - 1) / 2, dtype=np.int)
+        D = np.ndarray(int(n * (n - 1) / 2), dtype=np.int)
+        print("linkageokay?_2")
+        #D_num = np.ndarray(n * (n - 1) / 2, dtype=np.int)
+        D_num = np.ndarray(int(n * (n - 1) / 2), dtype=np.int)
+        print("linkageokay?_3")
         # map the indices to node ids
         id_map = np.ndarray(n, dtype=np.int)
-
+        #id_map = np.ndarray(int(n), dtype=np.int)
+        print("linkageokay?_4")
         D[:] = dists
         D_num[:] = dists1
         for i in range(n):
             id_map[i] = i
-
+            print("linkageokay?_5")
         for k in range(n - 1):
             # find two closest clusters x, y (x < y)
             percent_current_max = 0
             number_current_max = 0
-
+            print("linkageokay?_6")
             # get the max value of interconnection between different nodes/clusters
             for i in range(n - 1):
                 # if the node is dropped, skip this node
+                print("linkageokay?_6_1")
                 if id_map[i] == -1:
+                    print("linkageokay?_7")
                     continue
-
+                print("linkageokay?_7_2")
                 # get the max value of interconnection between id_map[i] node and other nodes/clusters
-                i_start = self.condensed_index(n, i, i + 1)
+                #i_start = self.condensed_index(n, i, i + 1) #original
+                i_start = int(self.condensed_index(n, i, i + 1))
+                print("linkageokay?_7_3")
+                print(i_start)
                 for j in range(n - i - 1):
                     if D[i_start + j] >= percent_current_max:
                         percent_current_max = D[i_start + j]
                         number_current_max = D_num[i_start + j]
                         x = i
                         y = i + j + 1
+                        print("linkageokay?_8")
+                print("linkageokay?_8_2")
 
             # get the real index for the two nodes with maximun value
             id_x = id_map[x]
             id_y = id_map[y]
+            print("linkageokay?_9")
 
             # update the index for two nodes
             id_map[x] = -1  # cluster x will be dropped
             id_map[y] = n + k  # cluster y will be replaced with the new cluster
-
+            print("linkageokay?_10")
             # record the new node
             Z[k, 0] = min(id_x, id_y)
             Z[k, 1] = max(id_y, id_x)
-
+            print("linkageokay?_11")
             Z[k, 2] = percent_current_max
             Z[k, 3] = number_current_max
-
+            print("linkageokay?_12")
             # update the distance matrix
             self.updateClusterGenes(x, y)
-
+            print("linkageokay?_13")
+            print(n)
+            print(k)
             for i in range(n):
                 id_i = id_map[i]
                 if id_i == -1 or id_i == n + k:
+                    print("linkageokay?_14")
                     continue
 
                 # ni = 1 if id_i < n else <int>Z[id_i - n, 3]
@@ -355,11 +378,19 @@ class DataProcess4():
 
                 # calcuate the real distance
                 #self.updateClusterGenes(x, y)
-                D[self.condensed_index(n, i, y)] = self.calRealDis(i,x,y)
-                D_num[self.condensed_index(n, i, y)] = self.calRealDisNum(i,x,y)
+
+                D_num_y= int(self.condensed_index(n, i, y))
+                D[D_num_y] = self.calRealDis(i,x,y) #Indexing D needs to be integer
+                D_num[D_num_y] = self.calRealDisNum(i,x,y) #Indexing D needs to be integer
+                #D[self.condensed_index(n, i, y)] = self.calRealDis(i,x,y) #Indexing D needs to be integer
+                #D_num[self.condensed_index(n, i, y)] = self.calRealDisNum(i,x,y)
+                
                 if i < x:
-                    D[self.condensed_index(n, i, x)] = -1
-                    D_num[self.condensed_index(n, i, x)] = -1
+                    D_num_x = int(self.condensed_index(n, i, x))
+                    D[D_num_x] = -1
+                    D_num[D_num_x] = -1
+                    #D[self.condensed_index(n, i, x)] = -1
+                    #D_num[self.condensed_index(n, i, x)] = -1
         for t in range(n - 1):
             level = []
             level.append(int(Z[t, 0]))
@@ -368,9 +399,9 @@ class DataProcess4():
             level.append(int(Z[t, 3]))
             level.append(int(Z[t, 2]))
             self.clusterHierData.append(level)
-
+        print("linkage okay?")
         return Z
-
+        
     def calRealDis(self, i, x, y):
         """
         calculate the real distance between different clusters based on the number of different genes.
@@ -440,7 +471,7 @@ class DataProcess4():
                 GO_hier_list[GO_id] = GO_hier[GO_id]
 
                 for i in GO_hier[GO_id]["p"]:
-                    if not GO_hier_list.has_key(i):
+                    if i not in GO_hier_list:
                         recuriveGetGOId(i.encode('ascii', 'ignore'))
 
         remote_server = False;
@@ -460,12 +491,13 @@ class DataProcess4():
             recuriveGetGOId(gos["GO_id"].encode('ascii', 'ignore'))
 
         return json.dumps(GO_hier_list)
-
+    print("goDependecies okay?")
     def reOrder(self, gen_anno_reord, go_inf):
         go_inf_tmp = []
         for i in gen_anno_reord:
             go_inf_tmp.append(go_inf[i])
         return go_inf_tmp
+    print("reOrder okay?")
 
     def createMatrix(self, go_inf):
 
@@ -521,9 +553,12 @@ class DataProcess4():
                     matrix_count[i][j] = len(overlappingGenes)*100.0/len(totalGenes)
         #print matrix_count
         return {"matrix_count": matrix_count}
+    
+    print("createMatrixOrd okay?")
 
     def dataProcess(self, go_inf, clustComp):
-
+        
+        print("dataProcess_1")
 
         self.clusterHierData = []  ##clear clusterHierData
 
@@ -533,28 +568,41 @@ class DataProcess4():
 
         if size == 0:
             raise Exception("go_inf is empty")
-
+        print("dataProcess_2")
         num_matrix, percent_matrix = self.createMatrix(go_inf)
 
-        D = np.ndarray(size * (size - 1) / 2, dtype=np.int)
+        #D = np.ndarray(size * (size - 1) / 2, dtype=np.int)
+        D = np.ndarray((int(size * (size - 1) / 2),), dtype=np.int)
         # D = self.pdist(matrix,size)
+        print("dataProcess_2_1")
         D = self.pdist(percent_matrix, size)
-        D_num = self.pdist(num_matrix, size)
-        # Z = np.zeros((size - 1, 3))
-        Z = np.zeros((size - 1, 4))
-        Z = self.linkage(D, D_num, Z, size, 0)
 
+        print("dataProcess_2_2")
+        D_num = self.pdist(num_matrix, size)
+        print("dataProcess_2_3")  
+
+  
+      # Z = np.zeros((size - 1, 3)) #Not sure what this is.
+        Z = np.zeros((size - 1, 4))
+        print("dataProcess_2_4")  
+        Z = self.linkage(D, D_num, Z, size, 0)
+        print("dataProcess_3")
         nd = [None] * (size * 2 - 1)
         nd = self.to_tree(Z)
-
+        print("dataProcess_4")
         go_index_reord = nd.pre_order()  # array_order
 
         go_inf_reOrder = self.reOrder(go_index_reord, go_inf)
-
+        print("dataProcess_5")
         matrix_reOrder = self.createMatrixReord(go_inf_reOrder)  # create matrix and clusterHierData
-        #print matrix_reOrder
+
+        print("dataProcess_6")
+
         go_hier = self.getGODependency(go_inf_reOrder)
 
-        #print self.clusterHierData
+        print("dataProcess_7")
+
         return {"matrix": matrix_reOrder, "go_index_reord": go_index_reord, "clusterHierData": self.clusterHierData,
                 "go_inf": go_inf_reOrder, "go_hier": go_hier, 'simDict': []}
+
+

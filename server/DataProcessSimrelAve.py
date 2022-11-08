@@ -228,12 +228,12 @@ class DataProcess4():
         d = [None] * (n * 2 - 1)
 
         # Create the nodes corresponding to the n original objects.
-        for i in xrange(0, n):
+        for i in range(0, n):
             d[i] = DataProcess4.ClusterNode(i)
 
         nd = None
 
-        for i in xrange(0, n - 1):
+        for i in range(0, n - 1):
             fi = int(Z[i, 0])
             fj = int(Z[i, 1])
             # print str(fi) + " " + str(fj)
@@ -451,7 +451,7 @@ class DataProcess4():
                 GO_hier_list[GO_id] = GO_hier[GO_id]
 
                 for i in GO_hier[GO_id]["p"]:
-                    if not GO_hier_list.has_key(i):
+                    if i not in GO_hier_list:
                         recuriveGetGOId(i.encode('ascii', 'ignore'))
 
         remote_server = False;
@@ -566,7 +566,8 @@ class DataProcess4():
 
         num_matrix, percent_matrix = self.createMatrix(go_inf, clustComp)
 
-        D = np.ndarray(size * (size - 1) / 2, dtype=np.int)
+        #D = np.ndarray(size * (size - 1) / 2, dtype=np.int)
+        D = np.ndarray((int(size * (size - 1) / 2),), dtype=np.int)
         # D = self.pdist(matrix,size)
         D = self.pdist(percent_matrix, size)
         D_num = self.pdist(num_matrix, size)

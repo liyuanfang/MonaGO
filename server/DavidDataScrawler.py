@@ -11,7 +11,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 import re
 import requests
 import threading
@@ -234,9 +234,9 @@ class DavidDataScrawler(object):
         rowidstr = ""
 
         #map(rowids.add, [genes for genes in geneListsDic.values()]) #list is not hashable
-        for genes in geneListsDic.values():
+        for genes in list(geneListsDic.values()):
             if isinstance(genes,list):
-                map(rowids.add,[gene for gene in genes])
+                list(map(rowids.add,[gene for gene in genes]))
             else:
                 rowids.add(genes)
 

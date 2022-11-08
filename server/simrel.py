@@ -11,7 +11,7 @@ import time
 def makeTree():
     # makes gene ontology tree using networkx and data from GO.js
     G=nx.DiGraph()
-    for key in go_hier.keys():
+    for key in list(go_hier.keys()):
         if 'GO' in unicodedata.normalize('NFKD',key).encode('ascii'):
             G.add_node(key)
     for key in G.nodes():

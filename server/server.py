@@ -11,7 +11,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import pprint
 import sys
 import json
 # import yaml
@@ -53,7 +53,7 @@ GO_dict = {}
 app = Flask(__name__)
 @app.route('/', methods=['POST','GET'])
 def index():
-
+    print('test')
     annotCatDict = {
         'GOTERM_BP':'30',#biological process direct
         'GOTERM_CC':'38',#celluar component direct
@@ -80,7 +80,10 @@ def index():
                 go = parseInputGOs(request.form['inputGOs'],float(str(pVal)))
 
             try:
+                
                 matrix_count, array_order, go_hier, go_inf_reord, clusterHierData, simDict = processedData(go, request.form['similarity'], request.form['clustComp'])
+
+
             except SemanticsError:
                 return "Cannot measure semantic similarity across multiple roots. Use a single function annotation, or measure similarity between terms using number of overlapping genes"
             except nx.NetworkXError as e:
@@ -307,10 +310,10 @@ def parseInputGOs(go_csvFormat,pVal):
     return goDictContainer
 def byteify(input, encoding='utf-8'):
     if isinstance(input, dict):
-        return {byteify(key): byteify(value) for key, value in input.iteritems()}
+        return {byteify(key): byteify(value) for key, value in input.items()}
     elif isinstance(input, list):
         return [byteify(element) for element in input]
-    elif isinstance(input, unicode):
+    elif isinstance(input, str):
         return input.encode(encoding)
     else:
         return input
@@ -378,9 +381,10 @@ def processedData(go, similarity, clustComp):
     # redefine any go terms that are 'alternative ids' as their main id
     alt_ids = json.load(open(root_dir +"js/alt.js"))
     for index, id in enumerate(go):
-        if id['GO_id'] in alt_ids.keys():
+        if id['GO_id'] in list(alt_ids.keys()):
             id['GO_id'] = str(alt_ids[id['GO_id']])
-
+            
+    print("alt_ids ok?")
 
     #for pre processing the data
     if similarity=='Resnik':
@@ -390,11 +394,13 @@ def processedData(go, similarity, clustComp):
     elif similarity=='Simrel':
         from DataProcessSimrelAve import DataProcess4
 
-
+    print("Similarity Okay?")
     dataProcess = DataProcess4()
+    print("DataProcess okay?")
+    print(type(DataProcess4))
     try:
         preProcessedData = dataProcess.dataProcess(go, clustComp)
-
+        print("preprocess okay?")
     except KeyError:
         raise SemanticsError
     except AttributeError as e:
@@ -403,6 +409,8 @@ def processedData(go, similarity, clustComp):
         raise nx.NetworkXError(e)
     except Exception as e:
         logger.error(str(e))
+        print("error statements okay?")
+        
     else:
         matrix = preProcessedData["matrix"]["matrix_count"]
         go_index_reord = preProcessedData["go_index_reord"]
@@ -412,6 +420,8 @@ def processedData(go, similarity, clustComp):
         simDict=preProcessedData['simDict']
         return matrix,go_index_reord,go_hier,go_inf_reord,clusterHierData, simDict
 
+    print("function okay?")
+    
 
 def loadConfig():
     pass

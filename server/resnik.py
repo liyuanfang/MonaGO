@@ -11,7 +11,7 @@ import time
 def makeTree():
     # makes gene ontology tree using networkx and data from GO.js
     G=nx.DiGraph()
-    for key in go_hier.keys():
+    for key in list(go_hier.keys()):
         if 'GO' in unicodedata.normalize('NFKD',key).encode('ascii'):
             G.add_node(key)
     for key in G.nodes():
@@ -97,9 +97,9 @@ def ResnikDisMIA(iGOids, x, yGOids):
     MIAName=go_hier[MIA]['n']
     return(sim,MIAName)
 
-print(simRes(u'GO:0006355',u'GO:0006351'))
-nodeA=u'GO:0006355'
-nodeB=u'GO:0006351'
+print((simRes('GO:0006355','GO:0006351')))
+nodeA='GO:0006355'
+nodeB='GO:0006351'
 if True:
     ancestorsNodeA=nx.ancestors(G,nodeA)
     ancestorsNodeA.add(nodeA)

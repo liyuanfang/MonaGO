@@ -62,7 +62,7 @@ def createGOjsFile():
         name=file[goID].name
         namespace=file[goID].namespace
         if not file[goID].is_obsolete:
-            GOjsDict[unicode(file[goID].id)]={'p':parents,'c':namespace,'n':name, 'u':uppers}
+            GOjsDict[str(file[goID].id)]={'p':parents,'c':namespace,'n':name, 'u':uppers}
     GOjs=open('js/GO.js','w')
     json.dump(GOjsDict,GOjs)
 
@@ -81,7 +81,7 @@ def makeTree():
         for GO in fr_GO:
             go_hier=json.loads(str(GO))
     G=nx.DiGraph()
-    for key in go_hier.keys():
+    for key in list(go_hier.keys()):
         if 'GO' in unicodedata.normalize('NFKD',key).encode('ascii'):
             G.add_node(key)
     for key in G.nodes():
@@ -108,7 +108,7 @@ def getAnnotations():
             if percentage>5:
                 print('hi')
                 count=0
-            goID=unicode(annotation['GO_ID'])
+            goID=str(annotation['GO_ID'])
             try:
                 annotDict[goID]+=1
             except KeyError:

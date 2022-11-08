@@ -13,7 +13,7 @@ def makeTree():
         for GO in fr_GO:
             go_hier=json.loads(str(GO))
     G=nx.DiGraph()
-    for key in go_hier.keys():
+    for key in list(go_hier.keys()):
         if 'GO' in unicodedata.normalize('NFKD',key).encode('ascii'):
             G.add_node(key)
     for key in G.nodes():
@@ -36,7 +36,7 @@ getCount=json.loads(annotDict)
 
 def getRoot(node):
     # returns the root of each GO ID
-    roots=[u'GO:0003674', u'GO:0008150', u'GO:0005575']
+    roots=['GO:0003674', 'GO:0008150', 'GO:0005575']
     for root in roots:
         if root in nx.ancestors(G,node):
             return(root)
@@ -76,7 +76,7 @@ def IC(node):
 
 ICDict={}
 
-print(G.number_of_nodes())
+print((G.number_of_nodes()))
 
 count=0
 for node in G.nodes():
