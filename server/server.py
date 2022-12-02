@@ -384,7 +384,7 @@ def processedData(go, similarity, clustComp):
         if id['GO_id'] in list(alt_ids.keys()):
             id['GO_id'] = str(alt_ids[id['GO_id']])
             
-    print("alt_ids ok?")
+   
 
     #for pre processing the data
     if similarity=='Resnik':
@@ -394,13 +394,11 @@ def processedData(go, similarity, clustComp):
     elif similarity=='Simrel':
         from DataProcessSimrelAve import DataProcess4
 
-    print("Similarity Okay?")
     dataProcess = DataProcess4()
-    print("DataProcess okay?")
-    print(type(DataProcess4))
+  
     try:
         preProcessedData = dataProcess.dataProcess(go, clustComp)
-        print("preprocess okay?")
+        
     except KeyError:
         raise SemanticsError
     except AttributeError as e:
@@ -409,7 +407,7 @@ def processedData(go, similarity, clustComp):
         raise nx.NetworkXError(e)
     except Exception as e:
         logger.error(str(e))
-        print("error statements okay?")
+        
         
     else:
         matrix = preProcessedData["matrix"]["matrix_count"]
@@ -420,7 +418,7 @@ def processedData(go, similarity, clustComp):
         simDict=preProcessedData['simDict']
         return matrix,go_index_reord,go_hier,go_inf_reord,clusterHierData, simDict
 
-    print("function okay?")
+  
     
 
 def loadConfig():
